@@ -1,0 +1,17 @@
+{
+    "name": "Abilities",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f1de37558e88fea4caab27f590d86d5d",
+        "GUID:10b4810c7e3324847aa3b3c89a3fa7f5"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

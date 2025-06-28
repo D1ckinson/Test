@@ -36,7 +36,7 @@ namespace Assets.Scripts.Spawners
             }
         }
 
-        public void Spawn(Vector3 position, int value)
+        internal void Spawn(Vector3 position, int value)
         {
             value.ThrowIfLessThan(_minValue);
 
@@ -80,6 +80,11 @@ namespace Assets.Scripts.Spawners
                 {
                     result.Add(experience);
                     remainingValue -= experience.Value;
+                }
+
+                if (remainingValue == Constants.Zero)
+                {
+                    break;
                 }
             }
 

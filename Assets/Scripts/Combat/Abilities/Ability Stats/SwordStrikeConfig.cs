@@ -4,11 +4,10 @@ using UnityEngine;
 namespace Assets.Scripts.Combat.Abilities
 {
     [CreateAssetMenu(fileName = "New Sword Strike Stats", menuName = "Game/SwordStrikeStats")]
-    internal class SwordStrikeStats : ScriptableObject
+    internal class SwordStrikeConfig : DamageSourceConfig
     {
         [field: Header("Basic Settings")]
         [field: SerializeField][field: Min(1)] public int Level { get; private set; } = 1;
-        [field: SerializeField][field: Min(1)] public float Damage { get; private set; } = 50f;
         [field: SerializeField][field: Min(0.1f)] public float Cooldown { get; private set; } = 2f;
 
         [field: Header("Area Settings")]

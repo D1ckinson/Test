@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Assets.Scripts.Tools
 {
-    public class Pool<T> where T : IPollable
+    public class Pool<T> where T : IPoolable
     {
         private readonly Queue<T> _items = new();
         private readonly Func<T> _createFunc;

@@ -1,13 +1,13 @@
 using Assets.Scripts.Tools;
+using Assets.Scripts.Movement;
 using UnityEngine;
 
 namespace Assets.Scripts.Combat.Abilities
 {
-    internal class SwordStrike : MonoBehaviour
+    internal class SwordStrike : DamageSourceBase<SwordStrikeConfig>
     {
         private const int MaxCountForStrike = 50;
 
-        [SerializeField] private SwordStrikeStats _stats;
         [SerializeField] private ParticleSystem _swingEffect;
 
         private Transform _transform;
@@ -17,15 +17,14 @@ namespace Assets.Scripts.Combat.Abilities
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            if (_stats != null)
+            if (_config != null)
             {
-                CustomGizmos.DrawCircle(transform.position, _stats.Radius);
+                CustomGizmos.DrawCircle(transform.position, _config.Radius);
             }
         }
 
         private void OnValidate()
         {
-            _stats.ThrowIfNull();
             _swingEffect.ThrowIfNull();
         }
 #endif
@@ -34,7 +33,8 @@ namespace Assets.Scripts.Combat.Abilities
         {
             _transform = transform;
             _colliders = new Collider[MaxCountForStrike];
-            _cooldownTimer = _stats.Cooldown;
+
+            _cooldownTimer = _config.Cooldown;
             SetEffectShape();
         }
 
@@ -45,25 +45,19 @@ namespace Assets.Scripts.Combat.Abilities
             if (_cooldownTimer <= Constants.Zero)
             {
                 Strike();
-                _cooldownTimer = _stats.Cooldown;
+                _cooldownTimer = _config.Cooldown;
             }
         }
 
         private void Strike()
         {
-            int count = Physics.OverlapSphereNonAlloc(_transform.position, _stats.Radius, _colliders);
+            int count = Physics.OverlapSphereNonAlloc(_transform.position, _config.Radius, _colliders);
 
             for (int i = Constants.Zero; i < count; i++)
             {
-                if (_colliders[i].TryGetComponent(out Health health) == false)
-                {
-                    continue;
-                }
+                Collider collider = _colliders[i];
 
-                if (health.EntityType == EntityType.Enemy)
-                {
-                    health.TakeDamage(_stats.Damage);
-                }
+                TryDamage(collider.gameObject);
             }
 
             _swingEffect.Play();
@@ -72,7 +66,7 @@ namespace Assets.Scripts.Combat.Abilities
         private void SetEffectShape()
         {
             ParticleSystem.ShapeModule shapeModule = _swingEffect.shape;
-            shapeModule.radius = _stats.Radius;
+            shapeModule.radius = _config.Radius;
         }
     }
 }

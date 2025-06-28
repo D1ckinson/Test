@@ -1,6 +1,6 @@
 ﻿namespace Assets.Scripts.Tools
 {
-    public interface IPollable
+    public interface IPoolable
     {
         public void Enable();
 

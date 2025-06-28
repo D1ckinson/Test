@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2710c10bc72abf43a50f5d68d81cb4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stats: {fileID: 11400000, guid: 457da223b1426854f91809b177542574, type: 2}
+  _config: {fileID: 11400000, guid: 457da223b1426854f91809b177542574, type: 2}
   _swingEffect: {fileID: 729005242921283116}
 --- !u!199 &8373814836254380403
 ParticleSystemRenderer:
@@ -4923,6 +4923,7 @@ GameObject:
   - component: {fileID: 4618816421412562059}
   - component: {fileID: 6580853868990871806}
   - component: {fileID: 5599739862744480138}
+  - component: {fileID: 6347065766948498967}
   m_Layer: 0
   m_Name: Hero
   m_TagString: Untagged
@@ -5084,13 +5085,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _config: {fileID: 11400000, guid: adc360fc8b7c21746aca14863af63b44, type: 2}
-  _directionSource:
-    rid: -2
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
 --- !u!114 &4863877485386011028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5165,8 +5159,23 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
+  m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6347065766948498967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3132953286049530585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c97fa4029b192784a82c03d725c6441e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _collectArea: {fileID: 5599739862744480138}
+  _attractionRadius: 10
+  _pullSpeed: 20
 --- !u!1 &3450082800684659828
 GameObject:
   m_ObjectHideFlags: 0

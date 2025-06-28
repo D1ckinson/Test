@@ -9,6 +9,7 @@ namespace Assets.Scripts.ExperienceSystem
     {
         [SerializeField] private NextLevelFormula _nextLevelFormula;
 
+        private ExperienceCollector _collector;
         private float _currentExperience;
         private float _experienceForLevelUp;
         private int _level = Constants.One;
@@ -25,12 +26,24 @@ namespace Assets.Scripts.ExperienceSystem
         private void Awake()
         {
             _experienceForLevelUp = _nextLevelFormula.CalculateNextLevel(_level);
+            _collector = GetComponent<ExperienceCollector>();
+            _collector.Collect += HandleExperience;
         }
 
-        internal void CollectExperience(int value)
+        private void OnDestroy()
         {
-            value.ThrowIfZeroOrLess();
-            _currentExperience += value;
+            if (_collector != null)
+            {
+                _collector.Collect -= HandleExperience;
+            }
+        }
+
+        internal void HandleExperience(Experience experience)
+        {
+            experience.ThrowIfNull();
+            _currentExperience += experience.Value;
+
+            Debug.Log($"Опыта: {_currentExperience}. Уровень: {_level}");
 
             TryLevelUp();
         }

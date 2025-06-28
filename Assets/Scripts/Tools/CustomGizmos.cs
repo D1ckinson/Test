@@ -14,18 +14,25 @@ namespace Assets.Scripts.Tools
             center.ThrowIfNull();
             radius.ThrowIfZeroOrLess();
 
-            Gizmos.color = color == null ? Color.yellow : (Color)color;
+            Gizmos.color = color ?? Color.yellow;
             float angleStep = Constants.FullCircleDegrees / CircleSegmentsCount;
 
-            for (int i = Constants.Zero; i < CircleSegmentsCount; i++)
+            Vector3 startPoint = CalculatePoint(Constants.Zero);
+
+            for (int i = Constants.One; i <= CircleSegmentsCount + Constants.One; i++)
             {
                 float angle = i * angleStep * Mathf.Deg2Rad;
-                float nextAngle = (i + Constants.One) * angleStep * Mathf.Deg2Rad;
+                Vector3 endPoint = CalculatePoint(angle);
 
-                Vector3 start = center + new Vector3(Mathf.Cos(angle), Constants.Zero, Mathf.Sin(angle)) * radius;
-                Vector3 end = center + new Vector3(Mathf.Cos(nextAngle), Constants.Zero, Mathf.Sin(nextAngle)) * radius;
+                Gizmos.DrawLine(startPoint, endPoint);
+                startPoint = endPoint;
+            }
 
-                Gizmos.DrawLine(start, end);
+            Vector3 CalculatePoint(float angle)
+            {
+                Vector3 point = center + new Vector3(Mathf.Cos(angle), Constants.Zero, Mathf.Sin(angle)) * radius;
+
+                return point;
             }
         }
 

@@ -9,7 +9,7 @@ namespace Assets.Characters
     [RequireComponent(typeof(CharacterMovement))]
     [RequireComponent(typeof(DirectionTeller))]
     [RequireComponent(typeof(Health))]
-    public class Enemy : MonoBehaviour, IPollable
+    public class Enemy : MonoBehaviour, IPoolable
     {
         [field: SerializeField][field: Min(10)] public int ExperienceValue { get; private set; } = 10;
 

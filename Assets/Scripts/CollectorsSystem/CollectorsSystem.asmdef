@@ -1,9 +1,8 @@
 {
-    "name": "ExperienceSystem",
+    "name": "CollectorsSystem",
     "rootNamespace": "",
     "references": [
-        "GUID:f1de37558e88fea4caab27f590d86d5d",
-        "GUID:291d242a09faef94983f6df6d7749c69"
+        "GUID:f1de37558e88fea4caab27f590d86d5d"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

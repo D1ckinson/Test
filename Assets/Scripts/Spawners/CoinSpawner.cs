@@ -27,17 +27,20 @@ namespace Assets.Scripts.Spawners
         {
             count.ThrowIfZeroOrLess();
 
-            Vector3 spawnPosition = position + GenerateOffset();
-            Quaternion spawnRotation = GenerateRotation();
+            for (int i = Constants.Zero; i < count; i++)
+            {
+                Vector3 spawnPosition = position + GenerateOffset();
+                Quaternion spawnRotation = GenerateRotation();
 
-            Coin coin = _pool.Get();
-            coin.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
+                Coin coin = _pool.Get();
+                coin.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
+            }
         }
 
         private Coin CreateFunc()
         {
             Coin coin = Instantiate(_coinPrefab);
-            coin.Collected += OnCoinCollected;
+            //coin.Collected += OnCoinCollected;
 
             return coin;
         }

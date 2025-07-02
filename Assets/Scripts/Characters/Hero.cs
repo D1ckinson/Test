@@ -30,6 +30,5 @@ namespace Assets.Scripts.Characters
         {
             gameObject.SetActive(false);
         }
-
     }
 }

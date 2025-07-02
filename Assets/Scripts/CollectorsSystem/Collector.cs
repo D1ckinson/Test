@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.CollectorsSystem
 {
-    public class BaseCollector<T> : MonoBehaviour where T : MonoBehaviour, ICollectable<T>
+    public class Collector<T> : MonoBehaviour where T : MonoBehaviour, ICollectable<T>
     {
         private const float CollectDistance = 1f;
 
@@ -63,7 +63,7 @@ namespace Assets.Scripts.CollectorsSystem
                 {
                     _toCollect.Remove(collectable);
 
-                    collectable.Collect();
+                    //collectable.Collect();
                     Collect?.Invoke(collectable);
 
                     continue;

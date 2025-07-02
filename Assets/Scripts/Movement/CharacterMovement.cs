@@ -1,4 +1,8 @@
 ﻿using Assets.Scripts.Tools;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.Movement
@@ -8,11 +12,14 @@ namespace Assets.Scripts.Movement
     {
         [SerializeField] private MovementConfig _config;
 
-        private ITellDirection _directionSource;
+        private ITellDirection _directionSource;//
         private Mover _mover;
         private Rotator _rotator;
         private Vector3 _direction;
         private Rigidbody _rigidbody;
+        private bool _isSlowed;
+        private List<float> _multipliers;
+        private float _multiplier;
 
 #if UNITY_EDITOR
         private void OnValidate()
@@ -21,6 +28,11 @@ namespace Assets.Scripts.Movement
         }
 #endif
 
+        private void Update()
+        {
+
+        }
+
         private void FixedUpdate()
         {
             if (_direction == Vector3.zero)
@@ -28,9 +40,48 @@ namespace Assets.Scripts.Movement
                 return;
             }
 
-            _mover.Move(_direction);
+            _mover.Move(_direction, _isSlowed ? _config.CalculateSpeed() : _config.MoveSpeed);
             _rotator.Rotate(_direction);
         }
+
+        public void AddSlow(Slow slow)
+        {
+            _mover.AddSlow(slow.Multiplier);
+            StartCoroutine(SlowProcess(slow));
+        }
+
+        private IEnumerator SlowProcess(Slow slow)
+        {
+            float duration = slow.Duration;
+
+            while (duration > 0)
+            {
+                duration -= Time.deltaTime;
+
+                yield return null;
+            }
+
+            _multipliers.Remove(slow.Multiplier);
+            CalculateSlow();
+        }
+
+        private void CalculateSlow()
+        {
+            if (_multipliers.Count > 0)
+            {
+                _multiplier = _multipliers.Sum();
+
+                return;
+            }
+
+            _isSlowed = false;
+        }
+
+        public void AddSlow(float duration, float multiplier)
+        {
+
+        }
+
 
         private void OnDisable()
         {
@@ -49,21 +100,45 @@ namespace Assets.Scripts.Movement
             }
         }
 
+        public void AddSlow(float multip, float time)
+        {
+
+        }
+
         public void Initialize()
         {
-            _directionSource = GetComponent<ITellDirection>();
-            _directionSource.ThrowIfNull();
+            if (TryGetComponent(out ITellDirection directionSource) == false)
+            {
+                throw new MissingComponentException();
+            }
+
+            _directionSource = directionSource;
             _directionSource.DirectionChanged += SetDirection;
 
             _rigidbody = GetComponent<Rigidbody>();
 
-            _mover = new(_rigidbody, _config.MoveSpeed);
+            _mover = new(_rigidbody);
             _rotator = new(_rigidbody, _config.RotationSpeed);
         }
 
         private void SetDirection(Vector3 vector)
         {
             _direction = vector;
+        }
+    }
+
+    public struct Slow
+    {
+        public readonly float Duration;
+        public readonly float Multiplier;
+
+        public Slow(float duration, float multiplier)
+        {
+            duration.ThrowIfZeroOrLess();
+            multiplier.ThrowIfZeroOrLess();
+
+            Duration = duration;
+            Multiplier = multiplier;
         }
     }
 }

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82a99659ae4c6ab41bc1e88ff7945afe, type: 3}
   m_Name: Enemy Movement Config
   m_EditorClassIdentifier: 
-  <MoveSpeed>k__BackingField: 5.5
+  <MoveSpeed>k__BackingField: 5.2
   <RotationSpeed>k__BackingField: 180

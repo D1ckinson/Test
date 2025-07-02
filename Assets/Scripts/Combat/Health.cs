@@ -13,8 +13,10 @@ namespace Assets.Scripts.Combat
 
         public event Action GetHit;
         public event Action Died;
+        public event Action<float> ValueChanged;
 
         public float Value { get; private set; }
+        public float MaxValue => _config.MaxValue;
         private bool IsInvincible => _invincibleTimer >= Constants.Zero;
 
 #if UNITY_EDITOR
@@ -36,6 +38,7 @@ namespace Assets.Scripts.Combat
         public void SetMaxValue()
         {
             Value = _config.MaxValue;
+            ValueChanged?.Invoke(Value);
         }
 
         public void TakeDamage(float damage)
@@ -60,6 +63,8 @@ namespace Assets.Scripts.Combat
                 Value = tempValue;
                 _invincibleTimer = _config.InvincibilityDuration;
             }
+
+            ValueChanged?.Invoke(Value);
         }
     }
 }

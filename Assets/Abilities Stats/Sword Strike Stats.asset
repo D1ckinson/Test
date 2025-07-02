@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d67f6aadae86b5e4389a0317ca4e25e1, type: 3}
   m_Name: Sword Strike Stats
   m_EditorClassIdentifier: 
-  <Damage>k__BackingField: 50
+  <Damage>k__BackingField: 15
   _entityTypes: 01000000
   <Level>k__BackingField: 1
-  <Cooldown>k__BackingField: 2
+  <Cooldown>k__BackingField: 0.4
   <Radius>k__BackingField: 4
   <Angle>k__BackingField: 50
   <IsSlowEnable>k__BackingField: 0

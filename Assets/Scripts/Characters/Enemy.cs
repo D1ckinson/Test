@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Combat;
+﻿using Assets.Scripts.Characters.EnemyConfigs;
+using Assets.Scripts.Combat;
 using Assets.Scripts.Movement;
 using Assets.Scripts.Tools;
 using System;
@@ -11,11 +12,22 @@ namespace Assets.Characters
     [RequireComponent(typeof(Health))]
     public class Enemy : MonoBehaviour, IPoolable
     {
-        [field: SerializeField][field: Min(10)] public int ExperienceValue { get; private set; } = 10;
+        [SerializeField] private EnemyItemDropConfig _dropConfig;
 
         private Health _health;
 
         public event Action<Enemy> Died;
+
+        public int ExperienceValue => _dropConfig.ExperienceValue;
+        public int CoinDropChance => _dropConfig.CoinDropChance;
+        public int CoinValue => _dropConfig.CoinValue;
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            _dropConfig.ThrowIfNull();
+        }
+#endif
 
         private void OnDestroy()
         {

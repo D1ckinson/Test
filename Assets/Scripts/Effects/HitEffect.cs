@@ -10,8 +10,8 @@ namespace Assets.Scripts.Effects
         private const float FlashInDuration = 0.05f;
         private const float FlashOutDuration = 0.4f;
 
-        private static readonly int _colorShaderID = Shader.PropertyToID("_Color");
-        private static readonly Color _hitColor = Color.white;
+        private static readonly int _colorShaderID = Shader.PropertyToID("_Color");//
+        private static readonly Color _hitColor = Color.white;//
 
         [SerializeField] private Renderer _renderer;
 

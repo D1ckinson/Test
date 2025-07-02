@@ -4136,7 +4136,7 @@ ParticleSystem:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-    minVertexDistance: 0.2
+    minVertexDistance: 0.1
     textureMode: 0
     textureScale: {x: 1, y: 1}
     ribbonCount: 1
@@ -4946,6 +4946,7 @@ Transform:
   m_Children:
   - {fileID: 6883353178174856}
   - {fileID: 2335215535711823290}
+  - {fileID: 4668831621029376059}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2297606656717263611
@@ -5281,3 +5282,89 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1001 &7043214163032542980
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6823972778971169954}
+    m_Modifications:
+    - target: {fileID: 714236851006827535, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: _health
+      value: 
+      objectReference: {fileID: 4863877485386011028}
+    - target: {fileID: 714236851006827535, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: _isFullHealthHide
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2410974366522097471, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2410974366522097471, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2410974366522097471, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2410974366522097471, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2410974366522097471, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2410974366522097471, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2410974366522097471, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2410974366522097471, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2410974366522097471, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2410974366522097471, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4670577237619668693, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_Name
+      value: Helth Ui
+      objectReference: {fileID: 0}
+    - target: {fileID: 7739630382616080194, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7739630382616080194, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7739630382616080194, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7739630382616080194, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+--- !u!4 &4668831621029376059 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2410974366522097471, guid: 4a1ee019567cc69409af2715bf3da8da, type: 3}
+  m_PrefabInstance: {fileID: 7043214163032542980}
+  m_PrefabAsset: {fileID: 0}

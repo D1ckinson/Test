@@ -10,9 +10,12 @@ namespace Assets.Scripts.Spawners
 {
     public class EnemySpawner : MonoBehaviour
     {
+        private const int MaxSpawnChance = 100;
+
         [SerializeField] private EnemySpawnerConfig _config;
         [SerializeField] private SphereCollider _gameArea;
         [SerializeField] private ExperienceSpawner _experienceSpawner;
+        [SerializeField] private CoinSpawner _coinSpawner;
 
         private Transform _hero;
         private Coroutine _spawnProcess;
@@ -127,7 +130,16 @@ namespace Assets.Scripts.Spawners
         private void OnEnemyDeath(Enemy enemy)
         {
             _pool.Return(enemy);
-            _experienceSpawner.Spawn(enemy.transform.position, enemy.ExperienceValue);
+            Vector3 position = enemy.transform.position;
+
+            _experienceSpawner.Spawn(position, enemy.ExperienceValue);
+
+            if (UnityEngine.Random.Range(Constants.Zero, MaxSpawnChance) > enemy.CoinDropChance)
+            {
+                return;
+            }
+
+            _coinSpawner.Spawn(position, enemy.CoinValue);
         }
 
         private Vector3 GenerateRandomPoint()

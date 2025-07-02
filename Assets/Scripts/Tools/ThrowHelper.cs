@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts.Tools
@@ -40,6 +41,14 @@ namespace Assets.Scripts.Tools
         public static void ThrowIfZeroOrLess(this float value)
         {
             if (value < Constants.Zero || Mathf.Approximately(value, Constants.Zero))
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public static void ThrowIfNegative(this float value)
+        {
+            if (value < Constants.Zero)
             {
                 throw new ArgumentOutOfRangeException();
             }

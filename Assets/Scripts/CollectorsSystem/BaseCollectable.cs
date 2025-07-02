@@ -6,11 +6,12 @@ namespace Assets.Scripts.CollectorsSystem
 {
     public abstract class BaseCollectable<T> : MonoBehaviour, ICollectable<T>, IPoolable where T : BaseCollectable<T>
     {
-        public event Action<T> Collected;
+        //public event Action<T> Collected;
 
         public void Collect()
         {
-            Collected?.Invoke((T)this);
+            //Collected?.Invoke((T)this);
+            Disable();
         }
 
         public void Enable()

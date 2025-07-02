@@ -9,6 +9,6 @@ namespace Assets.Scripts.Spawners
 {
     internal class CollectiblesSpawner : MonoBehaviour
     {
-        [SerializeField] private MonoBehaviour m_Spawner;
+        [SerializeField] private MonoBehaviour m_Spawner;//
     }
 }

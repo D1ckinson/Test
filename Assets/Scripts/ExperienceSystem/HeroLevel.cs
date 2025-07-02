@@ -5,16 +5,16 @@ using UnityEngine;
 namespace Assets.Scripts.ExperienceSystem
 {
     [RequireComponent(typeof(ExperienceCollector))]
-    internal class HeroLevel : MonoBehaviour
+    public class HeroLevel : MonoBehaviour
     {
         [SerializeField] private NextLevelFormula _nextLevelFormula;
 
         private ExperienceCollector _collector;
         private float _currentExperience;
         private float _experienceForLevelUp;
-        private int _level = Constants.One;
+        private int _level = 1;
 
-        internal event Action<int> LevelUp;
+        public event Action<int> LevelUp;
 
 #if UNITY_EDITOR
         private void OnValidate()

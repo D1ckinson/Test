@@ -2,5 +2,5 @@
 
 namespace Assets.Scripts.Economy
 {
-    internal class CoinCollector : BaseCollector<Coin> { }
+    public class CoinCollector : Collector<Coin> { }
 }

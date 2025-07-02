@@ -2,5 +2,5 @@
 
 namespace Assets.Scripts.ExperienceSystem
 {
-    internal class ExperienceCollector : BaseCollector<Experience> { }
+    internal class ExperienceCollector : Collector<Experience> { }
 }

@@ -4,8 +4,8 @@ namespace Assets.Scripts.CollectorsSystem
 {
     public interface ICollectable<T>
     {
-        public event Action<T> Collected;
+        //public event Action<T> Collected;
 
-        public void Collect();
+        //public void Collect();
     }
 }

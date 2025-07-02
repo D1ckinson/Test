@@ -9,17 +9,12 @@ namespace Assets.Scripts.Combat
         private void OnCollisionEnter(Collision collision)
         {
             collision.ThrowIfNull();
-            HandleCollider(collision.collider);
+            TryDamage(collision.gameObject);
         }
 
         private void OnCollisionStay(Collision collision)
         {
-            collision.ThrowIfNull();
-            HandleCollider(collision.collider);
-        }
-
-        private void HandleCollider(Collider collision)
-        {
+            collision.ThrowIfNull(); 
             TryDamage(collision.gameObject);
         }
     }

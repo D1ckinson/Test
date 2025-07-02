@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Enemy Spawner Config
   m_EditorClassIdentifier: 
   <Prefab>k__BackingField: {fileID: 5900649581248190045, guid: a0816ffc669af7747ac2f007cce13a8a, type: 3}
-  <Radius>k__BackingField: 20
-  <SpawnDelay>k__BackingField: 0.6
+  <Radius>k__BackingField: 25
+  <SpawnDelay>k__BackingField: 0.5
   <MaxCount>k__BackingField: 50

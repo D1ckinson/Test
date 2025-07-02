@@ -1,27 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Assets.Scripts.Tools
 {
-    public class Pool<T> where T : IPoolable
+    public class Pool<T> where T : MonoBehaviour, IPoolable
     {
-        private readonly Queue<T> _items = new();
+        private readonly List<T> _items = new();
         private readonly Func<T> _createFunc;
 
-        public Pool(Func<T> createFunc)
+        public Pool(Func<T> createFunc)//добавить стартовое количество
         {
             createFunc.ThrowIfNull();
             _createFunc = createFunc;
         }
 
-        public int ReleaseCount { get; private set; }
+        public int ReleaseCount => _items.Count(item => item.isActiveAndEnabled);
 
         public T Get()
         {
-            T item = _items.Count == Constants.Zero ? Create() : _items.Dequeue();
+            T item = _items.FirstOrDefault(item => item.isActiveAndEnabled) ?? Create();
+            //T item = _items.Count == Constants.Zero ? Create() : _items.Dequeue();
 
             item.Enable();
-            ReleaseCount++;
+            //ReleaseCount++;
 
             return item;
         }
@@ -39,8 +42,8 @@ namespace Assets.Scripts.Tools
             item.ThrowIfNull();
             item.Disable();
 
-            _items.Enqueue(item);
-            ReleaseCount--;
+            //_items.Enqueue(item);
+            //ReleaseCount--;
         }
     }
 }

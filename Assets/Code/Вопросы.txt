@@ -1,0 +1,12 @@
+﻿
+класс Loot, работа с PlayerData
+класс ThrowHelper, метод ThrowIfFalse
+класс Health, событие Died передает тип сущьности и место смерти
+класс PlayerData, работа с хранилищами данных
+класс CharacterMovement, замедления
+класс EnemyFactory, конфиги
+класс HeroFactory, привязка камеры к герою в методе создания
+класс Pool, метод Get
+класс CharacterMovement, реализация замедления
+класс CollisionDamage, какие делать проверки структур?
+В интерфейсах указывать модификаторы доступа?

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86d382cbdca550b459e6a225f44929db, type: 3}
+  m_Name: Hero
+  m_EditorClassIdentifier: 
+  <Type>k__BackingField: 0
+  <Prefab>k__BackingField: {fileID: 6823972778971169954, guid: 0ec494b4f7c30d241929124d2de9c04d, type: 3}
+  <MaxHealth>k__BackingField: 10000
+  <InvincibilityDuration>k__BackingField: 0.6
+  <MoveSpeed>k__BackingField: 10
+  <RotationSpeed>k__BackingField: 200
+  <Damage>k__BackingField: 10
+  <DamageLayer>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 64
+  <AttractionRadius>k__BackingField: 10
+  <PullSpeed>k__BackingField: 5
+  <Experiences>k__BackingField: []
+  <Coin>k__BackingField: {fileID: 0}
+  <CoinsCount>k__BackingField: 10
+  <CoinsDropChance>k__BackingField: 5

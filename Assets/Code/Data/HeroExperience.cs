@@ -2,6 +2,7 @@
 using Assets.Scripts.Configs;
 using Assets.Scripts.Tools;
 using System;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -13,6 +14,7 @@ namespace Assets.Scripts
         public float ExperienceForLevelUp { get; private set; }
 
         private readonly LevelSettings _levelSettings;
+        private float _lootPercent = 1;
 
         public HeroExperience(LevelSettings levelSettings)
         {
@@ -22,7 +24,7 @@ namespace Assets.Scripts
 
         public void Add(int value)
         {
-            CurrentExperience += value.ThrowIfNegative();
+            CurrentExperience += value.ThrowIfNegative() * _lootPercent;
             TryLevelUp();
         }
 
@@ -34,6 +36,11 @@ namespace Assets.Scripts
             CurrentExperience = Constants.Zero;
         }
 
+        public void SetLootPercent(int AdditionalLootMultiplier)
+        {
+            _lootPercent = Constants.One + AdditionalLootMultiplier.ThrowIfLessThan(Constants.One);
+        }
+
         private void TryLevelUp()
         {
             if (CurrentExperience < ExperienceForLevelUp)
@@ -43,10 +50,9 @@ namespace Assets.Scripts
 
             Level++;
             LevelUp?.Invoke(Level);
-
+            Debug.Log("Левел ап!");
             CurrentExperience -= ExperienceForLevelUp;
             ExperienceForLevelUp = _levelSettings.CalculateNextLevelExperience(Level);
         }
-
     }
 }

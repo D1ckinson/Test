@@ -14,29 +14,46 @@ namespace Assets.Scripts.Tools
             }
         }
 
-        public static void ThrowIfCollectionNull(this IEnumerable collection)
+        public static T ThrowIfCollectionNullOrEmpty<T>(this T collection) where T : ICollection
         {
             collection.ThrowIfNull();
 
-            foreach (var item in collection)
+            if (collection.Count == Constants.Zero)
+            {
+                throw new EmptyCollectionException();
+            }
+
+            foreach (object item in collection)
             {
                 item.ThrowIfNull();
             }
+
+            return collection;
         }
 
-        public static void ThrowIfDefault<T>(this T argument) where T : struct
+        public static T ThrowIfDefault<T>(this T argument) where T : struct
         {
             if (argument.Equals(default(T)))
             {
                 throw new ArgumentException();
             }
+
+            return argument;
         }
 
         public static void ThrowIfFalse(this bool isValid, Exception exception = null)
         {
             if (isValid == false)
             {
-                throw exception ?? new MissingComponentException();//
+                throw exception ?? new MissingComponentException();
+            }
+        }
+
+        public static void ThrowIfTrue(this bool isValid, Exception exception = null)
+        {
+            if (isValid)
+            {
+                throw exception ?? new NotImplementedException();
             }
         }
 

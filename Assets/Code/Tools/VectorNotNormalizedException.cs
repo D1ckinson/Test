@@ -2,7 +2,5 @@
 
 namespace Assets.Scripts.Tools
 {
-    internal class VectorNotNormalizedException : ArgumentException
-    {
-    }
+    internal class VectorNotNormalizedException : ArgumentException { }
 }

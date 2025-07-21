@@ -14,6 +14,8 @@ namespace Assets.Scripts
         private float _pullSpeed;
         private SphereCollider _collectArea;
 
+        private float _attractionRadius;
+
         private void Awake()
         {
             _collectArea = GetComponent<SphereCollider>().ThrowIfNull();
@@ -54,8 +56,15 @@ namespace Assets.Scripts
 
         public void Initialize(float attractionRadius, float pullSpeed)
         {
-            _collectArea.radius = attractionRadius.ThrowIfZeroOrLess();
+            _attractionRadius = attractionRadius.ThrowIfNegative();
+            _collectArea.radius = _attractionRadius;
+
             _pullSpeed = pullSpeed.ThrowIfZeroOrLess();
+        }
+
+        public void AddAttractionRadius(int value)
+        {
+            _collectArea.radius = _attractionRadius + value.ThrowIfNegative();
         }
     }
 }

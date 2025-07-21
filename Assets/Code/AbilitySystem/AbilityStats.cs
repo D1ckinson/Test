@@ -10,6 +10,5 @@ namespace Assets.Code
         [field: SerializeField] public float Damage { get; private set; }
         [field: SerializeField] public float Range { get; private set; }
         [field: SerializeField] public float ProjectilesCount { get; private set; }
-        //и тд.
     }
 }

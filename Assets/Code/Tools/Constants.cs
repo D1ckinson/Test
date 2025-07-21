@@ -6,6 +6,11 @@
         public const int One = 1;
         public const int Two = 2;
         public const int FullCircleDegrees = 360;
-        public const int MaxChance = 100;
+        public const int Hundred = 100;
+
+        public static float PercentToMultiplier(float value)
+        {
+            return One - value.ThrowIfNegative() / Hundred;
+        }
     }
 }

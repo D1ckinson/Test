@@ -1,5 +1,6 @@
 ﻿using Assets.Code.CharactersLogic;
 using Assets.Scripts.Movement;
+using Assets.Scripts.Tools;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -16,6 +17,7 @@ namespace Assets.Scripts
         public Health Health { get; private set; }
         public CollisionDamage CollisionDamage { get; private set; }
         public DeathTriger DeathTriger { get; private set; }
+        public CharacterType CharacterType { get; private set; } = CharacterType.Enemy;
 
         private void Awake()
         {
@@ -24,6 +26,11 @@ namespace Assets.Scripts
             Health = GetComponent<Health>();
             CollisionDamage = GetComponent<CollisionDamage>();
             DeathTriger = GetComponent<DeathTriger>();
+        }
+
+        public void SetType(CharacterType characterType)
+        {
+            CharacterType = characterType.ThrowIfNull();
         }
     }
 }

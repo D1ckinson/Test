@@ -3,6 +3,5 @@
     public enum AbilityType
     {
         SwordStrike,
-        //и тд.
     }
 }

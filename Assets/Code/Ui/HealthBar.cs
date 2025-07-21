@@ -13,14 +13,6 @@ namespace Assets.Scripts.Ui
 
         private Camera _camera;
 
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            _healthBar.ThrowIfNull();
-            _healthBarFilling.ThrowIfNull();
-        }
-#endif
-
         private void Awake()
         {
             _camera = Camera.main;
@@ -51,7 +43,7 @@ namespace Assets.Scripts.Ui
             {
                 _healthBar.gameObject.SetActive(false);
             }
-            else if (_healthBarFilling.IsActive() == false)
+            else if (_healthBar.IsActive() == false)
             {
                 _healthBar.gameObject.SetActive(true);
             }

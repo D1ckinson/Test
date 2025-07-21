@@ -7,48 +7,33 @@ namespace Assets.Code
 {
     public class AbilityFactory
     {
-        private readonly Dictionary<AbilityType, Func<NewAbilityConfig, Transform, Ability>> _abilityCreators;
-        private readonly Dictionary<AbilityType, NewAbilityConfig> _configs = new();
+        private readonly Dictionary<AbilityType, AbilityConfig> _configs;
+        private readonly Dictionary<AbilityType, Func<Ability>> _createFunctions;
+        private readonly Transform _hero;
 
-        public AbilityFactory(List<NewAbilityConfig> configs)
+        public AbilityFactory(Dictionary<AbilityType, AbilityConfig> configs, Transform hero)
         {
-            configs.ThrowIfCollectionNull();
-            configs.ForEach(config => _configs.Add(config.Type, config));
+            _configs = configs.ThrowIfCollectionNullOrEmpty();
+            _hero = hero.ThrowIfNull();
 
-
-            _abilityCreators = new Dictionary<AbilityType, Func<NewAbilityConfig, Transform, Ability>>
+            _createFunctions = new()
             {
-                { AbilityType.SwordStrike, (config, transform) => new NewSwordStrike(config,transform)}
-                // Добавь другие типы способностей здесь
+                [AbilityType.SwordStrike] = CreateSwordStrike
             };
         }
 
-        public T Create<T>(NewAbilityConfig abilityConfig, Transform hero) where T : Ability
+        public Ability Create(AbilityType abilityType)
         {
-            abilityConfig.ThrowIfNull();
-            _abilityCreators.TryGetValue(abilityConfig.Type, out Func<NewAbilityConfig, Transform, Ability> creator).ThrowIfFalse(new NotImplementedException());
+            _createFunctions.TryGetValue(abilityType.ThrowIfNull(), out Func<Ability> createFunc).ThrowIfFalse();
 
-            T ability = creator(abilityConfig, hero.ThrowIfNull()) as T;
-
-            return ability.ThrowIfNull();
+            return createFunc.Invoke();
         }
 
-        public NewSwordStrike CreateSwordStrike(Transform hero)
+        private SwordStrike CreateSwordStrike()
         {
-            NewAbilityConfig abilityConfig = _configs[AbilityType.SwordStrike];
+            AbilityConfig abilityConfig = _configs[AbilityType.SwordStrike];
 
-            return new NewSwordStrike(abilityConfig, hero.ThrowIfNull());
-        }
-
-        private ParticleSystem LoadSwingEffect(AbilityType type)
-        {
-            // Загрузка префаба эффекта по типу способности
-            var path = $"Effects/{type}SwingEffect";
-            var prefab = Resources.Load<ParticleSystem>(path);
-            if (prefab == null)
-                throw new MissingReferenceException($"Swing effect not found at path: {path}");
-
-            return UnityEngine.Object.Instantiate(prefab);
+            return new SwordStrike(abilityConfig, _hero);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Assets.Scripts
     {
         public Wallet Wallet { get; private set; }
         public HeroExperience Level { get; private set; }
-        public Transform HeroTransform { get; private set; }
+        public HeroComponents HeroComponents { get; private set; }
         public AbilityType StartAbility { get; private set; }
 
         public PlayerData(Wallet wallet, HeroExperience level)
@@ -23,7 +23,7 @@ namespace Assets.Scripts
 
         public void SetHeroTransform(HeroComponents heroComponents)
         {
-            HeroTransform = heroComponents.ThrowIfNull().transform;
+            HeroComponents = heroComponents.ThrowIfNull();
         }
 
         public void SetStartAbility(AbilityType startAbility)

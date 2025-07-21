@@ -1,4 +1,3 @@
-using Assets.Code;
 using Assets.Code.CharactersLogic.HeroLogic;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Tools;
@@ -9,36 +8,26 @@ namespace Assets.Scripts.Factories
 {
     public class HeroFactory
     {
-        private readonly LevelSettings _levelSettings;
-        private readonly PlayerData _playerData;
-        private readonly AbilityFactory _abilityFactory;
+        private readonly CharacterConfig _heroConfig;
 
-        public HeroFactory(LevelSettings levelSettings, PlayerData playerData, AbilityFactory abilityFactory)
+        public HeroFactory(CharacterConfig heroConfig)
         {
-            _levelSettings = levelSettings.ThrowIfNull();
-            _playerData = playerData.ThrowIfNull();
-            _abilityFactory = abilityFactory.ThrowIfNull();
+            _heroConfig = heroConfig.ThrowIfNull();
         }
 
-        public Transform Create()
+        public HeroComponents Create(Vector3 position)
         {
-            CharacterConfig config = _levelSettings.HeroConfig;
-            Transform hero = Object.Instantiate(config.Prefab);
-
+            Transform hero = Object.Instantiate(_heroConfig.Prefab, position + Vector3.up, Quaternion.identity);// убрать "+ Vector3.up"
             hero.TryGetComponent(out HeroComponents heroComponents);
-            _playerData.SetHeroTransform(heroComponents);
 
-            heroComponents.CharacterMovement.Initialize(config.MoveSpeed, config.RotationSpeed);
-            heroComponents.Health.Initialize(config.MaxHealth, config.InvincibilityDuration);
-            heroComponents.LootCollector.Initialize(config.AttractionRadius, config.PullSpeed);
-            heroComponents.AbilityContainer.Add(_abilityFactory.CreateSwordStrike(hero));
-
-            hero.SetPositionAndRotation(_levelSettings.GameAreaCenter + Vector3.up, Quaternion.identity);
+            heroComponents.CharacterMovement.Initialize(_heroConfig.MoveSpeed, _heroConfig.RotationSpeed);
+            heroComponents.Health.Initialize(_heroConfig.MaxHealth, _heroConfig.InvincibilityDuration);
+            heroComponents.LootCollector.Initialize(_heroConfig.AttractionRadius, _heroConfig.PullSpeed);
 
             Camera.main.TryGetComponent(out Follower follower).ThrowIfFalse();
             follower.Follow(hero);
 
-            return hero.transform;
+            return heroComponents;
         }
     }
 }

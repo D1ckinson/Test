@@ -1,34 +1,59 @@
-﻿using Assets.Scripts.Configs;
+﻿using Assets.Code;
+using Assets.Code.CharactersLogic.HeroLogic;
+using Assets.Code.Data;
+using Assets.Scripts.Factories;
 using Assets.Scripts.Tools;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.State_Machine
 {
     public class GameState : State
     {
-        private readonly LevelSettings _levelSettings;
-        private readonly FactoryService _factoryService;
-        private readonly PlayerData _playerData;
+        private readonly HeroComponents _heroComponents;
+        private readonly AbilityFactory _abilityFactory;
+        private readonly EnemyFactory _enemyFactory;
+        private readonly GameTimer _gameTimer;
+        private readonly Dictionary<int, CharacterType> _spawnTypeByTime;
 
-        private Transform _hero;
-        private float _enemySpawnTime;
+        private CharacterType _enemySpawnType;
+        private float _enemySpawnDelay;
+        private int _enemySpawnTypeThreshold;
+        private bool _canChangeSpawnType = true;
 
-        public GameState(StateMachine stateMachine, LevelSettings levelSettings, FactoryService factoryService, PlayerData playerData) : base(stateMachine)
+        public GameState(StateMachine stateMachine, HeroComponents heroComponents, EnemyFactory enemyFactory,
+            AbilityFactory abilityFactory, GameTimer gameTimer, Dictionary<int, CharacterType> spawnTypeByTime) : base(stateMachine)
         {
-            _levelSettings = levelSettings.ThrowIfNull();
-            _factoryService = factoryService.ThrowIfNull();
-            _hero = _factoryService.HeroFactory.Create();
-            _playerData = playerData.ThrowIfNull();
+            _heroComponents = heroComponents.ThrowIfNull();
+            _enemyFactory = enemyFactory.ThrowIfNull();
+            _abilityFactory = abilityFactory.ThrowIfNull();
+            _gameTimer = gameTimer.ThrowIfNull();
+            _spawnTypeByTime = spawnTypeByTime.ThrowIfCollectionNullOrEmpty();
         }
 
         public override void Enter()
         {
-            _hero ??= _factoryService.HeroFactory.Create();
+            _heroComponents.AbilityContainer.Add(_abilityFactory.Create(AbilityType.SwordStrike));
+            _enemySpawnType = _spawnTypeByTime.Values.First();
+
+            _gameTimer.Reset();
+            _enemySpawnTypeThreshold = _spawnTypeByTime.Keys.ElementAt(Constants.One);
         }
 
         public override void Update()
         {
+            _gameTimer.Update();
+
+            //_enemySpawner.Update();
+            //_спавнерУсилений.Update();
+
+            if (_enemySpawnTypeThreshold < _gameTimer.PassedTime && _canChangeSpawnType)
+            {
+                ChangeSpawnType();
+            }
+
             SpawnEnemy();
         }
 
@@ -39,21 +64,36 @@ namespace Assets.Scripts.State_Machine
 
         private void SpawnEnemy()
         {
-            if (_factoryService.EnemyFactory.ReleaseCount >= _levelSettings.MaxEnemyCount)
+            if (_enemyFactory.IsSpawnLimitReached)
             {
                 return;
             }
 
-            _enemySpawnTime += Time.deltaTime;
+            _enemySpawnDelay += Time.deltaTime;
 
-            if (_enemySpawnTime < _levelSettings.EnemySpawnDelay)
+            if (_enemySpawnDelay < _enemyFactory.Delay)
             {
                 return;
             }
 
-            EnemyComponents enemy = _factoryService.EnemyFactory.Spawn();
-            enemy.DirectionTeller.SetTarget(_hero);
-            _enemySpawnTime = Constants.Zero;
+            _enemyFactory.Spawn(_enemySpawnType);
+            _enemySpawnDelay = Constants.Zero;
+        }
+
+
+        private void ChangeSpawnType()
+        {
+            int? nextThreshold = _spawnTypeByTime.Keys.SkipWhile(time => time <= _enemySpawnTypeThreshold).FirstOrDefault();
+
+            if (nextThreshold == null)
+            {
+                _canChangeSpawnType = false;
+
+                return;
+            }
+
+            _enemySpawnType = _spawnTypeByTime[(int)nextThreshold];
+            _enemySpawnTypeThreshold = (int)nextThreshold;
         }
     }
 }

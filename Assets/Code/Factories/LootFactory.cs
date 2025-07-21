@@ -15,7 +15,7 @@ namespace Assets.Scripts.Factories
 
         public LootFactory(List<Loot> loots, PlayerData playerData)
         {
-            loots.ThrowIfCollectionNull();
+            loots.ThrowIfCollectionNullOrEmpty();
             _playerData = playerData.ThrowIfNull();
 
             _pools = new();

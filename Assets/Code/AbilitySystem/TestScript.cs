@@ -26,7 +26,7 @@ public enum AbilityType1
 }
 
 [CreateAssetMenu(menuName = "Game/AbilityConfig")]
-public class AbilityConfig : ScriptableObject
+public class AbilityConfig1 : ScriptableObject
 {
     public AbilityType1 Type;
     public float BaseDamage;
@@ -71,11 +71,11 @@ public class LevelSystem : MonoBehaviour
 
     private AbilityManager _abilityManager;
     private PauseManager _pauseManager;
-    private UpgradePanel _upgradePanel;
+    private UpgradePanel1 _upgradePanel;
 
     public event Action<int> OnLevelUp;
 
-    public void Initialize(AbilityManager abilityManager, PauseManager pauseManager, UpgradePanel upgradePanel)
+    public void Initialize(AbilityManager abilityManager, PauseManager pauseManager, UpgradePanel1 upgradePanel)
     {
         _abilityManager = abilityManager;
         _pauseManager = pauseManager;
@@ -112,7 +112,7 @@ public class LevelSystem : MonoBehaviour
 
 public class AbilityManager : MonoBehaviour
 {
-    [SerializeField] private List<AbilityConfig> _allAbilities;
+    [SerializeField] private List<AbilityConfig1> _allAbilities;
 
     public void Initialize()
     {
@@ -143,7 +143,7 @@ public class AbilityManager : MonoBehaviour
 
     public void ApplyUpgrade(AbilityUpgrade upgrade)
     {
-        AbilityConfig ability = _allAbilities.First(a => a.Type == upgrade.AbilityType);
+        AbilityConfig1 ability = _allAbilities.First(a => a.Type == upgrade.AbilityType);
         ability.ApplyUpgrade(upgrade);
 
         // Обновляем все активные экземпляры этой способности
@@ -158,11 +158,11 @@ public class AbilityManager : MonoBehaviour
 public interface IAbility
 {
     AbilityType1 GetAbilityType();
-    void UpdateStats(AbilityConfig config);
+    void UpdateStats(AbilityConfig1 config);
 }
 
 // ==================== UI ====================
-public class UpgradePanel : MonoBehaviour
+public class UpgradePanel1 : MonoBehaviour
 {
     [SerializeField] private GameObject _panel;
     [SerializeField] private Button[] _upgradeButtons;
@@ -226,7 +226,7 @@ public class PauseManager : MonoBehaviour
 // ==================== Ability Implementation ====================
 public class SwordStrike : MonoBehaviour, IAbility
 {
-    [SerializeField] private AbilityConfig _config;
+    [SerializeField] private AbilityConfig1 _config;
     private float _cooldownTimer;
 
     public AbilityType1 GetAbilityType() => AbilityType1.SwordStrike;
@@ -259,7 +259,7 @@ public class SwordStrike : MonoBehaviour, IAbility
         }
     }
 
-    public void UpdateStats(AbilityConfig config)
+    public void UpdateStats(AbilityConfig1 config)
     {
         _config = config;
     }
@@ -270,7 +270,7 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] private AbilityManager _abilityManager;
     [SerializeField] private PauseManager _pauseManager;
-    [SerializeField] private UpgradePanel _upgradePanel;
+    [SerializeField] private UpgradePanel1 _upgradePanel;
     [SerializeField] private LevelSystem _levelSystem;
 
     private void Start()

@@ -7,11 +7,18 @@ namespace Assets.Scripts
     [Serializable]
     public class Wallet : IValueContainer
     {
-        public int CoinsQuantity { get; private set; } = 0;
+        private float _lootPercent = 1;
+
+        public float CoinsQuantity { get; private set; } = 0;
 
         public void Add(int value)
         {
-            CoinsQuantity += value.ThrowIfZeroOrLess();
+            CoinsQuantity += value.ThrowIfZeroOrLess() * _lootPercent;
+        }
+
+        public void SetLootPercent(int percent)
+        {
+            _lootPercent = Constants.PercentToMultiplier(percent.ThrowIfNegative());
         }
     }
 }

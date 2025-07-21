@@ -1,58 +1,38 @@
+ï»¿using Assets.Scripts;
 using Assets.Scripts.Tools;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Code
 {
-    internal class SwordStrike : MonoBehaviour
+    public class SwordStrike : Ability
     {
-        private const int MaxCountForStrike = 50;
+        private const int MaxStrikeCount = 50;
 
-        [SerializeField] private ParticleSystem _swingEffect;
-        [SerializeField] private AbilityConfig _config;
+        private readonly ParticleSystem _swingEffect;
+        private readonly LayerMask _damageLayer;
+        private readonly Collider[] _colliders;
 
-        private Transform _transform;
-        private float _cooldownTimer;
-        private Collider[] _colliders;
+        private float _damage;
+        private float _radius;
 
-#if UNITY_EDITOR
-        private void OnDrawGizmos()
+        public SwordStrike(AbilityConfig config, Transform transform, int level = 1) : base(config, transform, level)
         {
-            if (_config != null)
-            {
-                CustomGizmos.DrawCircle(transform.position, _config.Radius);
-            }
-        }
+            config.ThrowIfNull();
 
-        private void OnValidate()
-        {
-            _swingEffect.ThrowIfNull();
-            _config.ThrowIfNull();
-        }
-#endif
+            _colliders = new Collider[MaxStrikeCount];
+            _swingEffect = Object.Instantiate(config.Effect, transform.ThrowIfNull());
+            _damageLayer = config.DamageLayer;
 
-        private void Awake()
-        {
-            _transform = transform;
-            _colliders = new Collider[MaxCountForStrike];
+            AbilityStats stats = config.GetStats(level);
 
-            _cooldownTimer = _config.Cooldown;
+            _damage = stats.Damage;
+            _radius = stats.Range;
             SetEffectShape();
         }
 
-        private void Update()
+        protected sealed override void Apply()
         {
-            _cooldownTimer -= Time.deltaTime;
-
-            if (_cooldownTimer <= Constants.Zero)
-            {
-                Strike();
-                _cooldownTimer = _config.Cooldown;
-            }
-        }
-
-        private void Strike()
-        {
-            int count = Physics.OverlapSphereNonAlloc(_transform.position, _config.Radius, _colliders, _config.DamageLayer);
+            int count = Physics.OverlapSphereNonAlloc(GetPosition(), _radius, _colliders, _damageLayer);
 
             for (int i = Constants.Zero; i < count; i++)
             {
@@ -61,21 +41,28 @@ namespace Assets.Scripts
                 if (collider.TryGetComponent(out Health health) == false)
                 {
 #if UNITY_EDITOR
-                    Debug.Log("Â ñëîå âðàãîâ ó êîãî òî íåò êîìïîíåíòà çäîðîâüÿ");
+                    Debug.Log("Ð’ ÑÐ»Ð¾Ðµ Ð²Ñ€Ð°Ð³Ð¾Ð² Ñƒ ÐºÐ¾Ð³Ð¾ Ñ‚Ð¾ Ð½ÐµÑ‚ ÐºÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚Ð° Ð·Ð´Ð¾Ñ€Ð¾Ð²ÑŒÑ");
 #endif
                     continue;
                 }
 
-                health.TakeDamage(_config.Damage);
+                health.TakeDamage(_damage);
             }
 
             _swingEffect.Play();
         }
 
+        protected override void UpdateStats(float damage, float range, float projectilesCount)
+        {
+            _damage = damage.ThrowIfNegative();
+            _radius = range.ThrowIfNegative();
+            SetEffectShape();
+        }
+
         private void SetEffectShape()
         {
             ParticleSystem.ShapeModule shapeModule = _swingEffect.shape;
-            shapeModule.radius = _config.Radius;
+            shapeModule.radius = _radius;
         }
     }
 }

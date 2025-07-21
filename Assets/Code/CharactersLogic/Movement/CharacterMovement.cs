@@ -61,6 +61,11 @@ namespace Assets.Scripts.Movement
             _rotator = new(_rigidbody, rotationSpeed);
         }
 
+        public void SetMoveStat(float moveSpeed)
+        {
+            _mover.SetSpeed(moveSpeed.ThrowIfZeroOrLess());
+        }
+
         private void SetDirection(Vector3 vector)
         {
             _direction = vector;
@@ -68,9 +73,7 @@ namespace Assets.Scripts.Movement
 
         public void AddSlow(SlowEffect slow)
         {
-            slow.ThrowIfDefault();
-
-            if (_slowTimers.TryGetValue(slow.Source, out Coroutine slowTimer))
+            if (_slowTimers.TryGetValue(slow.ThrowIfDefault().Source, out Coroutine slowTimer))
             {
                 StopCoroutine(slowTimer);
                 slowTimer = StartCoroutine(StartSlowTimer(slow));
@@ -97,6 +100,11 @@ namespace Assets.Scripts.Movement
 
             _slowTimers.Remove(slow.Source);
             _mover.RemoveMultiplier(slow.Multiplier);
+        }
+
+        public void SetAdditionalSpeed(int value)
+        {
+            _mover.AddSpeed(value.ThrowIfNegative());
         }
     }
 }

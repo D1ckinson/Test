@@ -12,21 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41b4944789864414dab455e27a5f8097, type: 3}
   m_Name: Level
   m_EditorClassIdentifier: 
-  <EnemiesConfigs>k__BackingField:
+  _enemiesConfigs:
   - {fileID: 11400000, guid: 607ebda76c4a6104a9c32d54cb275c9f, type: 2}
   <HeroConfig>k__BackingField: {fileID: 11400000, guid: eb372052ffe188444a7ed3f183ab727a, type: 2}
   <Loots>k__BackingField:
   - {fileID: 8437288460240149484, guid: e894acc6883e27a4dbca2941bed52c75, type: 3}
-  - {fileID: 6061571990834595463, guid: 8a6a64931f889084898f7f1cf244f517, type: 3}
-  - {fileID: 984098084897241430, guid: fc777ba7b0d31544ea1b3e7c772350b2, type: 3}
   - {fileID: 8665370823113824047, guid: 8c7580ed5a56c9c4eb243ca3369efe52, type: 3}
-  <EnemySpawnRadius>k__BackingField: 20
-  <EnemySpawnDelay>k__BackingField: 0.6
-  <MaxEnemyCount>k__BackingField: 50
-  <GameAreaRadius>k__BackingField: 90
-  <GameAreaCenter>k__BackingField: {x: 100, y: 0, z: 100}
-  <AbilitiesConfigs>k__BackingField:
-  - {fileID: 11400000, guid: 409d04e3fdf737645bcdc4de95a751e6, type: 2}
+  - {fileID: 984098084897241430, guid: fc777ba7b0d31544ea1b3e7c772350b2, type: 3}
+  - {fileID: 6061571990834595463, guid: 8a6a64931f889084898f7f1cf244f517, type: 3}
+  <EnemySpawnerSettings>k__BackingField:
+    <Radius>k__BackingField: 30
+    <Delay>k__BackingField: 0.6
+    <SpawnLimit>k__BackingField: 50
+  _spawnTypeByTimes:
+  - <Time>k__BackingField: 0
+    <Type>k__BackingField: 1
+  - <Time>k__BackingField: 2
+    <Type>k__BackingField: 1
+  <GameAreaSettings>k__BackingField:
+    <Center>k__BackingField: {x: 100, y: 0, z: 100}
+    <Radius>k__BackingField: 90
+  _abilitiesConfigs:
+  - {fileID: 11400000, guid: 0bca3361efed7af45be0c8a784702a07, type: 2}
   _fixedExperience: 1
   _experienceCoefficient: 1
   _degree: 1

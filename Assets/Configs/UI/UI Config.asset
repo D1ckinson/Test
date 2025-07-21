@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44cb7219a0831d644a655f9794043b55, type: 3}
+  m_Name: UI Config
+  m_EditorClassIdentifier: 
+  LevelUpCanvas: {fileID: 733074229439658083, guid: 904fec740c3087c4bba989286fa7b4be, type: 3}
+  LevelUpButton: {fileID: 2520206909844715109, guid: c70596d2e4b3b3940b304ab407b7be34, type: 3}

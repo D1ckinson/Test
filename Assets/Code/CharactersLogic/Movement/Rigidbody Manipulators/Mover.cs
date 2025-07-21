@@ -9,16 +9,32 @@ namespace Assets.Scripts.Movement
     {
         private readonly Rigidbody _rigidbody;
         private readonly List<float> _multipliers;
-        private readonly float _defaultSpeed;
 
+        private float _defaultSpeed;
         private float _speed;
+        private float _additionalSpeed;
 
         internal Mover(Rigidbody rigidbody, float speed)
         {
             _rigidbody = rigidbody.ThrowIfNull();
-            _defaultSpeed = speed.ThrowIfZeroOrLess();
-            _speed = _defaultSpeed;
             _multipliers = new();
+
+            SetSpeed(speed);
+        }
+
+        public void SetSpeed(float speed)
+        {
+            _defaultSpeed = speed.ThrowIfZeroOrLess() + _additionalSpeed;
+            _speed = _defaultSpeed;
+        }
+
+        public void AddSpeed(float value)
+        {
+            float tempValue = value.ThrowIfNegative() - _additionalSpeed;
+
+            _additionalSpeed = value;
+            _defaultSpeed += tempValue;
+            _speed += tempValue;
         }
 
         internal void AddMultiplier(float multiplier)

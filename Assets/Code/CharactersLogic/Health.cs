@@ -8,6 +8,9 @@ namespace Assets.Scripts
     {
         private float _invincibleTimer;
         private float _invincibilityDuration;
+        private float _regeneration;
+        private float _additionalValue;
+        private float _resistMultiplier = 1;
 
         public event Action GetHit;
         public event Action Died;
@@ -19,7 +22,8 @@ namespace Assets.Scripts
 
         private void OnEnable()
         {
-            SetMaxValue();
+            Value = MaxValue;
+            ValueChanged?.Invoke(Value);
         }
 
         private void Update()
@@ -27,6 +31,11 @@ namespace Assets.Scripts
             if (IsInvincible)
             {
                 _invincibleTimer -= Time.deltaTime;
+            }
+
+            if (Value < MaxValue && _regeneration != Constants.Zero)
+            {
+                Heal();
             }
         }
 
@@ -37,10 +46,9 @@ namespace Assets.Scripts
             _invincibilityDuration = invincibilityDuration.ThrowIfNegative();
         }
 
-        private void SetMaxValue()
+        public void SetMaxValue(float value)
         {
-            Value = MaxValue;
-            ValueChanged?.Invoke(Value);
+            MaxValue = value.ThrowIfZeroOrLess() + _additionalValue;
         }
 
         public void TakeDamage(float damage)
@@ -50,9 +58,7 @@ namespace Assets.Scripts
                 return;
             }
 
-            damage.ThrowIfZeroOrLess();
-
-            float tempValue = Value - damage;
+            float tempValue = Value - damage.ThrowIfNegative() * _resistMultiplier;
             GetHit?.Invoke();
 
             if (tempValue <= Constants.Zero)
@@ -68,6 +74,33 @@ namespace Assets.Scripts
             }
 
             ValueChanged?.Invoke(Value);
+        }
+
+        public void SetAdditionalValue(int value)
+        {
+            float tempValue = value.ThrowIfNegative() - _additionalValue;
+
+            _additionalValue = value;
+            MaxValue += tempValue;
+            Value += tempValue;
+
+            ValueChanged?.Invoke(Value);
+        }
+
+        public void SetRegeneration(int value)
+        {
+            _regeneration = value.ThrowIfNegative();
+        }
+
+        public void SetResistPercent(int resistPercent)
+        {
+            _resistMultiplier = Constants.PercentToMultiplier(resistPercent.ThrowIfNegative());
+        }
+
+        private void Heal()
+        {
+            float tempValue = Value + _regeneration;
+            Value = tempValue > MaxValue ? MaxValue : tempValue;
         }
     }
 }

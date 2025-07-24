@@ -1,10 +1,5 @@
-﻿using Assets.Code.AbilitySystem;
-using Assets.Code.Tools;
-using Assets.Scripts.Tools;
-using System;
-using System.Collections;
+﻿using Assets.Scripts.Tools;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Assets.Code
@@ -12,8 +7,6 @@ namespace Assets.Code
     public class AbilityContainer : MonoBehaviour
     {
         private Dictionary<AbilityType, Ability> _abilities;
-
-        public IEnumerable<AbilityType> MaxedAbilities => _abilities.Values.Where(ability => ability.IsMaxed).Select(ability => ability.Type);
 
         private void Awake()
         {
@@ -30,17 +23,33 @@ namespace Assets.Code
 
         public void Add(Ability ability)
         {
-            _abilities.Add(ability.ThrowIfNull().Type, ability);
+            ability.ThrowIfNull();
+            _abilities.Add(ability.Type, ability);
+        }
+
+        public List<AbilityType> GetMaxedAbilities()
+        {
+            List<AbilityType> abilityTypes = new();
+
+            foreach (Ability ability in _abilities.Values)
+            {
+                if (ability.IsMaxed)
+                {
+                    abilityTypes.Add(ability.Type);
+                }
+            }
+
+            return abilityTypes;
         }
 
         public void Upgrade(AbilityType abilityType)
         {
-            _abilities.GetValueOrThrow(abilityType).LevelUp();
+            _abilities[abilityType.ThrowIfNull()].LevelUp();
         }
 
-        public bool HasUpgrade(Enum type)
+        public bool HasAbility(AbilityType abilityType)
         {
-            return _abilities.ContainsKey((AbilityType)type.ThrowIfNull());
+            return _abilities.ContainsKey(abilityType.ThrowIfNull());
         }
 
         public int GetAbilityLevel(AbilityType abilityType)

@@ -47,7 +47,7 @@ namespace Assets.Scripts.Factories
 
         private void SetStats(EnemyComponents enemy, CharacterConfig config)
         {
-            enemy.CharacterMovement.ChangeMoveSpeed(config.MoveSpeed);
+            enemy.CharacterMovement.SetMoveStat(config.MoveSpeed);
             enemy.Health.SetMaxValue(config.MaxHealth);
             enemy.CollisionDamage.SetDamage(config.Damage);
             enemy.DeathTriger.SetLoot(config.Loot);

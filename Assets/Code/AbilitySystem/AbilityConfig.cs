@@ -6,14 +6,14 @@ using UnityEngine;
 namespace Assets.Code
 {
     [CreateAssetMenu(menuName = "Game/AbilityConfig")]
-    public class AbilityConfig : ScriptableObject, IUpgradeOptionUIData
+    public class AbilityConfig : ScriptableObject
     {
         [field: Header("Base Settings")]
         [field: SerializeField] public Transform ProjectilePrefab { get; private set; }
         [field: SerializeField] public ParticleSystem Effect { get; private set; }
         [field: SerializeField] public LayerMask DamageLayer { get; private set; }
         [field: SerializeField] public AbilityType Type { get; private set; }
-        [field: SerializeField] public Sprite Icon { get; private set; }
+        [field: SerializeField] public Sprite Image { get; private set; }
 
         [Header("Upgrades")]
         [SerializeField] private List<AbilityStats> _abilityStats;
@@ -24,10 +24,5 @@ namespace Assets.Code
         {
             return _abilityStats[level.ThrowIfZeroOrLess() - Constants.One];
         }
-    }
-
-    public interface IUpgradeOptionUIData
-    {
-        public Sprite Icon { get; }
     }
 }

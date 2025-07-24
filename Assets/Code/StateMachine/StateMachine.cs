@@ -1,5 +1,4 @@
-﻿using Assets.Code.Tools;
-using Assets.Scripts.Tools;
+﻿using Assets.Scripts.Tools;
 using System;
 using System.Collections.Generic;
 
@@ -32,8 +31,10 @@ namespace Assets.Scripts.State_Machine
                 return;
             }
 
+            _states.TryGetValue(type, out IState state).ThrowIfFalse(new InvalidOperationException());
+
             _currentState?.Exit();
-            _currentState = _states.GetValueOrThrow(type);
+            _currentState = state;
             _currentState.Enter();
         }
 

@@ -1,5 +1,4 @@
-﻿using Assets.Code.Tools;
-using Assets.Scripts.Tools;
+﻿using Assets.Scripts.Tools;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,14 +22,11 @@ namespace Assets.Code
             };
         }
 
-        public AbilityConfig GetConfig(AbilityType abilityType)
-        {
-            return _configs.GetValueOrThrow(abilityType);
-        }
-
         public Ability Create(AbilityType abilityType)
         {
-            return _createFunctions.GetValueOrThrow(abilityType).Invoke();
+            _createFunctions.TryGetValue(abilityType.ThrowIfNull(), out Func<Ability> createFunc).ThrowIfFalse();
+
+            return createFunc.Invoke();
         }
 
         private SwordStrike CreateSwordStrike()

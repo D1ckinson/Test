@@ -1,7 +1,5 @@
-﻿using Assets.Code.AmplificationSystem;
-using Assets.Scripts;
+﻿using Assets.Scripts;
 using Assets.Scripts.Movement;
-using Assets.Scripts.Tools;
 using UnityEngine;
 
 namespace Assets.Code.CharactersLogic.HeroLogic
@@ -16,7 +14,6 @@ namespace Assets.Code.CharactersLogic.HeroLogic
         public Health Health { get; private set; }
         public LootCollector LootCollector { get; private set; }
         public AbilityContainer AbilityContainer { get; private set; }
-        public BuffContainer BuffContainer { get; private set; }//
 
         private void Awake()
         {
@@ -24,7 +21,6 @@ namespace Assets.Code.CharactersLogic.HeroLogic
             Health = GetComponent<Health>();
             LootCollector = GetComponent<LootCollector>();
             AbilityContainer = GetComponent<AbilityContainer>();
-            BuffContainer = new();
         }
     }
 }

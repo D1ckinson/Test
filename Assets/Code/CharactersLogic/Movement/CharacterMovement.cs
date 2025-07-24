@@ -24,7 +24,7 @@ namespace Assets.Scripts.Movement
                 return;
             }
 
-            _mover.Move(_direction);//передавать данные скорости
+            _mover.Move(_direction);
             _rotator.Rotate(_direction);
         }
 
@@ -47,6 +47,9 @@ namespace Assets.Scripts.Movement
 
         public void Initialize(float moveSpeed, float rotationSpeed)
         {
+            moveSpeed.ThrowIfZeroOrLess();
+            rotationSpeed.ThrowIfZeroOrLess();
+
             TryGetComponent(out ITellDirection directionSource).ThrowIfFalse();
 
             _directionSource = directionSource;
@@ -54,13 +57,13 @@ namespace Assets.Scripts.Movement
 
             _rigidbody = GetComponent<Rigidbody>();
 
-            _mover = new Mover(_rigidbody).SetSpeed(moveSpeed.ThrowIfZeroOrLess());
-            _rotator = new(_rigidbody, rotationSpeed.ThrowIfZeroOrLess());
+            _mover = new(_rigidbody, moveSpeed);
+            _rotator = new(_rigidbody, rotationSpeed);
         }
 
-        public void ChangeMoveSpeed(float value)
+        public void SetMoveStat(float moveSpeed)
         {
-            _mover.SetSpeed(value.ThrowIfZeroOrLess());
+            _mover.SetSpeed(moveSpeed.ThrowIfZeroOrLess());
         }
 
         private void SetDirection(Vector3 vector)
@@ -99,9 +102,9 @@ namespace Assets.Scripts.Movement
             _mover.RemoveMultiplier(slow.Multiplier);
         }
 
-        public void AddMaxSpeed(int value)
+        public void SetAdditionalSpeed(int value)
         {
-            _mover.AddMaxSpeed(value.ThrowIfNegative());
+            _mover.AddSpeed(value.ThrowIfNegative());
         }
     }
 }

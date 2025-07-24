@@ -40,9 +40,9 @@ namespace Assets.Scripts.Factories
 
             IValueContainer valueContainer = loot.LootType switch
             {
-                LootType.LowExperience => _playerData.HeroExperience,
-                LootType.MediumExperience => _playerData.HeroExperience,
-                LootType.HighExperience => _playerData.HeroExperience,
+                LootType.LowExperience => _playerData.Level,
+                LootType.MediumExperience => _playerData.Level,
+                LootType.HighExperience => _playerData.Level,
                 LootType.Coin => _playerData.Wallet,
                 _ => throw new NotImplementedException(),
             };

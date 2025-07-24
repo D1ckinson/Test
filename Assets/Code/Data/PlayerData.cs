@@ -2,6 +2,7 @@
 using Assets.Code.CharactersLogic.HeroLogic;
 using Assets.Scripts.Tools;
 using System;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -9,14 +10,14 @@ namespace Assets.Scripts
     public class PlayerData
     {
         public Wallet Wallet { get; private set; }
-        public HeroExperience HeroExperience { get; private set; }
+        public HeroExperience Level { get; private set; }
         public HeroComponents HeroComponents { get; private set; }
         public AbilityType StartAbility { get; private set; }
 
         public PlayerData(Wallet wallet, HeroExperience level)
         {
             Wallet = wallet.ThrowIfNull();
-            HeroExperience = level.ThrowIfNull();
+            Level = level.ThrowIfNull();
             StartAbility = AbilityType.SwordStrike;
         }
 

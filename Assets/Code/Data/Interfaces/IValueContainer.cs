@@ -4,6 +4,6 @@
     {
         public void Add(int value);
 
-        public void SetLootPercent(float additionalLootPercent);
+        public void SetLootPercent(int additionalLootPercent);
     }
 }

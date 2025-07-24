@@ -10,36 +10,33 @@ namespace Assets.Scripts.Movement
         private readonly Rigidbody _rigidbody;
         private readonly List<float> _multipliers;
 
-        private float _defaultSpeed;
-        private float _speed;
-        private float _additionalSpeed;
+        private float _maxSpeed;
+        private float _currentSpeed;
 
-        internal Mover(Rigidbody rigidbody, float speed)
+        internal Mover(Rigidbody rigidbody)
         {
             _rigidbody = rigidbody.ThrowIfNull();
             _multipliers = new();
-
-            SetSpeed(speed);
         }
 
-        public void SetSpeed(float speed)
+        public Mover SetSpeed(float speed)
         {
-            _defaultSpeed = speed.ThrowIfZeroOrLess() + _additionalSpeed;
-            _speed = _defaultSpeed;
+            _maxSpeed = speed.ThrowIfZeroOrLess();
+            _currentSpeed = _maxSpeed;
+
+            return this;
         }
 
-        public void AddSpeed(float value)
+        public void AddMaxSpeed(float value)
         {
-            float tempValue = value.ThrowIfNegative() - _additionalSpeed;
-
-            _additionalSpeed = value;
-            _defaultSpeed += tempValue;
-            _speed += tempValue;
+            _maxSpeed += value.ThrowIfNegative();
+            CalculateSpeed();
         }
 
         internal void AddMultiplier(float multiplier)
         {
             _multipliers.Add(multiplier.ThrowIfZeroOrLess().ThrowIfMoreThan(Constants.One));
+            CalculateSpeed();
         }
 
         internal void Move(Vector3 direction)
@@ -47,7 +44,7 @@ namespace Assets.Scripts.Movement
             direction.ThrowIfNotNormalize();
             direction.y = Constants.Zero;
 
-            Vector3 position = _rigidbody.position + direction * (_speed * Time.fixedDeltaTime);
+            Vector3 position = _rigidbody.position + direction * (_currentSpeed * Time.fixedDeltaTime);
             _rigidbody.MovePosition(position);
         }
 
@@ -64,7 +61,7 @@ namespace Assets.Scripts.Movement
             float resultMultiplier = Constants.One;
             _multipliers.ForEach(multiplier => resultMultiplier *= multiplier);
 
-            _speed = _defaultSpeed * resultMultiplier;
+            _currentSpeed = _maxSpeed * resultMultiplier;
         }
     }
 }

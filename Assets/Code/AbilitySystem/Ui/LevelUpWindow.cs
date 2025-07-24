@@ -1,9 +1,11 @@
 ﻿using Assets.Code;
+using Assets.Code.AbilitySystem;
 using Assets.Code.AbilitySystem.Ui;
 using Assets.Scripts.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -36,6 +38,7 @@ namespace Assets.Scripts.Ui
         }
 
         public event Action<AbilityType> UpgradeChosen;
+        public event Action<Enum> UpgradeChosenEnum;
 
         public void Show(Dictionary<AbilityConfig, int> abilities, int level)
         {
@@ -50,12 +53,43 @@ namespace Assets.Scripts.Ui
                 AbilityConfig config = configs[i];
                 string description = PrepareDescription(config, abilities[config]);
 
-                button.SetDescription(description, config.Image);
+                button.SetDescription(description, config.Icon);
                 button.Subscribe(() => Callback(config.Type));
                 button.gameObject.SetActive(true);
             }
 
             _canvas.gameObject.SetActive(true);
+        }
+
+        public void Show(List<UpgradeOption> upgrades, int level)
+        {
+            upgrades.ThrowIfCollectionNullOrEmpty();
+            Time.timeScale = Constants.Zero;
+
+            for (int i = Constants.Zero; i < upgrades.Count; i++)
+            {
+                UpgradeOption upgrade = upgrades[i];
+                LevelUpButton button = _buttons[i];
+                button.SetDescription(upgrade.Description, upgrade.Icon);
+                button.Subscribe(() => Callback(upgrade.SpecificType));
+                button.gameObject.SetActive(true);
+            }
+
+            _canvas.gameObject.SetActive(true);
+        }
+
+        private void Callback(Enum specificType)
+        {
+            foreach (LevelUpButton button in _buttons)
+            {
+                button.UnsubscribeAll();
+                button.gameObject.SetActive(false);
+            }
+
+            _canvas.gameObject.SetActive(false);
+            UpgradeChosenEnum?.Invoke(specificType);
+
+            Time.timeScale = Constants.One;
         }
 
         private void Callback(AbilityType abilityType)

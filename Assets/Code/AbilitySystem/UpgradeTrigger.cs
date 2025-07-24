@@ -1,9 +1,14 @@
-﻿using Assets.Scripts;
+﻿using Assets.Code.AmplificationSystem;
+using Assets.Code.Tools;
+using Assets.Scripts;
 using Assets.Scripts.Tools;
 using Assets.Scripts.Ui;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Code.AbilitySystem
 {
@@ -12,20 +17,29 @@ namespace Assets.Code.AbilitySystem
         private const int SuggestedUpgradesCount = 3;
 
         private readonly HeroExperience _heroExperience;
-        private readonly Dictionary<AbilityType, AbilityConfig> _abilityConfigs;
         private readonly AbilityContainer _abilityContainer;
         private readonly LevelUpWindow _levelUpWindow;
         private readonly AbilityFactory _abilityFactory;
+        private readonly BuffFactory _buffFactory;
+        private readonly BuffContainer _buffContainer;
+        //private readonly Dictionary<UpgradeType, IUpgradeContainer> _containers;
 
         public UpgradeTrigger
-            (HeroExperience heroExperience, Dictionary<AbilityType, AbilityConfig> abilityConfigs,
-            AbilityContainer abilityContainer, LevelUpWindow levelUpWindow, AbilityFactory abilityFactory)
+            (HeroExperience heroExperience, AbilityContainer abilityContainer, LevelUpWindow levelUpWindow,
+            AbilityFactory abilityFactory, BuffFactory buffFactory, BuffContainer buffContainer)
         {
             _heroExperience = heroExperience.ThrowIfNull();
             _abilityContainer = abilityContainer.ThrowIfNull();
-            _abilityConfigs = abilityConfigs.ThrowIfCollectionNullOrEmpty();
             _levelUpWindow = levelUpWindow.ThrowIfNull();
             _abilityFactory = abilityFactory.ThrowIfNull();
+            _buffFactory = buffFactory.ThrowIfNull();
+            _buffContainer = buffContainer.ThrowIfNull();
+
+            //_containers = new()
+            //{
+            //    [UpgradeType.Ability] = (IUpgradeContainer)abilityContainer.ThrowIfNull(),
+            //    [UpgradeType.Buff] = (IUpgradeContainer)buffContainer.ThrowIfNull()
+            //};
 
             _heroExperience.LevelUp += GenerateUpgrades;
         }
@@ -40,69 +54,181 @@ namespace Assets.Code.AbilitySystem
 
         private void GenerateUpgrades(int level)
         {
-            List<AbilityType> maxedAbilities = _abilityContainer.GetMaxedAbilities();
-            List<AbilityType> possibleUpgrades = _abilityConfigs.Keys.Except(maxedAbilities).ToList();
-            List<AbilityType> suggestedUpgrades = new();
+            List<UpgradeOption> upgrades = new();
+
+            IEnumerable<AbilityType> abilityTypes = Constants.AbilityTypes.Except(_abilityContainer.MaxedAbilities);
+            IEnumerable<BuffType> buffTypes = Constants.BuffTypes.Except(_buffContainer.MaxedBuffs);
+
+            foreach (AbilityType type in abilityTypes)
+            {
+                UpgradeOption upgrade = new(UpgradeType.Ability, type);
+                upgrades.Add(upgrade);
+            }
+
+            foreach (BuffType type in buffTypes)
+            {
+                UpgradeOption upgrade = new(UpgradeType.Buff, type);
+                upgrades.Add(upgrade);
+            }
+
+            List<UpgradeOption> pickedUpgrades = new();
 
             for (int i = Constants.Zero; i < SuggestedUpgradesCount; i++)
             {
-                if (possibleUpgrades.Count == Constants.Zero)
-                {
-                    break;
-                }
+                int index = Random.Range(Constants.Zero, upgrades.GetLastIndex());
+                UpgradeOption option = upgrades[index];
 
-                int index = Random.Range(Constants.Zero, possibleUpgrades.Count - Constants.One);
-                suggestedUpgrades.Add(possibleUpgrades[index]);
-                possibleUpgrades.RemoveAt(index);
+                pickedUpgrades.Add(option);
+                upgrades.Remove(option);
             }
 
-            Dictionary<AbilityConfig, int> upgrades = new();
-
-            for (int i = Constants.Zero; i < suggestedUpgrades.Count; i++)
+            for (int i = Constants.Zero; i < pickedUpgrades.Count; i++)
             {
-                AbilityType abilityType = suggestedUpgrades[i];
-                int abilityNextLevel;
+                UpgradeOption option = pickedUpgrades[i];
 
-                if (_abilityContainer.HasAbility(abilityType))
+                if (option.Type == UpgradeType.Ability)
                 {
-                    abilityNextLevel = _abilityContainer.GetAbilityLevel(abilityType) + Constants.One;
+                    AbilityType type = (AbilityType)option.SpecificType;
+
+                    if (_abilityContainer.HasUpgrade(type))
+                    {
+                        option.NextLevel = _abilityContainer.GetAbilityLevel(type) + Constants.One;
+                    }
+                    else
+                    {
+                        option.NextLevel = Constants.One;
+                    }
+
+                    AbilityConfig config = _abilityFactory.GetConfig(type);
+                    option.Icon = config.Icon;
+                    option.Description = WriteDescription(config, option.NextLevel);
+                }
+                else if (option.Type == UpgradeType.Buff)
+                {
+                    BuffType type = (BuffType)option.SpecificType;
+
+                    if (_buffContainer.HasAbility(type))
+                    {
+                        option.NextLevel = _buffContainer.GetAbilityLevel(type) + Constants.One;
+                    }
+                    else
+                    {
+                        option.NextLevel = Constants.One;
+                    }
+
+                    BuffConfig config = _buffFactory.GetConfig(type);
+                    option.Icon = config.Icon;
+                    option.Description = WriteDescription(config, option.NextLevel);
                 }
                 else
                 {
-                    abilityNextLevel = Constants.One;
+                    throw new NotImplementedException();
                 }
-
-                upgrades.Add(_abilityConfigs[abilityType], abilityNextLevel);
             }
 
-            if (upgrades.Count == Constants.Zero)
+
+            if (upgrades.IsEmpty())
             {
                 //Наградить
 
                 return;
             }
 
-            _levelUpWindow.Show(upgrades, level.ThrowIfNegative());
-            _levelUpWindow.UpgradeChosen += UpgradeAbility;
+            _levelUpWindow.Show(upgrades, level);
+            _levelUpWindow.UpgradeChosenEnum += Upgrade;
         }
 
-        private void UpgradeAbility(AbilityType abilityType)
+        private void Upgrade(Enum @enum)
         {
-            abilityType.ThrowIfNull();
-
-            if (_abilityContainer.HasAbility(abilityType))
+            switch (@enum)
             {
-                if (_abilityContainer.IsMaxed(abilityType))
-                {
-                    return;
-                }
+                case AbilityType:
+                    UpgradeAbility((AbilityType)@enum);
+                    break;
 
-                _abilityContainer.Upgrade(abilityType);
+                case BuffType:
+                    UpgradeBuff((BuffType)@enum);
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        private void UpgradeBuff(BuffType type)
+        {
+            type.ThrowIfNull();
+
+            if (_buffContainer.HasUpgrade(type))
+            {
+                _buffContainer.IsMaxed(type).ThrowIfTrue(new NotImplementedException());
+                _buffContainer.Upgrade(type);/////////////////////////////
 
                 return;
             }
 
-            _abilityContainer.Add(_abilityFactory.Create(abilityType));
+            _buffContainer.Add(_buffFactory.Create(type));
+
         }
+
+        private string WriteDescription(BuffConfig config, int nextLevel)
+        {
+            return "ЗАГЛУШКА";
+        }
+
+        private string WriteDescription(AbilityConfig config, int nextLevel)
+        {
+            return "ЗАГЛУШКА";
+        }
+
+        private void UpgradeAbility(AbilityType type)
+        {
+            type.ThrowIfNull();
+
+            if (_abilityContainer.HasUpgrade(type))
+            {
+                _abilityContainer.IsMaxed(type).ThrowIfTrue(new NotImplementedException());
+                _abilityContainer.Upgrade(type);
+
+                return;
+            }
+
+            _abilityContainer.Add(_abilityFactory.Create(type));
+        }
+    }
+
+    public interface IUpgradeContainer<T> : IUpgradeContainer where T : Enum
+    {
+        public IEnumerable<T> Maxed { get; }
+        public bool HasUpgrade(T type);
+    }
+
+    public interface IUpgradeContainer
+    {
+        public IEnumerable Maxed { get; }
+
+        public bool HasUpgrade(Enum type);
+    }
+
+    public struct UpgradeOption
+    {
+        public UpgradeType Type;
+        public Enum SpecificType;
+        public int NextLevel;
+        public Sprite Icon;
+        public string Description;
+
+        public UpgradeOption(UpgradeType type, Enum specificType) : this()
+        {
+            Type = type.ThrowIfNull();
+            SpecificType = specificType.ThrowIfNull();
+        }
+    }
+
+    public enum UpgradeType
+    {
+        Default,
+        Ability,
+        Buff
     }
 }

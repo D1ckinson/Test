@@ -41,6 +41,8 @@ namespace Assets.Code
 
         public void LevelUp()
         {
+            IsMaxed.ThrowIfTrue(new IndexOutOfRangeException());
+
             Level++;
             AbilityStats stats = _config.GetStats(Level);
 

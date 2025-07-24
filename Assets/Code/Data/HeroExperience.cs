@@ -14,7 +14,7 @@ namespace Assets.Scripts
         public float ExperienceForLevelUp { get; private set; }
 
         private readonly LevelSettings _levelSettings;
-        private float _lootPercent = 1;
+        private float _lootMultiplier = 1;
 
         public HeroExperience(LevelSettings levelSettings)
         {
@@ -24,7 +24,7 @@ namespace Assets.Scripts
 
         public void Add(int value)
         {
-            CurrentExperience += value.ThrowIfNegative() * _lootPercent;
+            CurrentExperience += value.ThrowIfNegative() * _lootMultiplier;
             TryLevelUp();
         }
 
@@ -36,9 +36,9 @@ namespace Assets.Scripts
             CurrentExperience = Constants.Zero;
         }
 
-        public void SetLootPercent(int AdditionalLootMultiplier)
+        public void SetLootPercent(float value)
         {
-            _lootPercent = Constants.One + AdditionalLootMultiplier.ThrowIfLessThan(Constants.One);
+            _lootMultiplier = Constants.PercentToMultiplier(value.ThrowIfNegative());
         }
 
         private void TryLevelUp()

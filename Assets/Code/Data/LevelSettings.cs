@@ -1,4 +1,5 @@
 using Assets.Code;
+using Assets.Code.AmplificationSystem;
 using Assets.Scripts.Tools;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using UnityEngine;
 namespace Assets.Scripts.Configs
 {
     [CreateAssetMenu(menuName = "Game/LevelSettings")]
-    public class LevelSettings : ScriptableObject
+    public partial class LevelSettings : ScriptableObject
     {
         [field: Header("Characters Configs")]
         [field: SerializeField] private List<CharacterConfig> _enemiesConfigs;
@@ -26,6 +27,7 @@ namespace Assets.Scripts.Configs
 
         [field: Header("Abilities")]
         [field: SerializeField] private List<AbilityConfig> _abilitiesConfigs;
+        [field: SerializeField] private List<BuffConfig> _buffConfigs;
 
         [Header("Level Formula Settings")]
         [SerializeField][Min(1)] private int _fixedExperience = 100;
@@ -39,26 +41,9 @@ namespace Assets.Scripts.Configs
             return (int)(_fixedExperience * level + _experienceCoefficient * MathF.Pow(level, _degree));
         }
 
-        public Dictionary<AbilityType, AbilityConfig> GetAbilityConfigs()
-        {
-            return _abilitiesConfigs.ToDictionary(config => config.Type, config => config);
-        }
-
-        public Dictionary<CharacterType, CharacterConfig> GetEnemyConfigs()
-        {
-            return _enemiesConfigs.ToDictionary(config => config.Type, config => config);
-        }
-
-        public Dictionary<int, CharacterType> GetSpawnTypeByTime()
-        {
-            return _spawnTypeByTimes.ToDictionary(item => item.Time, item => item.Type);
-        }
-
-        [Serializable]
-        private struct SpawnTypeByTime
-        {
-            [field: SerializeField] public int Time { get; private set; }
-            [field: SerializeField] public CharacterType Type { get; private set; }
-        }
+        public Dictionary<AbilityType, AbilityConfig> AbilityConfigs => _abilitiesConfigs.ToDictionary(config => config.Type, config => config);
+        public Dictionary<CharacterType, CharacterConfig> EnemyConfigs => _enemiesConfigs.ToDictionary(config => config.Type, config => config);
+        public Dictionary<int, CharacterType> EnemyTypeByTime => _spawnTypeByTimes.ToDictionary(item => item.Time, item => item.Type);
+        public Dictionary<BuffType, BuffConfig> BuffConfigs => _buffConfigs.ToDictionary(config => config.Type, config => config);
     }
 }

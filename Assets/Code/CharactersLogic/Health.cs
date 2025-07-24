@@ -76,7 +76,7 @@ namespace Assets.Scripts
             ValueChanged?.Invoke(Value);
         }
 
-        public void SetAdditionalValue(int value)
+        public void SetAdditionalValue(float value)
         {
             float tempValue = value.ThrowIfNegative() - _additionalValue;
 
@@ -92,9 +92,9 @@ namespace Assets.Scripts
             _regeneration = value.ThrowIfNegative();
         }
 
-        public void SetResistPercent(int resistPercent)
+        public void SetResistPercent(int value)
         {
-            _resistMultiplier = Constants.PercentToMultiplier(resistPercent.ThrowIfNegative());
+            _resistMultiplier = Constants.PercentToMultiplier(value.ThrowIfNegative());
         }
 
         private void Heal()

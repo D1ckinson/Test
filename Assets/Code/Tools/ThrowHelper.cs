@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Code.Tools;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace Assets.Scripts.Tools
         {
             collection.ThrowIfNull();
 
-            if (collection.Count == Constants.Zero)
+            if (collection.IsEmpty())
             {
                 throw new EmptyCollectionException();
             }

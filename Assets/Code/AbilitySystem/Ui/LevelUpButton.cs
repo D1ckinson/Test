@@ -12,10 +12,10 @@ namespace Assets.Code.AbilitySystem.Ui
         [SerializeField] private TMP_Text _text;
         [SerializeField] private Image _image;
 
-        public void SetDescription(string text, Sprite image)
+        public void SetDescription(string text, Sprite icon)
         {
             _text.text = text.ThrowIfNull();
-            _image.sprite = image.ThrowIfNull();
+            _image.sprite = icon.ThrowIfNull();
         }
 
         public void Subscribe(Action upgradeAction)// поменять название параметра

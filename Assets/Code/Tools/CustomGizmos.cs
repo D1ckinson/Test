@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-namespace Assets.Scripts.Tools
+﻿namespace Assets.Scripts.Tools
 {
     using UnityEngine;
 
@@ -68,4 +67,3 @@ namespace Assets.Scripts.Tools
         }
     }
 }
-#endif

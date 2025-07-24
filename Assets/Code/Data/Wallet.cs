@@ -16,7 +16,7 @@ namespace Assets.Scripts
             CoinsQuantity += value.ThrowIfZeroOrLess() * _lootPercent;
         }
 
-        public void SetLootPercent(int percent)
+        public void SetLootPercent(float percent)
         {
             _lootPercent = Constants.PercentToMultiplier(percent.ThrowIfNegative());
         }

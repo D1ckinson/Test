@@ -44,6 +44,7 @@ namespace Assets.Scripts
             MaxValue = maxValue.ThrowIfZeroOrLess();
             Value = MaxValue;
             _invincibilityDuration = invincibilityDuration.ThrowIfNegative();
+            ValueChanged?.Invoke(Value);
         }
 
         public void SetMaxValue(float value)

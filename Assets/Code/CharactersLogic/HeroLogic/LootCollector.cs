@@ -1,3 +1,4 @@
+using Assets.Code.Tools;
 using Assets.Scripts.Tools;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +25,7 @@ namespace Assets.Scripts
 
         private void Update()
         {
-            for (int i = _toCollect.Count - Constants.One; i >= Constants.Zero; i--)
+            for (int i = _toCollect.GetLastIndex(); i >= Constants.Zero; i--)
             {
                 Loot loot = _toCollect[i];
 

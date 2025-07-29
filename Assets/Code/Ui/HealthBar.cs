@@ -1,3 +1,4 @@
+using Assets.Code.Tools;
 using Assets.Scripts.Tools;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,7 +18,6 @@ namespace Assets.Scripts.Ui
         {
             _camera = Camera.main;
             _health.ValueChanged += SetSliderValue;
-
             SetSliderValue(_health.Value);
         }
 
@@ -29,7 +29,7 @@ namespace Assets.Scripts.Ui
 
         private void OnDestroy()
         {
-            if (_health != null)
+            if (_health.IsNull() == false)
             {
                 _health.ValueChanged -= SetSliderValue;
             }
@@ -41,11 +41,11 @@ namespace Assets.Scripts.Ui
 
             if (_isFullHealthHide && Mathf.Approximately(value, _health.MaxValue))
             {
-                _healthBar.gameObject.SetActive(false);
+                _healthBar.SetActive(false);
             }
             else if (_healthBar.IsActive() == false)
             {
-                _healthBar.gameObject.SetActive(true);
+                _healthBar.SetActive(true);
             }
 
             float percentValue = value / _health.MaxValue;

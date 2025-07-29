@@ -23,7 +23,7 @@ namespace Assets.Code
             _swingEffect = Object.Instantiate(config.Effect, transform.ThrowIfNull());
             _damageLayer = config.DamageLayer;
 
-            AbilityStats stats = config.GetStats(level);
+            AbilityStats stats = config.GetStats(level.ThrowIfZeroOrLess());
 
             _damage = stats.Damage;
             _radius = stats.Range;
@@ -40,9 +40,6 @@ namespace Assets.Code
 
                 if (collider.TryGetComponent(out Health health) == false)
                 {
-#if UNITY_EDITOR
-                    Debug.Log("В слое врагов у кого то нет компонента здоровья");
-#endif
                     continue;
                 }
 

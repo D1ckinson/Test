@@ -79,7 +79,7 @@ namespace Assets.Scripts.Tools
 
         public static int ThrowIfZeroOrLess(this int value)
         {
-            if (value <= Constants.Zero)
+            if (value <= 0)
             {
                 throw new ArgumentOutOfRangeException();
             }
@@ -109,7 +109,7 @@ namespace Assets.Scripts.Tools
 
         public static float ThrowIfZeroOrLess(this float value)
         {
-            if (value < Constants.Zero || Mathf.Approximately(value, Constants.Zero))
+            if (value < 0 || Mathf.Approximately(value, 0))
             {
                 throw new ArgumentOutOfRangeException();
             }
@@ -119,7 +119,7 @@ namespace Assets.Scripts.Tools
 
         public static float ThrowIfNegative(this float value)
         {
-            if (value < Constants.Zero)
+            if (value < 0)
             {
                 throw new ArgumentOutOfRangeException();
             }
@@ -129,7 +129,7 @@ namespace Assets.Scripts.Tools
 
         public static int ThrowIfNegative(this int value)
         {
-            if (value < Constants.Zero)
+            if (value < 0)
             {
                 throw new ArgumentOutOfRangeException();
             }

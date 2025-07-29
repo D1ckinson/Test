@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.Configs;
-using Assets.Scripts.Tools;
+﻿using Assets.Scripts.Tools;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,7 +21,9 @@ namespace Assets.Code
 
         public AbilityStats GetStats(int level)
         {
-            return _abilityStats[level.ThrowIfZeroOrLess() - Constants.One];
+            level.ThrowIfZeroOrLess().ThrowIfMoreThan(MaxLevel);
+
+            return _abilityStats[level - Constants.One];
         }
     }
 }

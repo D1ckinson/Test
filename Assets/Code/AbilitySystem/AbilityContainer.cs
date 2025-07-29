@@ -1,5 +1,9 @@
-﻿using Assets.Scripts.Tools;
+﻿using Assets.Code.AbilitySystem;
+using Assets.Code.Tools;
+using Assets.Scripts.Tools;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Code
@@ -7,6 +11,8 @@ namespace Assets.Code
     public class AbilityContainer : MonoBehaviour
     {
         private Dictionary<AbilityType, Ability> _abilities;
+
+        public IEnumerable<AbilityType> MaxedAbilities => _abilities.Values.Where(ability => ability.IsMaxed).Select(ability => ability.Type);
 
         private void Awake()
         {
@@ -24,27 +30,14 @@ namespace Assets.Code
         public void Add(Ability ability)
         {
             ability.ThrowIfNull();
+            _abilities.ContainsKey(ability.Type).ThrowIfTrue(new ArgumentException());
+
             _abilities.Add(ability.Type, ability);
-        }
-
-        public List<AbilityType> GetMaxedAbilities()
-        {
-            List<AbilityType> abilityTypes = new();
-
-            foreach (Ability ability in _abilities.Values)
-            {
-                if (ability.IsMaxed)
-                {
-                    abilityTypes.Add(ability.Type);
-                }
-            }
-
-            return abilityTypes;
         }
 
         public void Upgrade(AbilityType abilityType)
         {
-            _abilities[abilityType.ThrowIfNull()].LevelUp();
+            _abilities.TryGetValueOrThrow(abilityType.ThrowIfNull()).LevelUp();
         }
 
         public bool HasAbility(AbilityType abilityType)
@@ -54,12 +47,9 @@ namespace Assets.Code
 
         public int GetAbilityLevel(AbilityType abilityType)
         {
-            return _abilities[abilityType.ThrowIfNull()].Level;
-        }
+            _abilities.TryGetValue(abilityType.ThrowIfNull(), out Ability ability);
 
-        public bool IsMaxed(AbilityType abilityType)
-        {
-            return _abilities[abilityType].IsMaxed;
+            return ability.IsNull() ? Constants.Zero : ability.Level;
         }
     }
 }

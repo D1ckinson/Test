@@ -1,7 +1,8 @@
 ﻿using Assets.Code;
 using Assets.Code.AbilitySystem;
 using Assets.Code.CharactersLogic.HeroLogic;
-using Assets.Code.Data;
+using Assets.Code.Spawners;
+using Assets.Code.Tools;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Factories;
 using Assets.Scripts.State_Machine;
@@ -20,9 +21,10 @@ namespace Assets.Scripts
         private PlayerData _playerData;
         private StateMachine _stateMachine;
 
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            if (_levelSettings == null)
+            if (_levelSettings.IsNull())
             {
                 return;
             }
@@ -33,6 +35,7 @@ namespace Assets.Scripts
             Gizmos.DrawSphere(gameAreaSettings.Center, 1);
             CustomGizmos.DrawCircle(gameAreaSettings.Center, gameAreaSettings.Radius, Color.red);
         }
+#endif
 
         private void Awake()
         {
@@ -50,11 +53,12 @@ namespace Assets.Scripts
             LootFactory lootFactory = new(_levelSettings.Loots, _playerData);
             EnemyFactory enemyFactory = new(_levelSettings.GetEnemyConfigs(), lootFactory, heroComponents.transform, _levelSettings.EnemySpawnerSettings, gameAreaSettings);
             new UpgradeTrigger(_playerData.Level, abilities, _playerData.HeroComponents.AbilityContainer, levelUpWindow, abilityFactory);
-            GameTimer gameTimer = new();
+
+            EnemySpawner enemySpawner = new(enemyFactory, _levelSettings.GetSpawnTypeByTime());
 
             _stateMachine
                 .AddState(new MenuState(_stateMachine))
-                .AddState(new GameState(_stateMachine, heroComponents, enemyFactory, abilityFactory, gameTimer, _levelSettings.GetSpawnTypeByTime()));
+                .AddState(new GameState(_stateMachine, heroComponents, enemySpawner, abilityFactory));
 
             _stateMachine.SetState<MenuState>();
         }

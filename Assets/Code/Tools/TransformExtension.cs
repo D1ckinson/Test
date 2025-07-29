@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Tools;
+﻿using Assets.Code.Tools;
+using Assets.Scripts.Tools;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -35,7 +36,7 @@ namespace Assets.Scripts.State_Machine
         {
             Quaternion rotation;
 
-            if (target == null)
+            if (target .IsNull())
             {
                 rotation = GenerateRotation();
             }

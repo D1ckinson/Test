@@ -1,4 +1,7 @@
-﻿namespace Assets.Scripts.Tools
+﻿using System;
+using System.Collections.Generic;
+
+namespace Assets.Scripts.Tools
 {
     public static class Constants
     {
@@ -11,6 +14,14 @@
         public static float PercentToMultiplier(float value)
         {
             return One - value.ThrowIfNegative() / Hundred;
+        }
+
+        public static IEnumerable<T> GetEnums<T>() where T : Enum
+        {
+            Type type = typeof(T);
+            type.IsEnum.ThrowIfFalse(new ArgumentException());
+
+            return (IEnumerable<T>)Enum.GetValues(type);
         }
     }
 }

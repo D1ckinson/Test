@@ -1,5 +1,7 @@
-﻿using Assets.Scripts.Tools;
+﻿using Assets.Code.Tools;
+using Assets.Scripts.Tools;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,15 +14,15 @@ namespace Assets.Code.AbilitySystem.Ui
         [SerializeField] private TMP_Text _text;
         [SerializeField] private Image _image;
 
-        public void SetDescription(string text, Sprite image)
+        public void SetDescription(List<string> text, Sprite image)
         {
-            _text.text = text.ThrowIfNull();
+            _text.text = text.ThrowIfCollectionNullOrEmpty().ToTextWithNewLines();
             _image.sprite = image.ThrowIfNull();
         }
 
-        public void Subscribe(Action upgradeAction)// поменять название параметра
+        public void Subscribe(Action call)
         {
-            _button.onClick.AddListener(() => upgradeAction?.Invoke());
+            _button.onClick.AddListener(() => call?.Invoke());
         }
 
         public void UnsubscribeAll()

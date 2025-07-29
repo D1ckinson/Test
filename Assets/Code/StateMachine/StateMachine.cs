@@ -21,11 +21,6 @@ namespace Assets.Scripts.State_Machine
         {
             Type type = typeof(T);
 
-            if (_currentState == null)
-            {
-
-            }
-
             if (type == _currentState?.GetType())
             {
                 return;

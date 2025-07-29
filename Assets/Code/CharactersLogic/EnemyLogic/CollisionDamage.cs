@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Tools;
+﻿using Assets.Code.Tools;
+using Assets.Scripts.Tools;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -33,8 +34,10 @@ namespace Assets.Scripts
         private void HandleCollision(Collision collision)
         {
             GameObject gameObject = collision.ThrowIfNull().gameObject;
-
-            if (gameObject.layer == _damageLayer && gameObject.TryGetComponent(out Health health))
+            //Debug.Log(gameObject.layer);
+            //Debug.Log(_damageLayer.value);
+            //Time.timeScale = 0;
+            if (_damageLayer.Contains(gameObject.layer) && gameObject.TryGetComponent(out Health health))
             {
                 health.TakeDamage(_damage);
             }

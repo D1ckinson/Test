@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Assets.Code.Tools;
+using Assets.Scripts.Tools;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Code
@@ -10,5 +13,42 @@ namespace Assets.Code
         [field: SerializeField] public float Damage { get; private set; }
         [field: SerializeField] public float Range { get; private set; }
         [field: SerializeField] public float ProjectilesCount { get; private set; }
+
+        public static AbilityStats operator -(AbilityStats a, AbilityStats b)
+        {
+            return new AbilityStats
+            {
+                Cooldown = a.Cooldown - b.Cooldown,
+                Damage = a.Damage - b.Damage,
+                Range = a.Range - b.Range,
+                ProjectilesCount = a.ProjectilesCount - b.ProjectilesCount
+            };
+        }
+
+        public List<string> GetStatsDescription()
+        {
+            List<string> description = new();
+
+            AddIfPositive(description, "Перезарядка", Cooldown);
+            AddIfPositive(description, "Урон", Damage);
+            AddIfPositive(description, "Дальность", Range);
+            AddIfPositive(description, "Количество снарядов", ProjectilesCount);
+
+            return description;
+        }
+
+        private void AddIfPositive(List<string> list, string statName, float value)
+        {
+            if (value.IsPositive() == false)
+            {
+                return;
+            }
+
+            string formattedValue = value % Constants.One == Constants.Zero
+                ? value.ToString("+0;-0")
+                : value.ToString("+0.0;-0.0");
+
+            list.Add($"{statName} {formattedValue}");
+        }
     }
 }

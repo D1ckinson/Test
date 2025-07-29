@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Tools;
+﻿using Assets.Code.Tools;
+using Assets.Scripts.Tools;
 using System;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace Assets.Scripts.Movement
 
         private void Update()
         {
-            if (_target == null && _target.gameObject.activeSelf)
+            if (_target.IsNull() && _target.gameObject.activeSelf)
             {
                 if (_moveDirection != Vector3.zero)
                 {

@@ -16,7 +16,7 @@ namespace Assets.Scripts.Tools
         {
             _createFunc = createFunc.ThrowIfNull();
 
-            for (int i = Constants.Zero; i < preCreatedCount; i++)
+            for (int i = 0; i < preCreatedCount; i++)
             {
                 Create();
             }

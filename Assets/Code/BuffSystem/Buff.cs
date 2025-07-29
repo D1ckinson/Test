@@ -1,19 +1,18 @@
-﻿using Assets.Code.Data.Interfaces;
-using Assets.Scripts;
+﻿using Assets.Scripts;
 using Assets.Scripts.Movement;
 using Assets.Scripts.Tools;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Code.AmplificationSystem
+namespace Assets.Code.BuffSystem
 {
-    public abstract class Amplification<T>
+    public abstract class Buff<T>
     {
         private readonly Dictionary<int, int> _valueOnLevel;
         private readonly List<T> _components;
 
-        public Amplification(Dictionary<int, int> valueOnLevel, T component)
+        public Buff(Dictionary<int, int> valueOnLevel, T component)
         {
             _valueOnLevel = valueOnLevel.ThrowIfCollectionNullOrEmpty();
             _components = new()
@@ -51,7 +50,7 @@ namespace Assets.Code.AmplificationSystem
         }
     }
 
-    public class HealthAmplification : Amplification<Health>
+    public class HealthAmplification : Buff<Health>
     {
         public HealthAmplification(Dictionary<int, int> valueOnLevel, Health health) : base(valueOnLevel, health) { }
 
@@ -61,7 +60,7 @@ namespace Assets.Code.AmplificationSystem
         }
     }
 
-    public class RegenAmplification : Amplification<Health>
+    public class RegenAmplification : Buff<Health>
     {
         public RegenAmplification(Dictionary<int, int> valueOnLevel, Health health) : base(valueOnLevel, health) { }
 
@@ -71,7 +70,7 @@ namespace Assets.Code.AmplificationSystem
         }
     }
 
-    public class DamageAmplification : Amplification<Ability>
+    public class DamageAmplification : Buff<Ability>
     {
         public DamageAmplification(Dictionary<int, int> valueOnLevel, Ability ability) : base(valueOnLevel, ability) { }
 
@@ -81,7 +80,7 @@ namespace Assets.Code.AmplificationSystem
         }
     }
 
-    public class CooldownAmplification : Amplification<Ability>
+    public class CooldownAmplification : Buff<Ability>
     {
         public CooldownAmplification(Dictionary<int, int> valueOnLevel, Ability ability) : base(valueOnLevel, ability) { }
 
@@ -91,7 +90,7 @@ namespace Assets.Code.AmplificationSystem
         }
     }
 
-    public class SpeedAmplification : Amplification<CharacterMovement>
+    public class SpeedAmplification : Buff<CharacterMovement>
     {
         public SpeedAmplification(Dictionary<int, int> valueOnLevel, CharacterMovement characterMovement) : base(valueOnLevel, characterMovement) { }
 
@@ -101,7 +100,7 @@ namespace Assets.Code.AmplificationSystem
         }
     }
 
-    public class LootAmplification : Amplification<Wallet>
+    public class LootAmplification : Buff<Wallet>
     {
         public LootAmplification(Dictionary<int, int> valueOnLevel, Wallet valueContainer) : base(valueOnLevel, valueContainer) { }
 
@@ -111,7 +110,7 @@ namespace Assets.Code.AmplificationSystem
         }
     }
 
-    public class LootAttractionRadiusAmplification : Amplification<LootCollector>
+    public class LootAttractionRadiusAmplification : Buff<LootCollector>
     {
         public LootAttractionRadiusAmplification(Dictionary<int, int> valueOnLevel, LootCollector lootCollector) : base(valueOnLevel, lootCollector) { }
 
@@ -121,7 +120,7 @@ namespace Assets.Code.AmplificationSystem
         }
     }
 
-    public class ResistAmplification : Amplification<Health>
+    public class ResistAmplification : Buff<Health>
     {
         public ResistAmplification(Dictionary<int, int> valueOnLevel, Health health) : base(valueOnLevel, health) { }
 
@@ -131,7 +130,7 @@ namespace Assets.Code.AmplificationSystem
         }
     }
 
-    public class ExperienceAmplification : Amplification<HeroExperience>
+    public class ExperienceAmplification : Buff<HeroExperience>
     {
         public ExperienceAmplification(Dictionary<int, int> valueOnLevel, HeroExperience heroExperience) : base(valueOnLevel, heroExperience) { }
 

@@ -42,19 +42,12 @@ namespace Assets.Code
         public void LevelUp()
         {
             Level++;
+            Debug.Log(Level);
             AbilityStats stats = _config.GetStats(Level);
 
             _maxCooldown = stats.Cooldown;
             UpdateStats(stats.Damage + _additionalDamage, stats.Range, stats.ProjectilesCount);
         }
-
-        public AbilityStats GetNextStats()
-        {
-            IsMaxed.ThrowIfTrue();
-
-            return _config.GetStats(Level + Constants.One);
-        }
-
 
         protected Vector3 GetPosition()
         {

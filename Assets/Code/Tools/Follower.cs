@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Code.Tools;
+using UnityEngine;
 
 namespace Assets.Scripts.Tools
 {
@@ -16,7 +17,7 @@ namespace Assets.Scripts.Tools
 
         private void Update()
         {
-            if (_target == null)
+            if (_target.IsNull())
             {
                 return;
             }

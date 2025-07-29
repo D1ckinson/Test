@@ -94,7 +94,6 @@ namespace Assets.Scripts.Factories
             return IsPositionInGameArea(point) ? point : _hero.position - distance;
         }
 
-
         private bool IsPositionInGameArea(Vector3 position)
         {
             float sqrDistance = (_gameAreaSettings.Center - position).sqrMagnitude;

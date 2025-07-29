@@ -50,7 +50,7 @@ namespace Assets.Scripts
 
             Level++;
             LevelUp?.Invoke(Level);
-            Debug.Log("Левел ап!");
+
             CurrentExperience -= ExperienceForLevelUp;
             ExperienceForLevelUp = _levelSettings.CalculateNextLevelExperience(Level);
         }

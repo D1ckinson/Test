@@ -3,7 +3,8 @@ using Assets.Scripts.Tools;
 using Assets.Scripts.Ui;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using Random = UnityEngine.Random;
+using Assets.Code.Tools;
 
 namespace Assets.Code.AbilitySystem
 {
@@ -28,21 +29,26 @@ namespace Assets.Code.AbilitySystem
             _abilityFactory = abilityFactory.ThrowIfNull();
 
             _heroExperience.LevelUp += GenerateUpgrades;
+            _levelUpWindow.UpgradeChosen += UpgradeAbility;
         }
 
         ~UpgradeTrigger()
         {
-            if (_heroExperience != null)
+            if (_heroExperience.IsNull() == false)
             {
                 _heroExperience.LevelUp -= GenerateUpgrades;
+            }
+
+            if (_levelUpWindow.IsNull() == false)
+            {
+                _levelUpWindow.UpgradeChosen -= UpgradeAbility;
             }
         }
 
         private void GenerateUpgrades(int level)
         {
-            List<AbilityType> maxedAbilities = _abilityContainer.GetMaxedAbilities();
-            List<AbilityType> possibleUpgrades = _abilityConfigs.Keys.Except(maxedAbilities).ToList();
-            List<AbilityType> suggestedUpgrades = new();
+            List<AbilityType> possibleUpgrades = Constants.GetEnums<AbilityType>().Except(_abilityContainer.MaxedAbilities).ToList();
+            List<UpgradeOption> upgradeOptions = new();
 
             for (int i = Constants.Zero; i < SuggestedUpgradesCount; i++)
             {
@@ -51,58 +57,54 @@ namespace Assets.Code.AbilitySystem
                     break;
                 }
 
-                int index = Random.Range(Constants.Zero, possibleUpgrades.Count - Constants.One);
-                suggestedUpgrades.Add(possibleUpgrades[index]);
+                int index = Random.Range(Constants.Zero, possibleUpgrades.GetLastIndex());
+                AbilityType abilityType = possibleUpgrades[index];
                 possibleUpgrades.RemoveAt(index);
-            }
 
-            Dictionary<AbilityConfig, int> upgrades = new();
+                int abilityLevel = _abilityContainer.GetAbilityLevel(abilityType);
 
-            for (int i = Constants.Zero; i < suggestedUpgrades.Count; i++)
-            {
-                AbilityType abilityType = suggestedUpgrades[i];
-                int abilityNextLevel;
+                AbilityConfig abilityConfig = _abilityConfigs[abilityType];
+                AbilityStats currentStats = abilityConfig.GetStats(abilityLevel);
+                List<string> statsDescription;
 
-                if (_abilityContainer.HasAbility(abilityType))
+                if (abilityLevel > Constants.Zero)
                 {
-                    abilityNextLevel = _abilityContainer.GetAbilityLevel(abilityType) + Constants.One;
+                    AbilityStats nextStats = abilityConfig.GetStats(abilityLevel + Constants.One);
+                    AbilityStats StatsDifference = nextStats - currentStats;
+                    statsDescription = StatsDifference.GetStatsDescription();
                 }
                 else
                 {
-                    abilityNextLevel = Constants.One;
+                    statsDescription = currentStats.GetStatsDescription();
                 }
 
-                upgrades.Add(_abilityConfigs[abilityType], abilityNextLevel);
+                upgradeOptions.Add(new(abilityType, abilityLevel, statsDescription, abilityConfig.Image));
             }
 
-            if (upgrades.Count == Constants.Zero)
+            if (upgradeOptions.Count == Constants.Zero)
             {
                 //Наградить
 
                 return;
             }
 
-            _levelUpWindow.Show(upgrades, level.ThrowIfNegative());
-            _levelUpWindow.UpgradeChosen += UpgradeAbility;
+            _levelUpWindow.Show(upgradeOptions, level.ThrowIfNegative());
         }
 
         private void UpgradeAbility(AbilityType abilityType)
         {
             abilityType.ThrowIfNull();
 
-            if (_abilityContainer.HasAbility(abilityType))
+            switch (_abilityContainer.HasAbility(abilityType))
             {
-                if (_abilityContainer.IsMaxed(abilityType))
-                {
-                    return;
-                }
+                case true:
+                    _abilityContainer.Upgrade(abilityType);
+                    break;
 
-                _abilityContainer.Upgrade(abilityType);
-
-                return;
+                case false:
+                    _abilityContainer.Add(_abilityFactory.Create(abilityType));
+                    break;
             }
-
-            _abilityContainer.Add(_abilityFactory.Create(abilityType));
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Assets.Scripts.Factories
 
         public EnemyFactory(Dictionary<CharacterType, CharacterConfig> enemiesConfigs, LootFactory lootFactory, Transform hero, EnemySpawnerSettings spawnerSettings, GameAreaSettings gameAreaSettings)
         {
-            _enemiesConfigs = enemiesConfigs.ThrowIfCollectionNullOrEmpty();
+            _enemiesConfigs = enemiesConfigs.ThrowIfNullOrEmpty();
             _lootFactory = lootFactory.ThrowIfNull();
             _hero = hero.ThrowIfNull();
 

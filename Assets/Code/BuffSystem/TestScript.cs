@@ -43,7 +43,7 @@ namespace Assets.Code.AbilitySystem
 
             List<UpgradeOption> upgradeOption1s = new();
 
-            for (int i = 0; i < chosen.GetLastIndex(); i++)
+            for (int i = 0; i < chosen.LastIndex(); i++)
             {
                 Enum type = chosen[i];
                 //UpgradeOption option1 = new(type);
@@ -162,8 +162,8 @@ namespace Assets.Code.AbilitySystem
 
         public List<string> GetStatsDifference(int fromIndex, int toIndex)
         {
-            AbilityStats fromStat = _stats[fromIndex.ThrowIfMoreThan(_stats.GetLastIndex())];
-            AbilityStats toStat = _stats[toIndex.ThrowIfMoreThan(_stats.GetLastIndex())];
+            AbilityStats fromStat = _stats[fromIndex.ThrowIfMoreThan(_stats.LastIndex())];
+            AbilityStats toStat = _stats[toIndex.ThrowIfMoreThan(_stats.LastIndex())];
             List<string> result = new();/* fromStat.GetStatsDescription(toStat);*/
 
             return result;

@@ -47,9 +47,6 @@ namespace Assets.Scripts.Movement
 
         public void Initialize(float moveSpeed, float rotationSpeed)
         {
-            moveSpeed.ThrowIfZeroOrLess();
-            rotationSpeed.ThrowIfZeroOrLess();
-
             TryGetComponent(out ITellDirection directionSource).ThrowIfFalse();
 
             _directionSource = directionSource;

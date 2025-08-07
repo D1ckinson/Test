@@ -1,10 +1,10 @@
 ﻿using Assets.Scripts;
 using Assets.Scripts.Tools;
 using Assets.Scripts.Ui;
+using Assets.Code.Tools;
 using System.Collections.Generic;
 using System.Linq;
 using Random = UnityEngine.Random;
-using Assets.Code.Tools;
 
 namespace Assets.Code.AbilitySystem
 {
@@ -12,34 +12,37 @@ namespace Assets.Code.AbilitySystem
     {
         private const int SuggestedUpgradesCount = 3;
 
-        private readonly HeroExperience _heroExperience;
+        private readonly HeroLevel _heroExperience;
         private readonly Dictionary<AbilityType, AbilityConfig> _abilityConfigs;
         private readonly AbilityContainer _abilityContainer;
         private readonly LevelUpWindow _levelUpWindow;
         private readonly AbilityFactory _abilityFactory;
+        private readonly Dictionary<AbilityType, int> _abilityUnlockLevel;
 
         public UpgradeTrigger
-            (HeroExperience heroExperience, Dictionary<AbilityType, AbilityConfig> abilityConfigs,
-            AbilityContainer abilityContainer, LevelUpWindow levelUpWindow, AbilityFactory abilityFactory)
+            (HeroLevel heroExperience, Dictionary<AbilityType, AbilityConfig> abilityConfigs,
+            AbilityContainer abilityContainer, LevelUpWindow levelUpWindow, AbilityFactory abilityFactory,
+            Dictionary<AbilityType, int> abilityUnlockLevel)
         {
             _heroExperience = heroExperience.ThrowIfNull();
             _abilityContainer = abilityContainer.ThrowIfNull();
-            _abilityConfigs = abilityConfigs.ThrowIfCollectionNullOrEmpty();
+            _abilityConfigs = abilityConfigs.ThrowIfNullOrEmpty();
             _levelUpWindow = levelUpWindow.ThrowIfNull();
             _abilityFactory = abilityFactory.ThrowIfNull();
+            _abilityUnlockLevel = abilityUnlockLevel;
 
-            _heroExperience.LevelUp += GenerateUpgrades;
+            _heroExperience.LevelReceived += GenerateUpgrades;
             _levelUpWindow.UpgradeChosen += UpgradeAbility;
         }
 
         ~UpgradeTrigger()
         {
-            if (_heroExperience.IsNull() == false)
+            if (_heroExperience.NotNull())
             {
-                _heroExperience.LevelUp -= GenerateUpgrades;
+                _heroExperience.LevelReceived -= GenerateUpgrades;
             }
 
-            if (_levelUpWindow.IsNull() == false)
+            if (_levelUpWindow.NotNull())
             {
                 _levelUpWindow.UpgradeChosen -= UpgradeAbility;
             }
@@ -48,6 +51,17 @@ namespace Assets.Code.AbilitySystem
         private void GenerateUpgrades(int level)
         {
             List<AbilityType> possibleUpgrades = Constants.GetEnums<AbilityType>().Except(_abilityContainer.MaxedAbilities).ToList();
+
+            for (int i = 0; i < possibleUpgrades.Count; i++)
+            {
+                AbilityType type = possibleUpgrades[i];
+
+                if (_abilityUnlockLevel[type] == _abilityContainer.GetAbilityLevel(type))
+                {
+                    possibleUpgrades.Remove(type);
+                }
+            }
+
             List<UpgradeOption> upgradeOptions = new();
 
             for (int i = Constants.Zero; i < SuggestedUpgradesCount; i++)
@@ -57,7 +71,7 @@ namespace Assets.Code.AbilitySystem
                     break;
                 }
 
-                int index = Random.Range(Constants.Zero, possibleUpgrades.GetLastIndex());
+                int index = Random.Range(Constants.Zero, possibleUpgrades.LastIndex());
                 AbilityType abilityType = possibleUpgrades[index];
                 possibleUpgrades.RemoveAt(index);
 
@@ -70,8 +84,7 @@ namespace Assets.Code.AbilitySystem
                 if (abilityLevel > Constants.Zero)
                 {
                     AbilityStats nextStats = abilityConfig.GetStats(abilityLevel + Constants.One);
-                    AbilityStats StatsDifference = nextStats - currentStats;
-                    statsDescription = StatsDifference.GetStatsDescription();
+                    statsDescription = (nextStats - currentStats).GetStatsDescription();
                 }
                 else
                 {
@@ -88,7 +101,7 @@ namespace Assets.Code.AbilitySystem
                 return;
             }
 
-            _levelUpWindow.Show(upgradeOptions, level.ThrowIfNegative());
+            _levelUpWindow.Show(upgradeOptions, level);
         }
 
         private void UpgradeAbility(AbilityType abilityType)

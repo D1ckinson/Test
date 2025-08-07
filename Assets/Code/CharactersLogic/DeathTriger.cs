@@ -16,13 +16,13 @@ namespace Assets.Code.CharactersLogic
         {
             _health = health.ThrowIfNull();
             _lootFactory = lootFactory.ThrowIfNull();
-            _loots = loots.ThrowIfCollectionNullOrEmpty();
+            _loots = loots.ThrowIfNullOrEmpty();
             _health.Died += SpawnLoot;
         }
 
         public void SetLoot(LootConfig[] loots)
         {
-            _loots = loots.ThrowIfCollectionNullOrEmpty();
+            _loots = loots.ThrowIfNullOrEmpty();
         }
 
         private void SpawnLoot()

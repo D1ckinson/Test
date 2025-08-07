@@ -1,34 +1,25 @@
 ﻿using Assets.Code;
-using Assets.Code.CharactersLogic.HeroLogic;
-using Assets.Scripts.Tools;
 using System;
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace Assets.Scripts
 {
     [Serializable]
     public class PlayerData
     {
-        public Wallet Wallet { get; private set; }
-        public HeroExperience Level { get; private set; }
-        public HeroComponents HeroComponents { get; private set; }
-        public AbilityType StartAbility { get; private set; }
+        public Wallet Wallet;
+        public AbilityType StartAbility;
+        public Dictionary<AbilityType, int> AbilityUnlockLevel;
 
-        public PlayerData(Wallet wallet, HeroExperience level)
+        public PlayerData()
         {
-            Wallet = wallet.ThrowIfNull();
-            Level = level.ThrowIfNull();
+            Wallet = new();
             StartAbility = AbilityType.SwordStrike;
-        }
 
-        public void SetHeroTransform(HeroComponents heroComponents)
-        {
-            HeroComponents = heroComponents.ThrowIfNull();
-        }
-
-        public void SetStartAbility(AbilityType startAbility)
-        {
-            StartAbility = startAbility.ThrowIfNull();
+            AbilityUnlockLevel = new()
+            {
+                [AbilityType.SwordStrike] = 5,
+            };
         }
     }
 }

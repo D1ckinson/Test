@@ -3,6 +3,7 @@ using Assets.Code.AbilitySystem;
 using Assets.Code.CharactersLogic.HeroLogic;
 using Assets.Code.Spawners;
 using Assets.Code.Tools;
+using Assets.Code.Ui;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Factories;
 using Assets.Scripts.State_Machine;
@@ -10,15 +11,16 @@ using Assets.Scripts.Tools;
 using Assets.Scripts.Ui;
 using System.Collections.Generic;
 using UnityEngine;
+using YG;
 
 namespace Assets.Scripts
 {
+    [RequireComponent(typeof(ExperienceDistiller))]
     public class Bootstrap : MonoBehaviour
     {
         [SerializeField] private LevelSettings _levelSettings;
         [SerializeField] private UIConfig _uIConfig;
 
-        private PlayerData _playerData;
         private StateMachine _stateMachine;
 
 #if UNITY_EDITOR
@@ -39,25 +41,28 @@ namespace Assets.Scripts
 
         private void Awake()
         {
-            _playerData = new(new(), new(_levelSettings));
-            _stateMachine = new();
-
+            PlayerData playerData = YG2.saves.Load();
+            HeroLevel heroLevel = new(_levelSettings.CalculateNextLevelExperience);
             GameAreaSettings gameAreaSettings = _levelSettings.GameAreaSettings;
             HeroComponents heroComponents = new HeroFactory(_levelSettings.HeroConfig).Create(gameAreaSettings.Center);
-            _playerData.SetHeroTransform(heroComponents);
+            SessionData sessionData = new(heroLevel, heroComponents);
+
+            GetComponent<ExperienceDistiller>().Initialize(heroLevel);
 
             Dictionary<AbilityType, AbilityConfig> abilities = _levelSettings.GetAbilityConfigs();
 
             AbilityFactory abilityFactory = new(abilities, heroComponents.transform);
-            LevelUpWindow levelUpWindow = new(_uIConfig.LevelUpCanvas, _uIConfig.LevelUpButton);
-            LootFactory lootFactory = new(_levelSettings.Loots, _playerData);
+            LootFactory lootFactory = new(_levelSettings.Loots, playerData.Wallet, sessionData.HeroLevel);
             EnemyFactory enemyFactory = new(_levelSettings.GetEnemyConfigs(), lootFactory, heroComponents.transform, _levelSettings.EnemySpawnerSettings, gameAreaSettings);
-            new UpgradeTrigger(_playerData.Level, abilities, _playerData.HeroComponents.AbilityContainer, levelUpWindow, abilityFactory);
+
+            LevelUpWindow levelUpWindow = new(_uIConfig.LevelUpCanvas, _uIConfig.LevelUpButton);
+            new UpgradeTrigger(heroLevel, abilities, heroComponents.AbilityContainer, levelUpWindow, abilityFactory, playerData.AbilityUnlockLevel);
 
             EnemySpawner enemySpawner = new(enemyFactory, _levelSettings.GetSpawnTypeByTime());
 
+            _stateMachine = new();
             _stateMachine
-                .AddState(new MenuState(_stateMachine))
+                .AddState(new MenuState(_stateMachine, new(_uIConfig.MenuButton, _uIConfig.MenuCanvas)))
                 .AddState(new GameState(_stateMachine, heroComponents, enemySpawner, abilityFactory));
 
             _stateMachine.SetState<MenuState>();

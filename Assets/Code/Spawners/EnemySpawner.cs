@@ -23,7 +23,7 @@ namespace Assets.Code.Spawners
         public EnemySpawner(EnemyFactory enemyFactory, Dictionary<int, CharacterType> spawnTypeByTime)
         {
             _enemyFactory = enemyFactory.ThrowIfNull();
-            _spawnTypeByTime = spawnTypeByTime.ThrowIfCollectionNullOrEmpty();
+            _spawnTypeByTime = spawnTypeByTime.ThrowIfNullOrEmpty();
 
             _changeTypeTimeThreshold = _spawnTypeByTime.Keys.First();
             _spawnType = _spawnTypeByTime.Values.ElementAt(Constants.One);

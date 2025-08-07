@@ -1,5 +1,6 @@
-﻿using Assets.Code.AbilitySystem.Ui;
+﻿using Assets.Code.Ui.LevelUp;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Ui
 {
@@ -7,6 +8,8 @@ namespace Assets.Scripts.Ui
     public class UIConfig : ScriptableObject
     {
         [Header("Menu")]
+        public Canvas MenuCanvas;
+        public Button MenuButton;
 
         [Header("LevelUp Window")]
         public Canvas LevelUpCanvas;

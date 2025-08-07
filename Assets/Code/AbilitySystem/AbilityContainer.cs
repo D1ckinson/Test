@@ -21,10 +21,7 @@ namespace Assets.Code
 
         private void Update()
         {
-            foreach (Ability ability in _abilities.Values)
-            {
-                ability.Update();
-            }
+            _abilities.Values.ForEach(ability => ability.Update());
         }
 
         public void Add(Ability ability)
@@ -37,7 +34,7 @@ namespace Assets.Code
 
         public void Upgrade(AbilityType abilityType)
         {
-            _abilities.TryGetValueOrThrow(abilityType.ThrowIfNull()).LevelUp();
+            _abilities.GetValueOrThrow(abilityType.ThrowIfNull()).LevelUp();
         }
 
         public bool HasAbility(AbilityType abilityType)

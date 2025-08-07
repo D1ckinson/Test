@@ -1,5 +1,4 @@
 ﻿using Assets.Scripts.Tools;
-using System;
 using UnityEngine;
 
 namespace Assets.Code
@@ -42,7 +41,6 @@ namespace Assets.Code
         public void LevelUp()
         {
             Level++;
-            Debug.Log(Level);
             AbilityStats stats = _config.GetStats(Level);
 
             _maxCooldown = stats.Cooldown;

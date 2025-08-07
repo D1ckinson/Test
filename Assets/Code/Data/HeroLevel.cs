@@ -1,0 +1,71 @@
+﻿using Assets.Code.Data.Interfaces;
+using Assets.Scripts.Configs;
+using Assets.Scripts.Tools;
+using System;
+
+namespace Assets.Scripts
+{
+    [Serializable]
+    public class HeroLevel : IValueContainer
+    {
+        private const float TransferValue = 10f;
+
+        private readonly Func<int, int> _experienceFormula;
+
+        private float _buffer;
+        private float _lootPercent = 1;
+        private float _levelUpValue;
+
+        public int Level { get; private set; } = 1;
+        public float Value { get; private set; } = 0;
+
+        public HeroLevel(Func<int, int> experienceFormula)
+        {
+            _experienceFormula = experienceFormula.ThrowIfNull();
+            _levelUpValue = _experienceFormula.Invoke(Level);
+        }
+
+        public event Action<int> LevelReceived;
+
+        public void Add(int value)
+        {
+            _buffer += value.ThrowIfNegative() * _lootPercent;
+        }
+
+        public void Reset()
+        {
+            Level = Constants.One;
+            Value = Constants.Zero;
+        }
+
+        public void SetLootPercent(int percent)
+        {
+            _lootPercent = Constants.One + Constants.PercentToMultiplier(percent);
+        }
+
+        public void Transfer()
+        {
+            if (_buffer < TransferValue)
+            {
+                return;
+            }
+
+            _buffer -= TransferValue;
+            Value += TransferValue;
+
+            if (Value >= _levelUpValue)
+            {
+                LevelUp();
+            }
+        }
+
+        private void LevelUp()
+        {
+            Value -= _levelUpValue;
+            _levelUpValue = _experienceFormula.Invoke(Level);
+
+            Level++;
+            LevelReceived?.Invoke(Level);
+        }
+    }
+}

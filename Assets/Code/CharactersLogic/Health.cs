@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
+    [RequireComponent(typeof(HitEffect))]
     public class Health : MonoBehaviour
     {
         private float _invincibleTimer;
@@ -11,14 +12,19 @@ namespace Assets.Scripts
         private float _regeneration;
         private float _additionalValue;
         private float _resistMultiplier = 1;
+        private HitEffect _hitEffect;
 
-        public event Action GetHit;
         public event Action Died;
         public event Action<float> ValueChanged;
 
         public float Value { get; private set; }
         public float MaxValue { get; private set; }
         private bool IsInvincible => _invincibleTimer > Constants.Zero;
+
+        private void Awake()
+        {
+            _hitEffect = GetComponent<HitEffect>();
+        }
 
         private void OnEnable()
         {
@@ -43,6 +49,7 @@ namespace Assets.Scripts
         {
             MaxValue = maxValue.ThrowIfZeroOrLess();
             Value = MaxValue;
+
             _invincibilityDuration = invincibilityDuration.ThrowIfNegative();
             ValueChanged?.Invoke(Value);
         }
@@ -60,7 +67,6 @@ namespace Assets.Scripts
             }
 
             float tempValue = Value - damage.ThrowIfNegative() * _resistMultiplier;
-            GetHit?.Invoke();
 
             if (tempValue <= Constants.Zero)
             {
@@ -72,6 +78,7 @@ namespace Assets.Scripts
             {
                 Value = tempValue;
                 _invincibleTimer = _invincibilityDuration;
+                _hitEffect.Play();
             }
 
             ValueChanged?.Invoke(Value);

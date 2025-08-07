@@ -5,21 +5,26 @@ namespace Assets.Scripts.Tools
 
     public sealed class CustomGizmos
     {
+        private const int Zero = 0;
+        private const int One = 1;
         private const int CircleSegmentsCount = 32;
         private const int ConeSegmentsCount = 20;
+        private const int FullCircleDegrees = 360;
         private const float Half = 0.5f;
+
+        private static readonly Color _baseColor = Color.yellow;
 
         public static void DrawCircle(Vector3 center, float radius, Color? color = null)
         {
             center.ThrowIfNull();
             radius.ThrowIfZeroOrLess();
 
-            Gizmos.color = color ?? Color.yellow;
-            float angleStep = Constants.FullCircleDegrees / CircleSegmentsCount;
+            Gizmos.color = color ?? _baseColor;
+            float angleStep = FullCircleDegrees / CircleSegmentsCount;
 
-            Vector3 startPoint = CalculatePoint(Constants.Zero);
+            Vector3 startPoint = CalculatePoint(Zero);
 
-            for (int i = Constants.One; i <= CircleSegmentsCount + Constants.One; i++)
+            for (int i = One; i <= CircleSegmentsCount + One; i++)
             {
                 float angle = i * angleStep * Mathf.Deg2Rad;
                 Vector3 endPoint = CalculatePoint(angle);
@@ -30,25 +35,25 @@ namespace Assets.Scripts.Tools
 
             Vector3 CalculatePoint(float angle)
             {
-                Vector3 point = center + new Vector3(Mathf.Cos(angle), Constants.Zero, Mathf.Sin(angle)) * radius;
+                Vector3 point = center + new Vector3(Mathf.Cos(angle), Zero, Mathf.Sin(angle)) * radius;
 
                 return point;
             }
         }
 
-        public static void DrawCone(Vector3 center, Vector3 direction, float radius, float angle)
+        public static void DrawCone(Vector3 center, Vector3 direction, float radius, float angle, Color? color = null)
         {
             center.ThrowIfNull();
             direction.ThrowIfNotNormalize();
             radius.ThrowIfZeroOrLess();
             angle.ThrowIfZeroOrLess();
 
-            Gizmos.color = Color.red;
+            Gizmos.color = color ?? _baseColor;
 
             float halfAngle = angle * Half;
 
-            Vector3 rightDirection = Quaternion.Euler(Constants.Zero, halfAngle, Constants.Zero) * direction;
-            Vector3 leftDirection = Quaternion.Euler(Constants.Zero, -halfAngle, Constants.Zero) * direction;
+            Vector3 rightDirection = Quaternion.Euler(Zero, halfAngle, Zero) * direction;
+            Vector3 leftDirection = Quaternion.Euler(Zero, -halfAngle, Zero) * direction;
 
             Gizmos.DrawLine(center, center + rightDirection * radius);
             Gizmos.DrawLine(center, center + leftDirection * radius);
@@ -56,10 +61,10 @@ namespace Assets.Scripts.Tools
             float angleStep = angle / ConeSegmentsCount;
             Vector3 previousPoint = center + leftDirection * radius;
 
-            for (int i = Constants.One; i <= ConeSegmentsCount; i++)
+            for (int i = One; i <= ConeSegmentsCount; i++)
             {
                 float currentAngle = -halfAngle + angleStep * i;
-                Vector3 nextPoint = center + Quaternion.Euler(Constants.Zero, currentAngle, Constants.Zero) * direction * radius;
+                Vector3 nextPoint = center + Quaternion.Euler(Zero, currentAngle, Zero) * direction * radius;
 
                 Gizmos.DrawLine(previousPoint, nextPoint);
 

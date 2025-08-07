@@ -7,6 +7,7 @@ namespace Assets.Scripts.Tools
 {
     public class Pool<T> where T : MonoBehaviour
     {
+        private const int Zero = 0;
         private const int DefaultPreCreatedCount = 10;
 
         private readonly List<T> _items = new();
@@ -16,7 +17,7 @@ namespace Assets.Scripts.Tools
         {
             _createFunc = createFunc.ThrowIfNull();
 
-            for (int i = 0; i < preCreatedCount; i++)
+            for (int i = Zero; i < preCreatedCount; i++)
             {
                 Create();
             }

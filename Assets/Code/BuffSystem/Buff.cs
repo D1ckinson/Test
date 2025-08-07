@@ -14,7 +14,7 @@ namespace Assets.Code.BuffSystem
 
         public Buff(Dictionary<int, int> valueOnLevel, T component)
         {
-            _valueOnLevel = valueOnLevel.ThrowIfCollectionNullOrEmpty();
+            _valueOnLevel = valueOnLevel.ThrowIfNullOrEmpty();
             _components = new()
             {
                 component.ThrowIfNull()
@@ -43,10 +43,7 @@ namespace Assets.Code.BuffSystem
         {
             int value = _valueOnLevel[Level];
 
-            foreach (T component in _components)
-            {
-                Amplify(component, value);
-            }
+            _components.ForEach(component => Amplify(component, value));
         }
     }
 
@@ -130,11 +127,11 @@ namespace Assets.Code.BuffSystem
         }
     }
 
-    public class ExperienceAmplification : Buff<HeroExperience>
+    public class ExperienceAmplification : Buff<HeroLevel>
     {
-        public ExperienceAmplification(Dictionary<int, int> valueOnLevel, HeroExperience heroExperience) : base(valueOnLevel, heroExperience) { }
+        public ExperienceAmplification(Dictionary<int, int> valueOnLevel, HeroLevel heroExperience) : base(valueOnLevel, heroExperience) { }
 
-        protected override void Amplify(HeroExperience heroExperience, int additionalExperiencePercent)
+        protected override void Amplify(HeroLevel heroExperience, int additionalExperiencePercent)
         {
             heroExperience.SetLootPercent(additionalExperiencePercent);
         }

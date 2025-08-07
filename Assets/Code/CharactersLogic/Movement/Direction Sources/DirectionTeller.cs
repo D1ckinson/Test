@@ -7,8 +7,11 @@ namespace Assets.Scripts.Movement
 {
     public class DirectionTeller : MonoBehaviour, ITellDirection
     {
+        private const float CalculateDelay = 0.15f;
+
         private Transform _target;
         private Vector3 _moveDirection;
+        private float _time;
 
         public event Action<Vector3> DirectionChanged;
 
@@ -19,7 +22,7 @@ namespace Assets.Scripts.Movement
 
         private void Update()
         {
-            if (_target.IsNull() && _target.gameObject.activeSelf)
+            if (_target.IsNull() && _target.gameObject.activeSelf && gameObject.activeSelf)
             {
                 if (_moveDirection != Vector3.zero)
                 {
@@ -30,6 +33,14 @@ namespace Assets.Scripts.Movement
                 return;
             }
 
+            _time -= Time.deltaTime;
+
+            if (_time > Constants.Zero)
+            {
+                return;
+            }
+
+            _time = CalculateDelay;
             Vector3 moveDirection = (_target.position - transform.position).normalized;
 
             if (Mathf.Approximately(moveDirection.x, _moveDirection.x) && Mathf.Approximately(moveDirection.z, _moveDirection.z))

@@ -14,7 +14,7 @@ namespace Assets.Scripts.Tools
             }
         }
 
-        public static T ThrowIfCollectionNullOrEmpty<T>(this T collection) where T : ICollection
+        public static T ThrowIfNullOrEmpty<T>(this T collection) where T : ICollection
         {
             collection.ThrowIfNull();
 
@@ -135,6 +135,14 @@ namespace Assets.Scripts.Tools
             }
 
             return value;
+        }
+
+        public static void ThrowIfAnimationMissing(this Animator animator, int hash, int layerIndex = Constants.Zero)
+        {
+            if (animator.HasState(layerIndex, hash) == false)
+            {
+                throw new MissingAnimationException();
+            }
         }
     }
 }

@@ -34,9 +34,7 @@ namespace Assets.Scripts
         private void HandleCollision(Collision collision)
         {
             GameObject gameObject = collision.ThrowIfNull().gameObject;
-            //Debug.Log(gameObject.layer);
-            //Debug.Log(_damageLayer.value);
-            //Time.timeScale = 0;
+
             if (_damageLayer.Contains(gameObject.layer) && gameObject.TryGetComponent(out Health health))
             {
                 health.TakeDamage(_damage);

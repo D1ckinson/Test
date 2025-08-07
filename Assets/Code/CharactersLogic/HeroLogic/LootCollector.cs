@@ -25,7 +25,7 @@ namespace Assets.Scripts
 
         private void Update()
         {
-            for (int i = _toCollect.GetLastIndex(); i >= Constants.Zero; i--)
+            for (int i = _toCollect.LastIndex(); i >= Constants.Zero; i--)
             {
                 Loot loot = _toCollect[i];
 

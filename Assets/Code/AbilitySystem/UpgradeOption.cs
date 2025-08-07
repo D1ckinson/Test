@@ -15,7 +15,7 @@ namespace Assets.Code.AbilitySystem
         {
             Type = type.ThrowIfNull();
             NextLevel = nextLevel.ThrowIfZeroOrLess();
-            Text = statsDescription.ThrowIfCollectionNullOrEmpty();
+            Text = statsDescription.ThrowIfNullOrEmpty();
             Icon = icon.ThrowIfNull();
         }
     }

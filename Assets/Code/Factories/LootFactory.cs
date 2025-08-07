@@ -11,12 +11,14 @@ namespace Assets.Scripts.Factories
     public class LootFactory
     {
         private readonly Dictionary<LootType, Pool<Loot>> _pools;
-        private readonly PlayerData _playerData;
+        private readonly Wallet _wallet;
+        private readonly HeroLevel _heroLevel;
 
-        public LootFactory(List<Loot> loots, PlayerData playerData)
+        public LootFactory(List<Loot> loots, Wallet wallet, HeroLevel heroLevel)
         {
-            loots.ThrowIfCollectionNullOrEmpty();
-            _playerData = playerData.ThrowIfNull();
+            loots.ThrowIfNullOrEmpty();
+            _wallet = wallet.ThrowIfNull();
+            _heroLevel = heroLevel.ThrowIfNull();
 
             _pools = new();
             loots.ForEach(loot => _pools.Add(loot.LootType, new(() => Create(loot))));
@@ -40,10 +42,10 @@ namespace Assets.Scripts.Factories
 
             IValueContainer valueContainer = loot.LootType switch
             {
-                LootType.LowExperience => _playerData.Level,
-                LootType.MediumExperience => _playerData.Level,
-                LootType.HighExperience => _playerData.Level,
-                LootType.Coin => _playerData.Wallet,
+                LootType.LowExperience => _heroLevel,
+                LootType.MediumExperience => _heroLevel,
+                LootType.HighExperience => _heroLevel,
+                LootType.Coin => _wallet,
                 _ => throw new NotImplementedException(),
             };
 

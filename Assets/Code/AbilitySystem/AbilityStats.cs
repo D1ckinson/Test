@@ -29,17 +29,17 @@ namespace Assets.Code
         {
             List<string> description = new();
 
-            AddIfPositive(description, "Перезарядка", Cooldown);
-            AddIfPositive(description, "Урон", Damage);
-            AddIfPositive(description, "Дальность", Range);
-            AddIfPositive(description, "Количество снарядов", ProjectilesCount);
+            AddIfNotZero(description, "Перезарядка", Cooldown);
+            AddIfNotZero(description, "Урон", Damage);
+            AddIfNotZero(description, "Дальность", Range);
+            AddIfNotZero(description, "Количество снарядов", ProjectilesCount);
 
             return description;
         }
 
-        private void AddIfPositive(List<string> list, string statName, float value)
+        private void AddIfNotZero(List<string> list, string statName, float value)
         {
-            if (value.IsPositive() == false)
+            if (value == Constants.Zero)
             {
                 return;
             }

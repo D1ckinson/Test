@@ -13,7 +13,7 @@ namespace Assets.Code
 
         public AbilityFactory(Dictionary<AbilityType, AbilityConfig> configs, Transform hero)
         {
-            _configs = configs.ThrowIfCollectionNullOrEmpty();
+            _configs = configs.ThrowIfNullOrEmpty();
             _hero = hero.ThrowIfNull();
 
             _createFunctions = new()

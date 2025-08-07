@@ -15,14 +15,12 @@ namespace Assets.Scripts.Tools
             _transform = GetComponent<Transform>();
         }
 
-        private void Update()
+        private void LateUpdate()
         {
-            if (_target.IsNull())
+            if (_target.NotNull())
             {
-                return;
+                _transform.position = _target.position + _offset;
             }
-
-            _transform.position = _target.position + _offset;
         }
 
         public void Follow(Transform target)

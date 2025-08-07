@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44cb7219a0831d644a655f9794043b55, type: 3}
   m_Name: UI Config
   m_EditorClassIdentifier: 
+  MenuCanvas: {fileID: 6567926420972474822, guid: 3952ebd9e32829449907f2d256580127, type: 3}
+  MenuButton: {fileID: 600938578111088843, guid: ad1819ec2c4e31648b4f882e626b0b39, type: 3}
   LevelUpCanvas: {fileID: 733074229439658083, guid: 904fec740c3087c4bba989286fa7b4be, type: 3}
-  LevelUpButton: {fileID: 2520206909844715109, guid: c70596d2e4b3b3940b304ab407b7be34, type: 3}
+  LevelUpButton: {fileID: 3213702649923148649, guid: c70596d2e4b3b3940b304ab407b7be34, type: 3}

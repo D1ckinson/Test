@@ -1,4 +1,5 @@
 using Assets.Code;
+using Assets.Code.Shop;
 using Assets.Scripts.Tools;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace Assets.Scripts.Configs
         [field: SerializeField] public GameAreaSettings GameAreaSettings { get; private set; }
 
         [field: Header("Abilities")]
+        [field: SerializeField] public UpgradeCost UpgradeCost { get; private set; }
+
         [field: SerializeField] private List<AbilityConfig> _abilitiesConfigs;
 
         [Header("Level Formula Settings")]
@@ -32,27 +35,18 @@ namespace Assets.Scripts.Configs
         [SerializeField][Min(1)] private int _experienceCoefficient = 50;
         [SerializeField][Min(1)] private float _degree = 1.3f;
 
-        public int CalculateNextLevelExperience(int level)
+        public int CalculateExperienceForNextLevel(int current)
         {
-            level.ThrowIfZeroOrLess();
+            current.ThrowIfZeroOrLess();
 
-            return (int)(_fixedExperience * level + _experienceCoefficient * MathF.Pow(level, _degree));
+            return (int)(_fixedExperience * current + _experienceCoefficient * MathF.Pow(current, _degree));
         }
 
-        public Dictionary<AbilityType, AbilityConfig> GetAbilityConfigs()
-        {
-            return _abilitiesConfigs.ToDictionary(config => config.Type, config => config);
-        }
+        public Dictionary<AbilityType, AbilityConfig> AbilityConfigs => _abilitiesConfigs.ToDictionary(config => config.Type, config => config);
 
-        public Dictionary<CharacterType, CharacterConfig> GetEnemyConfigs()
-        {
-            return _enemiesConfigs.ToDictionary(config => config.Type, config => config);
-        }
+        public Dictionary<CharacterType, CharacterConfig> EnemyConfigs => _enemiesConfigs.ToDictionary(config => config.Type, config => config);
 
-        public Dictionary<int, CharacterType> GetSpawnTypeByTime()
-        {
-            return _spawnTypeByTimes.ToDictionary(item => item.Time, item => item.Type);
-        }
+        public Dictionary<int, CharacterType> SpawnTypesByTime => _spawnTypeByTimes.ToDictionary(item => item.Time, item => item.Type);
 
         [Serializable]
         private struct SpawnTypeByTime

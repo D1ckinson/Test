@@ -50,18 +50,7 @@ namespace Assets.Code.AbilitySystem
 
         private void GenerateUpgrades(int level)
         {
-            List<AbilityType> possibleUpgrades = Constants.GetEnums<AbilityType>().Except(_abilityContainer.MaxedAbilities).ToList();
-
-            for (int i = 0; i < possibleUpgrades.Count; i++)
-            {
-                AbilityType type = possibleUpgrades[i];
-
-                if (_abilityUnlockLevel[type] == _abilityContainer.GetAbilityLevel(type))
-                {
-                    possibleUpgrades.Remove(type);
-                }
-            }
-
+            List<AbilityType> possibleUpgrades = GetPossibleUpgrades();
             List<UpgradeOption> upgradeOptions = new();
 
             for (int i = Constants.Zero; i < SuggestedUpgradesCount; i++)
@@ -91,7 +80,7 @@ namespace Assets.Code.AbilitySystem
                     statsDescription = currentStats.GetStatsDescription();
                 }
 
-                upgradeOptions.Add(new(abilityType, abilityLevel, statsDescription, abilityConfig.Image));
+                upgradeOptions.Add(new(abilityType, abilityLevel, statsDescription, abilityConfig.Icon, abilityConfig.Name));
             }
 
             if (upgradeOptions.Count == Constants.Zero)
@@ -102,6 +91,23 @@ namespace Assets.Code.AbilitySystem
             }
 
             _levelUpWindow.Show(upgradeOptions, level);
+        }
+
+        private List<AbilityType> GetPossibleUpgrades()
+        {
+            List<AbilityType> possibleUpgrades = Constants.GetEnums<AbilityType>().Except(_abilityContainer.MaxedAbilities).ToList();
+
+            for (int i = 0; i < possibleUpgrades.Count; i++)
+            {
+                AbilityType type = possibleUpgrades[i];
+
+                if (_abilityUnlockLevel[type] == _abilityContainer.GetAbilityLevel(type))
+                {
+                    possibleUpgrades.Remove(type);
+                }
+            }
+
+            return possibleUpgrades;
         }
 
         private void UpgradeAbility(AbilityType abilityType)

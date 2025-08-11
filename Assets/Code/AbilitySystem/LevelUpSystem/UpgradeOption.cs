@@ -8,15 +8,17 @@ namespace Assets.Code.AbilitySystem
     {
         public readonly AbilityType Type;
         public readonly int NextLevel;
-        public readonly List<string> Text;
+        public readonly List<string> Stats;
         public readonly Sprite Icon;
+        public readonly string Name;
 
-        public UpgradeOption(AbilityType type, int nextLevel, List<string> statsDescription, Sprite icon)
+        public UpgradeOption(AbilityType type, int nextLevel, List<string> statsDescription, Sprite icon, string name)
         {
             Type = type.ThrowIfNull();
             NextLevel = nextLevel.ThrowIfZeroOrLess();
-            Text = statsDescription.ThrowIfNullOrEmpty();
+            Stats = statsDescription.ThrowIfNullOrEmpty();
             Icon = icon.ThrowIfNull();
+            Name = name.ThrowIfNullOrEmpty();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Assets.Code.Ui.LevelUp;
+﻿using Assets.Code.Shop;
+using Assets.Code.Ui.LevelUp;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,5 +15,9 @@ namespace Assets.Scripts.Ui
         [Header("LevelUp Window")]
         public Canvas LevelUpCanvas;
         public LevelUpButton LevelUpButton;
+
+        [Header("Shop")]
+        public Canvas ShopCanvas;
+        public ShopOption ShopButton;
     }
 }

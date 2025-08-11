@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace Assets.Code.Tools
 {
@@ -20,6 +23,21 @@ namespace Assets.Code.Tools
             return argument != null;
         }
 
+        public static int ParseOrThrow(this string argument)
+        {
+            if (int.TryParse(argument, out var result))
+            {
+                return result;
+            }
+
+            throw new ArgumentException();
+        }
+
+        public static void SetText(this TMP_Text textWindow, string text)
+        {
+            textWindow.text = text;
+        }
+
         public static TValue GetValueOrThrow<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
         {
             if (dictionary.TryGetValue(key, out TValue value))
@@ -30,9 +48,32 @@ namespace Assets.Code.Tools
             throw new KeyNotFoundException();
         }
 
+        public static T GetComponentOrThrow<T>(this Component component)
+        {
+            if (component.TryGetComponent(out T value))
+            {
+                return value;
+            }
+
+            throw new MissingComponentException();
+        }
+
+        public static T GetComponentInChildrenOrThrow<T>(this Component component)
+        {
+            return component.GetComponentInChildren<T>() ?? throw new MissingComponentException();
+        }
+
         public static void ForEach<T>(this ICollection<T> collection, Action<T> action)
         {
             foreach (T item in collection)
+            {
+                action?.Invoke(item);
+            }
+        }
+
+        public static void ForEachValues<TKey, TValue>(this Dictionary<TKey, TValue> pairs, Action<TValue> action)
+        {
+            foreach (TValue item in pairs.Values)
             {
                 action?.Invoke(item);
             }
@@ -63,7 +104,7 @@ namespace Assets.Code.Tools
             return (mask.value & (One << layer)) != Zero;
         }
 
-        public static void SetActive(this Behaviour component, bool isActive)
+        public static void SetActive(this Component component, bool isActive)
         {
             component.gameObject.SetActive(isActive);
         }
@@ -71,6 +112,21 @@ namespace Assets.Code.Tools
         public static bool IsFinished(this AnimatorStateInfo stateInfo)
         {
             return stateInfo.normalizedTime >= One || stateInfo.loop;
+        }
+
+        public static bool IsActive(this Component component)
+        {
+            return component.gameObject.activeSelf;
+        }
+
+        public static void Subscribe(this Button button, UnityAction action)
+        {
+            button.onClick.AddListener(action);
+        }
+
+        public static void UnsubscribeAll(this Button button)
+        {
+            button.onClick.RemoveAllListeners();
         }
     }
 }

@@ -1,86 +1,47 @@
-﻿using Assets.Code.Tools;
+﻿using Assets.Code.Shop;
 using Assets.Scripts.Tools;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
 
 namespace Assets.Scripts.State_Machine
 {
     public class MenuState : State
     {
-        private readonly MenuWindow _menuWindow;
+        private readonly MenuWindow _menu;
+        private readonly ShopWindow _shop;
 
-        public MenuState(StateMachine stateMachine, MenuWindow menuWindow) : base(stateMachine)
+        public MenuState(StateMachine stateMachine, MenuWindow menu, ShopWindow shop) : base(stateMachine)
         {
-            _menuWindow = menuWindow.ThrowIfNull();
-            _menuWindow.Subscribe(ButtonType.Play, () => SetState<GameState>());
+            _menu = menu.ThrowIfNull();
+            _shop = shop.ThrowIfNull();
+
+            _menu.Subscribe(ButtonType.Play, () => SetState<GameState>());
+            _menu.Subscribe(ButtonType.Shop, () => ShowShop());
         }
 
         public override void Enter()
         {
-            _menuWindow.Toggle(true);
+            _menu.Toggle(true);
         }
 
         public override void Exit()
         {
-            _menuWindow.Toggle(false);
+            _menu.Toggle(false);
         }
 
         public override void Update()
         {
         }
-    }
 
-    public class MenuWindow
-    {
-        private readonly Dictionary<ButtonType, Button> _buttons;
-        private readonly Canvas _canvas;
-
-        public MenuWindow(Button buttonPrefab, Canvas canvasPrefab)
+        private void ShowShop()
         {
-            buttonPrefab.ThrowIfNull();
-            _canvas = Object.Instantiate(canvasPrefab.ThrowIfNull());
-            Transform layoutGroup = _canvas.GetComponentInChildren<LayoutGroup>().ThrowIfNull().transform;
-
-            _buttons = new()
-            {
-                [ButtonType.Play] = Object.Instantiate(buttonPrefab, layoutGroup, false),
-                [ButtonType.Shop] = Object.Instantiate(buttonPrefab, layoutGroup, false),
-                [ButtonType.Leaderboard] = Object.Instantiate(buttonPrefab, layoutGroup, false),
-            };
-
-            Toggle(false);
+            _menu.Toggle(false);
+            _shop.Toggle(true);
+            _shop.Exiting += TurnOnMaiMenu;
         }
 
-        public bool IsEnable => _canvas.gameObject.activeSelf;
-
-        public void Toggle(bool? isActive = null)
+        private void TurnOnMaiMenu(ShopWindow shopWindow)
         {
-            isActive ??= IsEnable == false;
-
-            _canvas.SetActive((bool)isActive);
-            _buttons.Values.ForEach(button => button.SetActive((bool)isActive));
+            _menu.Toggle(true);
+            shopWindow.Exiting -= TurnOnMaiMenu;
         }
-
-        public void Subscribe(ButtonType buttonType, UnityAction call)
-        {
-            _buttons.GetValueOrThrow(buttonType.ThrowIfNull()).onClick.AddListener(call.ThrowIfNull());
-        }
-
-        public void UnsubscribeAll()
-        {
-            _buttons.Values.ForEach(button => button.onClick.RemoveAllListeners());
-        }
-    }
-
-    public enum ButtonType
-    {
-        Play,
-        Continue,
-        Upgrade,
-        Shop,
-        Leaderboard,
-        Exit
     }
 }

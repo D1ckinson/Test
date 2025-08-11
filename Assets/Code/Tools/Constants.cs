@@ -18,10 +18,7 @@ namespace Assets.Scripts.Tools
 
         public static IEnumerable<T> GetEnums<T>() where T : Enum
         {
-            Type type = typeof(T);
-            type.IsEnum.ThrowIfFalse(new ArgumentException());
-
-            return (IEnumerable<T>)Enum.GetValues(type);
+            return (IEnumerable<T>)Enum.GetValues(typeof(T));
         }
     }
 }

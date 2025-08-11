@@ -67,6 +67,13 @@ namespace Assets.Scripts.Tools
             return argument;
         }
 
+        public static string ThrowIfNullOrEmpty(this string argument)
+        {
+            string.IsNullOrEmpty(argument).ThrowIfTrue(new ArgumentException());
+
+            return argument;
+        }
+
         public static int ThrowIfLessThan(this int value, int range)
         {
             if (value < range)

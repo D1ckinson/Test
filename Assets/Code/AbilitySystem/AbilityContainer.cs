@@ -21,7 +21,7 @@ namespace Assets.Code
 
         private void Update()
         {
-            _abilities.Values.ForEach(ability => ability.Update());
+            _abilities.ForEachValues(ability => ability.Update());
         }
 
         public void Add(Ability ability)

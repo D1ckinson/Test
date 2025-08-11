@@ -9,16 +9,20 @@ namespace Assets.Scripts
     {
         private float _lootMultiplier = 1;
 
+        public event Action<float> ValueChanged;
+
         public float CoinsQuantity { get; private set; } = 0;
 
         public void Add(int value)
         {
             CoinsQuantity += value.ThrowIfZeroOrLess() * _lootMultiplier;
+            ValueChanged?.Invoke(CoinsQuantity);
         }
 
         public void Spend(float value)
         {
             CoinsQuantity -= value.ThrowIfNegative().ThrowIfMoreThan(CoinsQuantity + Constants.One);
+            ValueChanged?.Invoke(CoinsQuantity);
         }
 
         public void SetLootPercent(int percent)

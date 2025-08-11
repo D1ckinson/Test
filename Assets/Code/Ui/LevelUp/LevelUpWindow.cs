@@ -19,7 +19,7 @@ namespace Assets.Scripts.Ui
         public LevelUpWindow(Canvas canvas, LevelUpButton buttonPrefab)
         {
             _canvas = Object.Instantiate(canvas.ThrowIfNull());
-            Transform layoutGroup = _canvas.GetComponentInChildren<LayoutGroup>().ThrowIfNull().transform;
+            Transform layoutGroup = _canvas.GetComponentInChildrenOrThrow<LayoutGroup>().transform;
 
             _buttons = new LevelUpButton[]
             {
@@ -34,7 +34,7 @@ namespace Assets.Scripts.Ui
 
         public event Action<AbilityType> UpgradeChosen;
 
-        public void Show(List<UpgradeOption> upgradeOptions, int level=1)
+        public void Show(List<UpgradeOption> upgradeOptions, int level = 1)
         {
             upgradeOptions.ThrowIfNullOrEmpty();
 
@@ -44,7 +44,7 @@ namespace Assets.Scripts.Ui
             {
                 LevelUpButton button = _buttons[i];
                 UpgradeOption upgradeOption = upgradeOptions[i];
-                button.SetDescription(upgradeOption.Text, upgradeOption.Icon);
+                button.SetDescription(upgradeOption.Name, upgradeOption.Icon, upgradeOption.Stats);
                 button.Subscribe(() => Callback(upgradeOption.Type));
                 button.SetActive(true);
             }

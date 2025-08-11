@@ -16,3 +16,5 @@ MonoBehaviour:
   MenuButton: {fileID: 600938578111088843, guid: ad1819ec2c4e31648b4f882e626b0b39, type: 3}
   LevelUpCanvas: {fileID: 733074229439658083, guid: 904fec740c3087c4bba989286fa7b4be, type: 3}
   LevelUpButton: {fileID: 3213702649923148649, guid: c70596d2e4b3b3940b304ab407b7be34, type: 3}
+  ShopCanvas: {fileID: 934338067670144840, guid: 15ccc84f916deaa4a9c9b789b8cb9ed7, type: 3}
+  ShopButton: {fileID: 7006632268564582405, guid: d40bae330f156f84b8c87130e9727c4b, type: 3}

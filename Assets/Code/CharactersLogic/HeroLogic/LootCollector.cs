@@ -19,7 +19,7 @@ namespace Assets.Scripts
 
         private void Awake()
         {
-            _collectArea = GetComponent<SphereCollider>().ThrowIfNull();
+            _collectArea = GetComponent<SphereCollider>();
             _collectArea.isTrigger = true;
         }
 
@@ -47,7 +47,7 @@ namespace Assets.Scripts
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.TryGetComponent(out Loot loot) == false || _toCollect.Contains(loot))
+            if (other.TryGetComponent(out Loot loot) == false || _toCollect.Contains(loot))
             {
                 return;
             }

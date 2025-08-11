@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Configs;
+﻿using Assets.Code.Tools;
+using Assets.Scripts.Configs;
 using Assets.Scripts.Tools;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,9 +59,7 @@ namespace Assets.Scripts.Factories
         private EnemyComponents Create()
         {
             CharacterConfig config = _enemiesConfigs.Values.First();
-
-            Transform enemy = Object.Instantiate(config.Prefab);
-            enemy.TryGetComponent(out EnemyComponents enemyComponents).ThrowIfFalse();
+            EnemyComponents enemyComponents = Object.Instantiate(config.Prefab).GetComponentOrThrow<EnemyComponents>();
 
             enemyComponents.CharacterMovement.Initialize(config.MoveSpeed, config.RotationSpeed);
             enemyComponents.Health.Initialize(config.MaxHealth, config.InvincibilityDuration);

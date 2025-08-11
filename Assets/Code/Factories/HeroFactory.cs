@@ -1,4 +1,5 @@
 using Assets.Code.CharactersLogic.HeroLogic;
+using Assets.Code.Tools;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Tools;
 using UnityEngine;
@@ -18,14 +19,13 @@ namespace Assets.Scripts.Factories
         public HeroComponents Create(Vector3 position)
         {
             Transform hero = Object.Instantiate(_heroConfig.Prefab, position + Vector3.up, Quaternion.identity);// убрать "+ Vector3.up"
-            hero.TryGetComponent(out HeroComponents heroComponents);
+            HeroComponents heroComponents = hero.GetComponentOrThrow<HeroComponents>();
 
             heroComponents.CharacterMovement.Initialize(_heroConfig.MoveSpeed, _heroConfig.RotationSpeed);
             heroComponents.Health.Initialize(_heroConfig.MaxHealth, _heroConfig.InvincibilityDuration);
             heroComponents.LootCollector.Initialize(_heroConfig.AttractionRadius, _heroConfig.PullSpeed);
 
-            Camera.main.TryGetComponent(out Follower follower).ThrowIfFalse();
-            follower.Follow(hero);
+            Camera.main.GetComponentOrThrow<Follower>().Follow(hero);
 
             return heroComponents;
         }

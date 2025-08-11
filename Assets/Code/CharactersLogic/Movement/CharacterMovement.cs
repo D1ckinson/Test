@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Tools;
+﻿using Assets.Code.Tools;
+using Assets.Scripts.Tools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,9 +48,7 @@ namespace Assets.Scripts.Movement
 
         public void Initialize(float moveSpeed, float rotationSpeed)
         {
-            TryGetComponent(out ITellDirection directionSource).ThrowIfFalse();
-
-            _directionSource = directionSource;
+            _directionSource = this.GetComponentOrThrow<ITellDirection>();
             _directionSource.DirectionChanged += SetDirection;
 
             _rigidbody = GetComponent<Rigidbody>();

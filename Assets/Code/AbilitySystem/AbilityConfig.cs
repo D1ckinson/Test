@@ -12,7 +12,8 @@ namespace Assets.Code
         [field: SerializeField] public ParticleSystem Effect { get; private set; }
         [field: SerializeField] public LayerMask DamageLayer { get; private set; }
         [field: SerializeField] public AbilityType Type { get; private set; }
-        [field: SerializeField] public Sprite Image { get; private set; }
+        [field: SerializeField] public Sprite Icon { get; private set; }
+        [field: SerializeField] public string Name { get; private set; }
 
         [Header("Upgrades")]
         [SerializeField] private List<AbilityStats> _abilityStats;

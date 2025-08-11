@@ -2,19 +2,28 @@
 using Assets.Code.Tools;
 using Assets.Scripts.Tools;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Code.Ui.LevelUp
 {
-    public class LevelUpButton : TextButton
+    public class LevelUpButton : UiButton
     {
+        [SerializeField] private TMP_Text _name;
         [SerializeField] private Image _image;
+        [SerializeField] private TMP_Text _stats;
 
-        public void SetDescription(List<string> text, Sprite image)
+        public void SetText(string text)
         {
-            SetText(text.ThrowIfNullOrEmpty().ToWrapText());
+            _stats.text = text;
+        }
+
+        public void SetDescription(string name, Sprite image, List<string> stats)
+        {
+            _name.text = name.ThrowIfNullOrEmpty();
             _image.sprite = image.ThrowIfNull();
+            _stats.text = stats.ThrowIfNullOrEmpty().ToWrapText();
         }
     }
 }

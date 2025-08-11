@@ -18,7 +18,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   <Type>k__BackingField: 0
-  <Image>k__BackingField: {fileID: 21300000, guid: 90c9b0811749b974b92025ced2c45d94, type: 3}
+  <Icon>k__BackingField: {fileID: 21300000, guid: 90c9b0811749b974b92025ced2c45d94, type: 3}
+  <Name>k__BackingField: "\u0423\u0434\u0430\u0440 \u043C\u0435\u0447\u043E\u043C"
   _abilityStats:
   - <Cooldown>k__BackingField: 0.6
     <Damage>k__BackingField: 10

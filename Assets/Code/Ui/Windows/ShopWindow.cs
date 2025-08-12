@@ -1,4 +1,5 @@
-﻿using Assets.Code.Tools;
+﻿using Assets.Code.Data;
+using Assets.Code.Tools;
 using Assets.Scripts;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Tools;
@@ -83,7 +84,7 @@ namespace Assets.Code.Shop
 
         private void SetOptionColor(ShopOption option)
         {
-            if (option.Maxed)
+            if (option.IsMaxed)
             {
                 option.SetColor(Color.yellow);
             }
@@ -112,11 +113,13 @@ namespace Assets.Code.Shop
                 int availableLevel = _playerData.AbilityUnlockLevel.GetValueOrThrow(abilityType);
                 int cost = _upgradeCost.GetCost(abilityType, availableLevel + Constants.One);
 
-                string buttonText = availableLevel == abilityConfig.MaxLevel ? "Макс." : $"Улучшить";
+                string buyText = availableLevel == abilityConfig.MaxLevel ? UIText.LevelMaxed : UIText.Upgrade;
 
-                option.Initialize(abilityConfig.Icon, abilityConfig.Name).SetDescription(availableLevel, buttonText, cost);
+                option.Initialize(abilityConfig.Icon, abilityConfig.Name);
+                SetDescription(abilityType, option);
+
                 SetOptionColor(option);
-                option.Subscribe(() => IncreaseUnlockLevel(abilityType));
+                option.Subscribe(() => IncreaseUnlockLevel(abilityType, option));
 
                 options.Add(option);
             }
@@ -124,12 +127,26 @@ namespace Assets.Code.Shop
             return options;
         }
 
-        private void IncreaseUnlockLevel(AbilityType abilityType)
+        private void IncreaseUnlockLevel(AbilityType abilityType, ShopOption option)
         {
             int unlockLevel = _playerData.AbilityUnlockLevel[abilityType] + Constants.One;
 
             _playerData.Wallet.Spend(_upgradeCost.GetCost(abilityType, unlockLevel));
             _playerData.AbilityUnlockLevel[abilityType] = unlockLevel;
+            SetDescription(abilityType, option);
+        }
+
+        private void SetDescription(AbilityType abilityType, ShopOption option)
+        {
+            AbilityConfig abilityConfig = _levelSettings.AbilityConfigs.GetValueOrThrow(abilityType);
+
+            int availableLevel = _playerData.AbilityUnlockLevel.GetValueOrThrow(abilityType);
+            int cost = _upgradeCost.GetCost(abilityType, availableLevel + Constants.One);
+
+            string buyText = availableLevel >= abilityConfig.MaxLevel ? UIText.LevelMaxed : UIText.Upgrade;
+            Debug.Log(availableLevel);
+            Debug.Log(abilityConfig.MaxLevel);
+            option.SetDescription(availableLevel, buyText, cost);
         }
     }
 }

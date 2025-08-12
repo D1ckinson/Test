@@ -1,7 +1,7 @@
 ﻿using Assets.Code.Shop;
 using Assets.Code.Ui.LevelUp;
+using Assets.Scripts.State_Machine;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Scripts.Ui
 {
@@ -10,7 +10,7 @@ namespace Assets.Scripts.Ui
     {
         [Header("Menu")]
         public Canvas MenuCanvas;
-        public Button MenuButton;
+        public TextButton MenuButton;
 
         [Header("LevelUp Window")]
         public Canvas LevelUpCanvas;

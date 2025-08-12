@@ -416,7 +416,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bf6adf0551a5414f80e4e1eb2fa5ab7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _icon: {fileID: 4314523002470197275}
+  _abilityIcon: {fileID: 4314523002470197275}
+  _goldIcon: {fileID: 9175762900916471592}
   _abilityName: {fileID: 1882100541288408115}
   _levelDescription: {fileID: 6655599966603680866}
   _button: {fileID: 2731194817173089287}
@@ -434,7 +435,7 @@ GameObject:
   - component: {fileID: 5467686217863181453}
   - component: {fileID: 4314523002470197275}
   m_Layer: 5
-  m_Name: Icon
+  m_Name: Ability Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

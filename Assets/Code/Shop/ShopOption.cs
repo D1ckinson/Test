@@ -1,4 +1,5 @@
-﻿using Assets.Code.Tools;
+﻿using Assets.Code.Data;
+using Assets.Code.Tools;
 using Assets.Scripts.Tools;
 using TMPro;
 using UnityEngine;
@@ -9,7 +10,8 @@ namespace Assets.Code.Shop
 {
     public class ShopOption : MonoBehaviour
     {
-        [SerializeField] private Image _icon;
+        [SerializeField] private Image _abilityIcon;
+        [SerializeField] private Image _goldIcon;
         [SerializeField] private TMP_Text _abilityName;
         [SerializeField] private TMP_Text _levelDescription;
         [SerializeField] private Button _button;
@@ -17,14 +19,12 @@ namespace Assets.Code.Shop
         [SerializeField] private TMP_Text _costText;
 
         public int Cost => _costText.text.ParseOrThrow();
-        public bool Maxed => _buyText.text == "Макс.";
+        public bool IsMaxed => _buyText.text == UIText.LevelMaxed;
 
-        public ShopOption Initialize(Sprite sprite, string abilityName)
+        public void Initialize(Sprite sprite, string abilityName)
         {
-            _icon.sprite = sprite.ThrowIfNull();
+            _abilityIcon.sprite = sprite.ThrowIfNull();
             _abilityName.text = abilityName.ThrowIfNullOrEmpty();
-
-            return this;
         }
 
         public void Subscribe(UnityAction onClick)
@@ -34,7 +34,7 @@ namespace Assets.Code.Shop
 
         public void SetDescription(int level, string buyText, int cost)
         {
-            _levelDescription.SetText("Ур." + level.ThrowIfNegative().ToString());
+            _levelDescription.SetText(UIText.Level + level.ThrowIfNegative().ToString());
             _buyText.SetText(buyText.ThrowIfNullOrEmpty());
             _costText.SetText(cost.ThrowIfNegative().ToString());
         }
@@ -49,6 +49,12 @@ namespace Assets.Code.Shop
             if (color == Color.red)
             {
                 _button.interactable = false;
+            }
+            else if (color == Color.yellow)
+            {
+                _button.interactable = false;
+                _goldIcon.SetActive(false);
+                _costText.SetActive(false);
             }
             else
             {

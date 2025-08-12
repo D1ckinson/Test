@@ -1,7 +1,7 @@
-﻿using Assets.Code.Tools;
+﻿using Assets.Code.Data;
+using Assets.Code.Tools;
 using Assets.Scripts.Tools;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -10,10 +10,10 @@ namespace Assets.Scripts.State_Machine
 {
     public class MenuWindow
     {
-        private readonly Dictionary<ButtonType, Button> _buttons;
+        private readonly Dictionary<ButtonType, TextButton> _buttons;
         private readonly Canvas _canvas;
 
-        public MenuWindow(Button buttonPrefab, Canvas canvasPrefab)
+        public MenuWindow(TextButton buttonPrefab, Canvas canvasPrefab)
         {
             buttonPrefab.ThrowIfNull();
             _canvas = Object.Instantiate(canvasPrefab.ThrowIfNull());
@@ -26,7 +26,9 @@ namespace Assets.Scripts.State_Machine
                 [ButtonType.Leaderboard] = Object.Instantiate(buttonPrefab, layoutGroup, false),
             };
 
-            _buttons[ButtonType.Shop].GetComponentInChildren<TMP_Text>().text = "Магазин";///////////////
+            _buttons[ButtonType.Play].Text.text = UIText.Play;
+            _buttons[ButtonType.Shop].Text.text = UIText.Shop;
+            _buttons[ButtonType.Leaderboard].Text.text = UIText.Leaderboard;
 
             Toggle(false);
         }
@@ -41,12 +43,12 @@ namespace Assets.Scripts.State_Machine
 
         public void Subscribe(ButtonType buttonType, UnityAction call)
         {
-            _buttons.GetValueOrThrow(buttonType.ThrowIfNull()).Subscribe(call.ThrowIfNull());
+            _buttons.GetValueOrThrow(buttonType.ThrowIfNull()).Button.Subscribe(call.ThrowIfNull());
         }
 
         public void UnsubscribeAll()
         {
-            _buttons.ForEachValues(button => button.UnsubscribeAll());
+            _buttons.ForEachValues(button => button.Button.UnsubscribeAll());
         }
     }
 }

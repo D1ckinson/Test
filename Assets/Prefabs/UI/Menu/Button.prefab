@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0418\u0433\u0440\u0430\u0442\u044C"
+  m_text: Text
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cd73669869c4ce540886f76be2a8ad5f, type: 2}
   m_sharedMaterial: {fileID: 942589445191879500, guid: cd73669869c4ce540886f76be2a8ad5f, type: 2}
@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 9160935241317720720}
   - component: {fileID: 3713532646876907024}
   - component: {fileID: 600938578111088843}
+  - component: {fileID: 8207335518274604322}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -255,3 +256,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8207335518274604322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5989073600926569094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dddd73133c31465418c347e7a29adb2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Button>k__BackingField: {fileID: 600938578111088843}
+  <Text>k__BackingField: {fileID: 1180844770790699025}

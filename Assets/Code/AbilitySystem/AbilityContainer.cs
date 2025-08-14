@@ -32,6 +32,11 @@ namespace Assets.Code
             _abilities.Add(ability.Type, ability);
         }
 
+        public void RemoveAll()
+        {
+            _abilities.Clear();
+        }
+
         public void Upgrade(AbilityType abilityType)
         {
             _abilities.GetValueOrThrow(abilityType.ThrowIfNull()).LevelUp();

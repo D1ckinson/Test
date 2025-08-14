@@ -11,6 +11,11 @@ namespace Assets.Code.Data
         public static string Shop { get; private set; }
         public static string Upgrade { get; private set; }
         public static string Leaderboard { get; private set; }
+        public static string EarnedText { get; internal set; }
+        public static string YourTimeText { get; internal set; }
+        public static string MinutesText { get; internal set; }
+        public static string ContinueText { get; internal set; }
+        public static string MenuText { get; internal set; }
 
         static UIText()
         {
@@ -38,6 +43,11 @@ namespace Assets.Code.Data
             Shop = "Магазин";
             Upgrade = "Улучшить";
             Leaderboard = "Таблица лидеров";
+            EarnedText="";
+            YourTimeText="Ваше время";
+            MinutesText="Минут";
+            ContinueText="Продолжить";
+            MenuText = "Меню";
         }
 
         private static void FillEn()
@@ -48,6 +58,11 @@ namespace Assets.Code.Data
             Shop = "Shop";
             Upgrade = "Upgrade";
             Leaderboard = "Leaderboard";
+            EarnedText = "Earned";
+            YourTimeText = "Your time";
+            MinutesText = "Minutes";
+            ContinueText = "Continue";
+            MenuText = "Menu";
         }
 
         private static void FillTr()

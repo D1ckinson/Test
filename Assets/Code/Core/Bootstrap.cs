@@ -46,7 +46,7 @@ namespace Assets.Scripts
             GameAreaSettings gameAreaSettings = _levelSettings.GameAreaSettings;
             HeroComponents heroComponents = new HeroFactory(_levelSettings.HeroConfig).Create(gameAreaSettings.Center);
             SessionData sessionData = new(heroLevel, heroComponents);
-            playerData.Wallet.Add(10000);
+
             GetComponent<ExperienceDistiller>().Initialize(heroLevel);////////////////////////////////
 
             Dictionary<AbilityType, AbilityConfig> abilities = _levelSettings.AbilityConfigs;
@@ -62,11 +62,12 @@ namespace Assets.Scripts
 
             MenuWindow menu = new(_uIConfig.MenuButton, _uIConfig.MenuCanvas);
             ShopWindow shop = new(playerData, _levelSettings, _levelSettings.UpgradeCost, _uIConfig.ShopCanvas, _uIConfig.ShopButton);
+            UiFactory uiFactory = new(_uIConfig);
 
             _stateMachine = new();
             _stateMachine
-                .AddState(new MenuState(_stateMachine, menu, shop))
-                .AddState(new GameState(_stateMachine, heroComponents, enemySpawner, abilityFactory));
+                .AddState(new MenuState(_stateMachine, menu, shop, uiFactory))
+                .AddState(new GameState(_stateMachine, heroComponents, enemySpawner, abilityFactory,uiFactory));
 
             _stateMachine.SetState<MenuState>();
         }

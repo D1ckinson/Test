@@ -24,9 +24,7 @@ namespace Assets.Code
 
         public Ability Create(AbilityType abilityType)
         {
-            _createFunctions.TryGetValue(abilityType.ThrowIfNull(), out Func<Ability> createFunc).ThrowIfFalse();
-
-            return createFunc.Invoke();
+            return _createFunctions[abilityType].Invoke();
         }
 
         private SwordStrike CreateSwordStrike()

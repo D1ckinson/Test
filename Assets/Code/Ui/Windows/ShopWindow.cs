@@ -144,8 +144,6 @@ namespace Assets.Code.Shop
             int cost = _upgradeCost.GetCost(abilityType, availableLevel + Constants.One);
 
             string buyText = availableLevel >= abilityConfig.MaxLevel ? UIText.LevelMaxed : UIText.Upgrade;
-            Debug.Log(availableLevel);
-            Debug.Log(abilityConfig.MaxLevel);
             option.SetDescription(availableLevel, buyText, cost);
         }
     }

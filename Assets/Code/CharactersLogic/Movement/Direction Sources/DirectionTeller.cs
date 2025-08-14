@@ -22,7 +22,7 @@ namespace Assets.Scripts.Movement
 
         private void Update()
         {
-            if (_target.IsNull() && _target.IsActive() && this.IsActive())
+            if (this.IsActive() == false || _target.IsNull() || _target.IsActive() == false)
             {
                 if (_moveDirection != Vector3.zero)
                 {

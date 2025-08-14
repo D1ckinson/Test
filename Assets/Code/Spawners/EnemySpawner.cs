@@ -46,6 +46,7 @@ namespace Assets.Code.Spawners
         public void Reset()
         {
             _gameTimer.Reset();
+            _enemyFactory.DisableAll();
         }
 
         private void SpawnEnemy()

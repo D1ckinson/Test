@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Code.Tools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -31,6 +32,11 @@ namespace Assets.Scripts.Tools
             item.gameObject.SetActive(true);
 
             return item;
+        }
+
+        public void DisableAll()
+        {
+            _items.ForEach(item => item.SetActive(false));
         }
 
         private T Create()

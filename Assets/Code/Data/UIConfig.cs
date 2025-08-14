@@ -1,4 +1,5 @@
 ﻿using Assets.Code.Shop;
+using Assets.Code.Ui;
 using Assets.Code.Ui.LevelUp;
 using Assets.Scripts.State_Machine;
 using UnityEngine;
@@ -19,5 +20,9 @@ namespace Assets.Scripts.Ui
         [Header("Shop")]
         public Canvas ShopCanvas;
         public ShopOption ShopButton;
+
+        [Header("Other")]
+        public DeathWindow DeathWindow;
+        public TestCanvasUiFactory TestCanvasUiFactory;
     }
 }

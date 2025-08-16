@@ -295,7 +295,6 @@ GameObject:
   m_Component:
   - component: {fileID: 867356546}
   - component: {fileID: 867356547}
-  - component: {fileID: 867356548}
   m_Layer: 0
   m_Name: Bootstrap
   m_TagString: Untagged
@@ -332,18 +331,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _levelSettings: {fileID: 11400000, guid: 7eb38bd379c89884a9342674f543a20b, type: 2}
   _uIConfig: {fileID: 11400000, guid: aede97ec0c4284e4c8042b4f700d6ac1, type: 2}
---- !u!114 &867356548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 867356544}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e3bcf53c2836ff438d32a0b178b69a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,7 +450,7 @@ GameObject:
   - component: {fileID: 1426739354}
   - component: {fileID: 1426739353}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

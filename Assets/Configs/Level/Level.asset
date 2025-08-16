@@ -24,10 +24,10 @@ MonoBehaviour:
     <Radius>k__BackingField: 30
     <Delay>k__BackingField: 0.6
     <SpawnLimit>k__BackingField: 50
-  _spawnTypeByTimes:
+  <SpawnTypeByTimes>k__BackingField:
   - <Time>k__BackingField: 0
     <Type>k__BackingField: 1
-  - <Time>k__BackingField: 2
+  - <Time>k__BackingField: 120
     <Type>k__BackingField: 1
   <GameAreaSettings>k__BackingField:
     <Center>k__BackingField: {x: 100, y: 0, z: 100}

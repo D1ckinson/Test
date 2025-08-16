@@ -1,4 +1,5 @@
 ﻿using Assets.Code.Shop;
+using Assets.Code.Tools;
 using Assets.Code.Ui;
 using Assets.Code.Ui.LevelUp;
 using Assets.Scripts.State_Machine;
@@ -24,5 +25,7 @@ namespace Assets.Scripts.Ui
         [Header("Other")]
         public DeathWindow DeathWindow;
         public TestCanvasUiFactory TestCanvasUiFactory;
+        public BaseWindow FadeWindow;
+        public FPSView FPSView;
     }
 }

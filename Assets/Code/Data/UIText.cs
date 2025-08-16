@@ -43,10 +43,10 @@ namespace Assets.Code.Data
             Shop = "Магазин";
             Upgrade = "Улучшить";
             Leaderboard = "Таблица лидеров";
-            EarnedText="";
-            YourTimeText="Ваше время";
-            MinutesText="Минут";
-            ContinueText="Продолжить";
+            EarnedText = "Заработано";
+            YourTimeText = "Ваше время";
+            MinutesText = "Минут";
+            ContinueText = "Продолжить";
             MenuText = "Меню";
         }
 

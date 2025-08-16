@@ -56,6 +56,7 @@ namespace Assets.Code.Shop
 
             _canvas.SetActive((bool)isActive);
             _options.ForEach(option => option.SetActive((bool)isActive));
+            _walletView.SetText(_playerData.Wallet.CoinsQuantity.ToString());
 
             switch (isActive)
             {

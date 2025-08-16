@@ -1,6 +1,6 @@
-﻿using Assets.Code.Data.Interfaces;
+﻿using Assets.Code.Loot;
+using Assets.Code.Tools;
 using Assets.Scripts.Tools;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -11,17 +11,13 @@ namespace Assets.Scripts.Factories
     public class LootFactory
     {
         private readonly Dictionary<LootType, Pool<Loot>> _pools;
-        private readonly Wallet _wallet;
-        private readonly HeroLevel _heroLevel;
 
-        public LootFactory(List<Loot> loots, Wallet wallet, HeroLevel heroLevel)
+        public LootFactory(Loot[] loots)
         {
             loots.ThrowIfNullOrEmpty();
-            _wallet = wallet.ThrowIfNull();
-            _heroLevel = heroLevel.ThrowIfNull();
 
             _pools = new();
-            loots.ForEach(loot => _pools.Add(loot.LootType, new(() => Create(loot))));
+            loots.ForEach(loot => _pools.Add(loot.Type, new(() => Create(loot))));
         }
 
         public void Spawn(Loot loot, Vector3 position, int count = Constants.One)
@@ -31,27 +27,19 @@ namespace Assets.Scripts.Factories
 
             for (int i = Constants.Zero; i < count; i++)
             {
-                Loot createdLoot = _pools[loot.LootType].Get();
+                Loot createdLoot = _pools[loot.Type].Get();
                 createdLoot.transform.SetPositionAndRotation(position + GenerateOffset(), GenerateRotation());
             }
         }
 
+        public void DisableAll()
+        {
+            _pools.ForEachValues(pool => pool.DisableAll());
+        }
+
         private Loot Create(Loot loot)
         {
-            Loot createdLoot = Object.Instantiate(loot);
-
-            IValueContainer valueContainer = loot.LootType switch
-            {
-                LootType.LowExperience => _heroLevel,
-                LootType.MediumExperience => _heroLevel,
-                LootType.HighExperience => _heroLevel,
-                LootType.Coin => _wallet,
-                _ => throw new NotImplementedException(),
-            };
-
-            createdLoot.Initialize(valueContainer);
-
-            return createdLoot;
+            return Object.Instantiate(loot);
         }
 
         private Vector3 GenerateOffset()

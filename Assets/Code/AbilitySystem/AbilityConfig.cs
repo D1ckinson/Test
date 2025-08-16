@@ -27,9 +27,4 @@ namespace Assets.Code
             return _abilityStats[level - Constants.One];
         }
     }
-
-    public class StaticData
-    {
-
-    }
 }

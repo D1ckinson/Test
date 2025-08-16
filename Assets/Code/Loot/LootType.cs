@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Factories
+﻿namespace Assets.Code.Loot
 {
     public enum LootType
     {

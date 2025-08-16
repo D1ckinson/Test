@@ -1,74 +1,43 @@
-﻿using Assets.Code.Tools;
-using Assets.Scripts.Tools;
+﻿using Assets.Scripts.Tools;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-namespace Assets.Code.Ui
+namespace Assets.Code.Tools
 {
     public class Timer
     {
-        private readonly List<TimerData> _activeTimers = new();
+        private int _duration;
+        private float _remainingTime;
 
-        public Timer Start(float duration, Action onComplete, bool isRepeated = false)
+        public event Action Completed;
+
+        public void Start(int duration)
         {
-            _activeTimers.Add(new(duration, onComplete, isRepeated));
+            _duration = duration.ThrowIfZeroOrLess();
+            _remainingTime = _duration;
 
-            if (_activeTimers.Count == Constants.One)
-            {
-                UpdateService.Register(Update);
-            }
-
-            return this;
-        }
-
-        public void Stop(Action onComplete)
-        {
-            TimerData data = _activeTimers.First(data => data.Callback == onComplete);
-            _activeTimers.Remove(data);
+            UpdateService.Register(Update);
         }
 
         private void Update()
         {
-            for (int i = _activeTimers.LastIndex(); i >= Constants.Zero; i--)
-            {
-                TimerData timer = _activeTimers[i];
-                timer.RemainingTime -= Time.deltaTime;
+            _remainingTime -= Time.deltaTime;
 
-                if (timer.RemainingTime > Constants.Zero)
-                {
-                    continue;
-                }
-
-                timer.Callback?.Invoke();
-
-                if (timer.IsRepeated)
-                {
-                    continue;
-                }
-
-                _activeTimers.Remove(timer);
-            }
-
-            if (_activeTimers.Count == Constants.Zero)
+            if (_remainingTime <= Constants.Zero)
             {
                 UpdateService.Unregister(Update);
+                Completed?.Invoke();
             }
         }
 
-        private class TimerData
+        public void Pause()
         {
-            public float RemainingTime;
-            public Action Callback;
-            public bool IsRepeated;
+            UpdateService.Unregister(Update);
+        }
 
-            public TimerData(float remainingTime, Action callback, bool isRepeated)
-            {
-                RemainingTime = remainingTime.ThrowIfZeroOrLess();
-                Callback = callback.ThrowIfNull();
-                IsRepeated = isRepeated;
-            }
+        public void Continue()
+        {
+            UpdateService.Register(Update);
         }
     }
 }

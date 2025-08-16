@@ -15,7 +15,6 @@ using YG;
 
 namespace Assets.Scripts
 {
-    [RequireComponent(typeof(ExperienceDistiller))]
     public class Bootstrap : MonoBehaviour
     {
         [SerializeField] private LevelSettings _levelSettings;
@@ -44,30 +43,29 @@ namespace Assets.Scripts
             PlayerData playerData = YG2.saves.Load();
             HeroLevel heroLevel = new(_levelSettings.CalculateExperienceForNextLevel);
             GameAreaSettings gameAreaSettings = _levelSettings.GameAreaSettings;
-            HeroComponents heroComponents = new HeroFactory(_levelSettings.HeroConfig).Create(gameAreaSettings.Center);
-            SessionData sessionData = new(heroLevel, heroComponents);
-
-            GetComponent<ExperienceDistiller>().Initialize(heroLevel);////////////////////////////////
+            HeroComponents heroComponents = new HeroFactory(_levelSettings.HeroConfig, playerData.Wallet, heroLevel).Create(gameAreaSettings.Center);
+            heroComponents.Initialize(heroLevel, gameAreaSettings.Center);
 
             Dictionary<AbilityType, AbilityConfig> abilities = _levelSettings.AbilityConfigs;
 
             AbilityFactory abilityFactory = new(abilities, heroComponents.transform);
-            LootFactory lootFactory = new(_levelSettings.Loots, playerData.Wallet, sessionData.HeroLevel);
+            LootFactory lootFactory = new(_levelSettings.Loots);
             EnemyFactory enemyFactory = new(_levelSettings.EnemyConfigs, lootFactory, heroComponents.transform, _levelSettings.EnemySpawnerSettings, gameAreaSettings);
 
             LevelUpWindow levelUpWindow = new(_uIConfig.LevelUpCanvas, _uIConfig.LevelUpButton);
             new UpgradeTrigger(heroLevel, abilities, heroComponents.AbilityContainer, levelUpWindow, abilityFactory, playerData.AbilityUnlockLevel);
 
-            EnemySpawner enemySpawner = new(enemyFactory, _levelSettings.SpawnTypesByTime);
+            EnemySpawner enemySpawner = new(enemyFactory, _levelSettings.SpawnTypeByTimes);
 
             MenuWindow menu = new(_uIConfig.MenuButton, _uIConfig.MenuCanvas);
             ShopWindow shop = new(playerData, _levelSettings, _levelSettings.UpgradeCost, _uIConfig.ShopCanvas, _uIConfig.ShopButton);
             UiFactory uiFactory = new(_uIConfig);
+            uiFactory.Create<FPSView>();
 
             _stateMachine = new();
             _stateMachine
                 .AddState(new MenuState(_stateMachine, menu, shop, uiFactory))
-                .AddState(new GameState(_stateMachine, heroComponents, enemySpawner, abilityFactory,uiFactory));
+                .AddState(new GameState(_stateMachine, heroComponents, enemySpawner, abilityFactory, uiFactory));
 
             _stateMachine.SetState<MenuState>();
         }

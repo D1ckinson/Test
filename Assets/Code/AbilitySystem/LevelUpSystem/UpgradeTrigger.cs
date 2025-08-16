@@ -31,7 +31,7 @@ namespace Assets.Code.AbilitySystem
             _abilityFactory = abilityFactory.ThrowIfNull();
             _abilityUnlockLevel = abilityUnlockLevel;
 
-            _heroExperience.LevelReceived += GenerateUpgrades;
+            _heroExperience.LevelRaised += GenerateUpgrades;
             _levelUpWindow.UpgradeChosen += UpgradeAbility;
         }
 
@@ -39,7 +39,7 @@ namespace Assets.Code.AbilitySystem
         {
             if (_heroExperience.NotNull())
             {
-                _heroExperience.LevelReceived -= GenerateUpgrades;
+                _heroExperience.LevelRaised -= GenerateUpgrades;
             }
 
             if (_levelUpWindow.NotNull())

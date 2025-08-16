@@ -128,5 +128,15 @@ namespace Assets.Code.Tools
         {
             button.onClick.RemoveAllListeners();
         }
+
+        public static int IndexOf<T>(this T[] values, T value)
+        {
+            return Array.IndexOf(values, value);
+        }
+
+        public static string ToMinutesString(this float seconds, string format = "0.##")
+        {
+            return TimeSpan.FromSeconds(seconds).TotalMinutes.ToString(format);
+        }
     }
 }

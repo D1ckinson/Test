@@ -1,27 +1,27 @@
-﻿using Assets.Code.Data.Interfaces;
-using Assets.Scripts.Factories;
-using Assets.Scripts.Tools;
+﻿using Assets.Code.Loot;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
+    [RequireComponent(typeof(Rigidbody))]
     public class Loot : MonoBehaviour
     {
         [SerializeField][Min(1)] private int _value = 1;
 
-        [field: SerializeField] public LootType LootType { get; private set; }
+        [field: SerializeField] public LootType Type { get; private set; }
+        public Rigidbody Rigidbody { get; private set; }
 
-        private IValueContainer _valueContainer;
-
-        public void Initialize(IValueContainer valueContainer)
+        private void Awake()
         {
-            _valueContainer = valueContainer.ThrowIfNull();
+            Rigidbody = GetComponent<Rigidbody>();
         }
 
-        public void Collect()
+        public int Collect()
         {
-            _valueContainer.Add(_value);
             gameObject.SetActive(false);
+            Rigidbody.velocity = Vector3.zero;
+
+            return _value;
         }
     }
 }

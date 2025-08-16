@@ -46,6 +46,12 @@ namespace Assets.Scripts.Factories
             return enemy;
         }
 
+        public void DisableAll()
+        {
+            _pool.DisableAll();
+            _lootFactory.DisableAll();
+        }
+
         private void SetStats(EnemyComponents enemy, CharacterConfig config)
         {
             enemy.CharacterMovement.SetMoveStat(config.MoveSpeed);
@@ -95,9 +101,12 @@ namespace Assets.Scripts.Factories
 
         private bool IsPositionInGameArea(Vector3 position)
         {
-            float sqrDistance = (_gameAreaSettings.Center - position).sqrMagnitude;
+            //float sqrDistance = (_gameAreaSettings.Center - position).sqrMagnitude;
 
-            return sqrDistance <= Mathf.Sqrt(_gameAreaSettings.Radius);
+            //return sqrDistance <= Mathf.Sqrt(_gameAreaSettings.Radius);
+
+            float distance = Vector3.Distance(_gameAreaSettings.Center, position);
+            return distance <= _gameAreaSettings.Radius;
         }
     }
 }

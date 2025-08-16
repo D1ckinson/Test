@@ -2,6 +2,7 @@
 using Assets.Code.CharactersLogic.HeroLogic;
 using Assets.Code.Spawners;
 using Assets.Code.Tools;
+using Assets.Code.Ui.Windows;
 using Assets.Scripts.Tools;
 using UnityEngine;
 
@@ -9,13 +10,10 @@ namespace Assets.Scripts.State_Machine
 {
     public class GameState : State
     {
-        private const int SecondsInOneMinute = 60;
-
         private readonly HeroComponents _heroComponents;
         private readonly AbilityFactory _abilityFactory;
         private readonly EnemySpawner _enemySpawner;
         private readonly UiFactory _uiFactory;
-        private readonly string _format = "0.##";
 
         private float _survivedTime;
 
@@ -32,35 +30,42 @@ namespace Assets.Scripts.State_Machine
         {
             _heroComponents.AbilityContainer.Add(_abilityFactory.Create(AbilityType.SwordStrike));
             _heroComponents.Health.Died += ShowDeathWindow;
+            _heroComponents.LootCollector.Run();
             _survivedTime = Constants.Zero;
+            _enemySpawner.Run();
         }
 
         public override void Update()
         {
-            _enemySpawner.Update();
             _survivedTime += Time.deltaTime;
         }
 
         public override void Exit()
         {
+            DeathWindow deathWindow = _uiFactory.Create<DeathWindow>();
+            deathWindow.BackToMenuButton.UnsubscribeAll();
+            deathWindow.SetActive(false);
+
             _heroComponents.Health.Died -= ShowDeathWindow;
             _heroComponents.AbilityContainer.RemoveAll();
+            _heroComponents.LootCollector.Stop();
+            _heroComponents.LootCollector.TransferGold();
+            _heroComponents.HeroLevel.Reset();
+            _heroComponents.SetActive(true);
+            _heroComponents.SetDefaultPosition();
+
+            _enemySpawner.Reset();
         }
 
         private void ShowDeathWindow()
         {
+            _heroComponents.LootCollector.Stop();
+            _enemySpawner.Pause();
             DeathWindow deathWindow = _uiFactory.Create<DeathWindow>();
-            //deathWindow.CoinsQuantity =;
-            deathWindow.MinutesQuantity.SetText((_survivedTime / SecondsInOneMinute).ToString(_format));
-            deathWindow.BackToMenuButton.Subscribe(() => ReturnToMenuState(deathWindow));
-        }
 
-        private void ReturnToMenuState(DeathWindow deathWindow)
-        {
-            deathWindow.BackToMenuButton.UnsubscribeAll();
-            _heroComponents.AbilityContainer.RemoveAll();
-            _enemySpawner.Reset();
-            SetState<MenuState>();
+            deathWindow.CoinsQuantity.SetText(_heroComponents.LootCollector.CollectedGold.ToString(StringFormat.WholeNumber));
+            deathWindow.MinutesQuantity.SetText(_survivedTime.ToMinutesString());
+            deathWindow.BackToMenuButton.Subscribe(() => _uiFactory.Create<FadeWindow>().Show(SetState<MenuState>));
         }
     }
 }

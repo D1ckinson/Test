@@ -1,4 +1,5 @@
 using Assets.Code;
+using Assets.Code.Data.Setting_Structures;
 using Assets.Code.Shop;
 using Assets.Scripts.Tools;
 using System;
@@ -9,18 +10,18 @@ using UnityEngine;
 namespace Assets.Scripts.Configs
 {
     [CreateAssetMenu(menuName = "Game/LevelSettings")]
-    public class LevelSettings : ScriptableObject
+    public partial class LevelSettings : ScriptableObject
     {
         [field: Header("Characters Configs")]
-        [field: SerializeField] private List<CharacterConfig> _enemiesConfigs;
+        [field: SerializeField] private CharacterConfig[] _enemiesConfigs;
         [field: SerializeField] public CharacterConfig HeroConfig { get; private set; }
 
         [field: Header("All Loot")]
-        [field: SerializeField] public List<Loot> Loots { get; private set; }
+        [field: SerializeField] public Loot[] Loots { get; private set; }
 
         [field: Header("Enemy Spawn Settings")]
         [field: SerializeField] public EnemySpawnerSettings EnemySpawnerSettings { get; private set; }
-        [field: SerializeField] private List<SpawnTypeByTime> _spawnTypeByTimes;
+        [field: SerializeField] public SpawnTypeByTime[] SpawnTypeByTimes { get; private set; }
 
         [field: Header("Game Area Settings")]
         [field: SerializeField] public GameAreaSettings GameAreaSettings { get; private set; }
@@ -28,7 +29,7 @@ namespace Assets.Scripts.Configs
         [field: Header("Abilities")]
         [field: SerializeField] public UpgradeCost UpgradeCost { get; private set; }
 
-        [field: SerializeField] private List<AbilityConfig> _abilitiesConfigs;
+        [field: SerializeField] private AbilityConfig[] _abilitiesConfigs;
 
         [Header("Level Formula Settings")]
         [SerializeField][Min(1)] private int _fixedExperience = 100;
@@ -45,14 +46,5 @@ namespace Assets.Scripts.Configs
         public Dictionary<AbilityType, AbilityConfig> AbilityConfigs => _abilitiesConfigs.ToDictionary(config => config.Type, config => config);
 
         public Dictionary<CharacterType, CharacterConfig> EnemyConfigs => _enemiesConfigs.ToDictionary(config => config.Type, config => config);
-
-        public Dictionary<int, CharacterType> SpawnTypesByTime => _spawnTypeByTimes.ToDictionary(item => item.Time, item => item.Type);
-
-        [Serializable]
-        private struct SpawnTypeByTime
-        {
-            [field: SerializeField] public int Time { get; private set; }
-            [field: SerializeField] public CharacterType Type { get; private set; }
-        }
     }
 }

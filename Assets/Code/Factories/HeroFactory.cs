@@ -10,10 +10,14 @@ namespace Assets.Scripts.Factories
     public class HeroFactory
     {
         private readonly CharacterConfig _heroConfig;
+        private readonly Wallet _wallet;
+        private readonly HeroLevel _heroLevel;
 
-        public HeroFactory(CharacterConfig heroConfig)
+        public HeroFactory(CharacterConfig heroConfig, Wallet wallet, HeroLevel heroLevel)
         {
             _heroConfig = heroConfig.ThrowIfNull();
+            _wallet = wallet.ThrowIfNull();
+            _heroLevel = heroLevel.ThrowIfNull();
         }
 
         public HeroComponents Create(Vector3 position)
@@ -23,7 +27,7 @@ namespace Assets.Scripts.Factories
 
             heroComponents.CharacterMovement.Initialize(_heroConfig.MoveSpeed, _heroConfig.RotationSpeed);
             heroComponents.Health.Initialize(_heroConfig.MaxHealth, _heroConfig.InvincibilityDuration);
-            heroComponents.LootCollector.Initialize(_heroConfig.AttractionRadius, _heroConfig.PullSpeed);
+            heroComponents.LootCollector.Initialize(_heroConfig.AttractionRadius, _heroConfig.PullSpeed, _wallet, _heroLevel);
 
             Camera.main.GetComponentOrThrow<Follower>().Follow(hero);
 

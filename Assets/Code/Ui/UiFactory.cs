@@ -1,4 +1,6 @@
-﻿using Assets.Code.Ui;
+﻿using Assets.Code.Tools;
+using Assets.Code.Ui;
+using Assets.Code.Ui.Windows;
 using Assets.Scripts.Tools;
 using Assets.Scripts.Ui;
 using System;
@@ -20,6 +22,8 @@ public class UiFactory
         _createMethods = new()
         {
             [typeof(DeathWindow)] = CreateDeathWindow,
+            [typeof(FadeWindow)] = CreateFadeWindow,
+            [typeof(FPSView)] = CreateFPSView,
         };
     }
 
@@ -27,14 +31,29 @@ public class UiFactory
     {
         if (_cash.TryGetValue(typeof(T), out BaseWindow window))
         {
+            window.SetActive(true);
+
             return (T)window;
         }
 
-        return (T)_createMethods[typeof(T)].Invoke();
+        window = _createMethods[typeof(T)].Invoke();
+        _cash.Add(typeof(T), window);
+
+        return (T)window;
     }
 
-    private DeathWindow CreateDeathWindow()
+    private BaseWindow CreateFadeWindow()
+    {
+        return Object.Instantiate(_uIConfig.FadeWindow, _canvas.transform, false);
+    }
+
+    private BaseWindow CreateDeathWindow()
     {
         return Object.Instantiate(_uIConfig.DeathWindow, _canvas.DeathWindowPoint, false).Initialize();
+    }
+
+    private BaseWindow CreateFPSView()
+    {
+        return Object.Instantiate(_uIConfig.FPSView, _canvas.transform, false);
     }
 }

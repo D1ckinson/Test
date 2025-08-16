@@ -1,10 +1,7 @@
-﻿using Assets.Code.Data;
+﻿using Assets.Code.Data.Setting_Structures;
 using Assets.Code.Tools;
-using Assets.Scripts;
 using Assets.Scripts.Factories;
 using Assets.Scripts.Tools;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Assets.Code.Spawners
@@ -12,40 +9,38 @@ namespace Assets.Code.Spawners
     public class EnemySpawner
     {
         private readonly EnemyFactory _enemyFactory;
-        private readonly GameTimer _gameTimer;
-        private readonly Dictionary<int, CharacterType> _spawnTypeByTime;
+        private readonly Timer _timer;
+        private readonly SpawnTypeByTime[] _spawnTypeByTime;
 
-        private CharacterType _spawnType;
+        private SpawnTypeByTime _spawnType;
         private float _delay;
-        private int _changeTypeTimeThreshold;
-        private bool _canChangeSpawnType = true;
 
-        public EnemySpawner(EnemyFactory enemyFactory, Dictionary<int, CharacterType> spawnTypeByTime)
+        public EnemySpawner(EnemyFactory enemyFactory, SpawnTypeByTime[] spawnTypeByTime)
         {
             _enemyFactory = enemyFactory.ThrowIfNull();
             _spawnTypeByTime = spawnTypeByTime.ThrowIfNullOrEmpty();
 
-            _changeTypeTimeThreshold = _spawnTypeByTime.Keys.First();
-            _spawnType = _spawnTypeByTime.Values.ElementAt(Constants.One);
-
-            _gameTimer = new();
+            _timer = new();
         }
 
-        public void Update()
+        public void Run()
         {
-            _gameTimer.Update();
+            _spawnType = _spawnTypeByTime[Constants.Zero];
+            SetSpawnType();
+            UpdateService.Register(SpawnEnemy);
+        }
 
-            if (_changeTypeTimeThreshold < _gameTimer.PassedTime && _canChangeSpawnType)
-            {
-                ChangeSpawnType();
-            }
-
-            SpawnEnemy();
+        public void Pause()
+        {
+            _timer.Pause();
+            UpdateService.Unregister(SpawnEnemy);
         }
 
         public void Reset()
         {
-            _gameTimer.Reset();
+            UpdateService.Unregister(SpawnEnemy);
+            _timer.Pause();
+            _timer.Completed -= SetSpawnType;
             _enemyFactory.DisableAll();
         }
 
@@ -63,24 +58,23 @@ namespace Assets.Code.Spawners
                 return;
             }
 
-            _enemyFactory.Spawn(_spawnType);
+            _enemyFactory.Spawn(_spawnType.Type);
             _delay = Constants.Zero;
         }
 
-
-        private void ChangeSpawnType()
+        private void SetSpawnType()
         {
-            int? nextThreshold = _spawnTypeByTime.Keys.SkipWhile(time => time <= _changeTypeTimeThreshold).FirstOrDefault();
+            _timer.Completed -= SetSpawnType;
+            int nextIndex = _spawnTypeByTime.IndexOf(_spawnType) + Constants.One;
 
-            if (nextThreshold.IsNull())
+            if (nextIndex == Constants.Zero)
             {
-                _canChangeSpawnType = false;
-
                 return;
             }
 
-            _spawnType = _spawnTypeByTime[(int)nextThreshold];
-            _changeTypeTimeThreshold = (int)nextThreshold;
+            int time = _spawnTypeByTime[nextIndex].Time;
+            _timer.Start(time);
+            _timer.Completed += SetSpawnType;
         }
     }
 }

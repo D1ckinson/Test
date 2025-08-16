@@ -1,12 +1,11 @@
-﻿using Assets.Code.AbilitySystem;
-using Assets.Code.Tools;
+﻿using Assets.Code.Tools;
 using Assets.Scripts.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Assets.Code
+namespace Assets.Code.AbilitySystem
 {
     public class AbilityContainer : MonoBehaviour
     {

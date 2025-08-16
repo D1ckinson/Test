@@ -1,5 +1,7 @@
-﻿using Assets.Scripts;
+﻿using Assets.Code.AbilitySystem;
+using Assets.Scripts;
 using Assets.Scripts.Movement;
+using Assets.Scripts.Tools;
 using UnityEngine;
 
 namespace Assets.Code.CharactersLogic.HeroLogic
@@ -14,6 +16,9 @@ namespace Assets.Code.CharactersLogic.HeroLogic
         public Health Health { get; private set; }
         public LootCollector LootCollector { get; private set; }
         public AbilityContainer AbilityContainer { get; private set; }
+        public HeroLevel HeroLevel { get; private set; }
+
+        private Vector3 _defaultPosition;
 
         private void Awake()
         {
@@ -21,6 +26,17 @@ namespace Assets.Code.CharactersLogic.HeroLogic
             Health = GetComponent<Health>();
             LootCollector = GetComponent<LootCollector>();
             AbilityContainer = GetComponent<AbilityContainer>();
+        }
+
+        public void Initialize(HeroLevel heroLevel, Vector3 defaultPosition)
+        {
+            HeroLevel = heroLevel.ThrowIfNull();
+            _defaultPosition = defaultPosition;
+        }
+
+        public void SetDefaultPosition()
+        {
+            transform.SetPositionAndRotation(_defaultPosition, Quaternion.identity);
         }
     }
 }

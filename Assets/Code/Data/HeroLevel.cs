@@ -25,7 +25,7 @@ namespace Assets.Scripts
             _levelUpValue = _experienceFormula.Invoke(Level);
         }
 
-        public event Action<int> LevelReceived;
+        public event Action<int> LevelRaised;
 
         public void Add(int value)
         {
@@ -34,6 +34,7 @@ namespace Assets.Scripts
 
         public void Reset()
         {
+            _buffer = Constants.Zero;
             Level = Constants.One;
             Value = Constants.Zero;
         }
@@ -65,7 +66,7 @@ namespace Assets.Scripts
             _levelUpValue = _experienceFormula.Invoke(Level);
 
             Level++;
-            LevelReceived?.Invoke(Level);
+            LevelRaised?.Invoke(Level);
         }
     }
 }

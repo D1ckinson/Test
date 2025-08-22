@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Tools;
+﻿using Assets.Code.Tools;
 using UnityEngine;
 
 namespace Assets.Code
@@ -26,6 +26,16 @@ namespace Assets.Code
         public AbilityType Type => _config.Type;
         public int Level { get; private set; }
         public bool IsMaxed => Level == _config.MaxLevel;
+
+        public void Run()
+        {
+            UpdateService.RegisterUpdate(Update);
+        }
+
+        public void Stop()
+        {
+            UpdateService.UnregisterUpdate(Update);
+        }
 
         public void Update()
         {

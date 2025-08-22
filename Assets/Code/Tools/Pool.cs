@@ -26,6 +26,11 @@ namespace Assets.Scripts.Tools
 
         public int ReleaseCount => _items.Count(item => item.gameObject.activeSelf);
 
+        public List<T> GetAllActive()
+        {
+            return _items.FindAll(item => item.IsActive());
+        }
+
         public T Get()
         {
             T item = _items.FirstOrDefault(item => item.gameObject.activeSelf == false) ?? Create();

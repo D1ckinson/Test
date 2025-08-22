@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.Scripts.Tools
+namespace Assets.Code.Tools.Exceptions
 {
     internal class EmptyCollectionException : Exception { }
 }

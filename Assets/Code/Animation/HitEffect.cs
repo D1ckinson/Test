@@ -1,6 +1,5 @@
 using Assets.Code.Animation.Types;
 using Assets.Code.Tools;
-using Assets.Scripts.Tools;
 using UnityEngine;
 
 namespace Assets.Scripts

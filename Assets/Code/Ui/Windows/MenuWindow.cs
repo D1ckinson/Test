@@ -1,6 +1,6 @@
 ﻿using Assets.Code.Data;
 using Assets.Code.Tools;
-using Assets.Scripts.Tools;
+using Assets.Code.Ui.Buttons;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;

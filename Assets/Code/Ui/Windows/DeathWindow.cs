@@ -1,4 +1,5 @@
 ﻿using Assets.Code.Data;
+using Assets.Code.Ui.Windows;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,10 +19,10 @@ public class DeathWindow : BaseWindow
 
     public DeathWindow Initialize()
     {
-        _earnedText.SetText(UIText.EarnedText);
-        _yourTimeText.SetText(UIText.YourTimeText);
-        _minutesText.SetText(UIText.MinutesText);
-        _continueText.SetText(UIText.ContinueText);
+        _earnedText.SetText(UIText.Earned);
+        _yourTimeText.SetText(UIText.YourTime);
+        _minutesText.SetText(UIText.Minutes);
+        _continueText.SetText(UIText.Continue);
         _menuText.SetText(UIText.MenuText);
 
         return this;

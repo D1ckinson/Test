@@ -1,6 +1,6 @@
 ﻿using Assets.Code.Data.Interfaces;
 using Assets.Code.Loot;
-using Assets.Scripts.Tools;
+using Assets.Code.Tools;
 using UnityEngine;
 
 namespace Assets.Scripts

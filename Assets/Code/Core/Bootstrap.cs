@@ -1,9 +1,12 @@
 ﻿using Assets.Code;
 using Assets.Code.AbilitySystem;
 using Assets.Code.CharactersLogic.HeroLogic;
+using Assets.Code.Data;
 using Assets.Code.Shop;
 using Assets.Code.Spawners;
 using Assets.Code.Tools;
+using Assets.Code.Ui;
+using Assets.Code.Ui.Windows;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Factories;
 using Assets.Scripts.State_Machine;
@@ -60,7 +63,7 @@ namespace Assets.Scripts
             MenuWindow menu = new(_uIConfig.MenuButton, _uIConfig.MenuCanvas);
             ShopWindow shop = new(playerData, _levelSettings, _levelSettings.UpgradeCost, _uIConfig.ShopCanvas, _uIConfig.ShopButton);
             UiFactory uiFactory = new(_uIConfig);
-            uiFactory.Create<FPSView>();
+            uiFactory.Create<FPSWindow>();
 
             _stateMachine = new();
             _stateMachine

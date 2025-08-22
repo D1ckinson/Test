@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace Assets.Code.Tools
 {
@@ -134,9 +135,16 @@ namespace Assets.Code.Tools
             return Array.IndexOf(values, value);
         }
 
-        public static string ToMinutesString(this float seconds, string format = "0.##")
+        public static string ToMinutesString(this float seconds)
         {
-            return TimeSpan.FromSeconds(seconds).TotalMinutes.ToString(format);
+            TimeSpan time = TimeSpan.FromSeconds(seconds);
+
+            return $"{(int)time.TotalMinutes}:{time.Seconds:00}";
+        }
+
+        public static T Instantiate<T>(this T component, Transform parent, bool worldPositionStays) where T : MonoBehaviour
+        {
+            return Object.Instantiate(component, parent, worldPositionStays);
         }
     }
 }

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.State_Machine
+namespace Assets.Code.Ui.Buttons
 {
     public class TextButton : MonoBehaviour
     {

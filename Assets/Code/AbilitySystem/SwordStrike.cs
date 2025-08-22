@@ -1,5 +1,5 @@
-﻿using Assets.Scripts;
-using Assets.Scripts.Tools;
+﻿using Assets.Code.Tools;
+using Assets.Scripts;
 using UnityEngine;
 
 namespace Assets.Code

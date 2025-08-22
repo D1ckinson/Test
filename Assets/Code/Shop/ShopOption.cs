@@ -1,6 +1,5 @@
 ﻿using Assets.Code.Data;
 using Assets.Code.Tools;
-using Assets.Scripts.Tools;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;

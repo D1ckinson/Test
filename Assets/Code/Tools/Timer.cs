@@ -1,43 +1,61 @@
-﻿using Assets.Scripts.Tools;
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace Assets.Code.Tools
 {
     public class Timer
     {
-        private int _duration;
+        private const float Zero = 0;
+
         private float _remainingTime;
+
+        public float Duration { get; private set; }
 
         public event Action Completed;
 
-        public void Start(int duration)
+        public void Start(float remainingTime)
         {
-            _duration = duration.ThrowIfZeroOrLess();
-            _remainingTime = _duration;
+            if (remainingTime <= Zero)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
 
-            UpdateService.Register(Update);
+            _remainingTime = remainingTime;
+            Duration = Zero;
+            UpdateService.RegisterUpdate(UpdateTime);
         }
 
-        private void Update()
+        public void Start()
         {
-            _remainingTime -= Time.deltaTime;
+            Start(float.MaxValue);
+        }
 
-            if (_remainingTime <= Constants.Zero)
-            {
-                UpdateService.Unregister(Update);
-                Completed?.Invoke();
-            }
+        public void Stop()
+        {
+            UpdateService.UnregisterUpdate(UpdateTime);
+            _remainingTime = Zero;
+            Duration = Zero;
         }
 
         public void Pause()
         {
-            UpdateService.Unregister(Update);
+            UpdateService.UnregisterUpdate(UpdateTime);
         }
 
         public void Continue()
         {
-            UpdateService.Register(Update);
+            UpdateService.RegisterUpdate(UpdateTime);
+        }
+
+        private void UpdateTime()
+        {
+            Duration += Time.deltaTime;
+
+            if (Duration >= _remainingTime)
+            {
+                UpdateService.UnregisterUpdate(UpdateTime);
+                Completed?.Invoke();
+            }
         }
     }
 }

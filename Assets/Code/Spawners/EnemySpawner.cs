@@ -1,7 +1,7 @@
-﻿using Assets.Code.Data.Setting_Structures;
+﻿using Assets.Code.CharactersLogic.EnemyLogic;
+using Assets.Code.Data.Setting_Structures;
 using Assets.Code.Tools;
 using Assets.Scripts.Factories;
-using Assets.Scripts.Tools;
 using UnityEngine;
 
 namespace Assets.Code.Spawners
@@ -27,18 +27,26 @@ namespace Assets.Code.Spawners
         {
             _spawnType = _spawnTypeByTime[Constants.Zero];
             SetSpawnType();
-            UpdateService.Register(SpawnEnemy);
+            UpdateService.RegisterUpdate(SpawnEnemy);
         }
 
         public void Pause()
         {
             _timer.Pause();
-            UpdateService.Unregister(SpawnEnemy);
+            _enemyFactory.StopAll();
+            UpdateService.UnregisterUpdate(SpawnEnemy);
+        }
+
+        public void Continue()
+        {
+            _timer.Continue();
+            _enemyFactory.ContinueAll();
+            UpdateService.RegisterUpdate(SpawnEnemy);
         }
 
         public void Reset()
         {
-            UpdateService.Unregister(SpawnEnemy);
+            UpdateService.UnregisterUpdate(SpawnEnemy);
             _timer.Pause();
             _timer.Completed -= SetSpawnType;
             _enemyFactory.DisableAll();
@@ -58,8 +66,16 @@ namespace Assets.Code.Spawners
                 return;
             }
 
-            _enemyFactory.Spawn(_spawnType.Type);
+            EnemyComponents enemy = _enemyFactory.Spawn(_spawnType.Type);
+            enemy.Health.Died += OnDeath;
             _delay = Constants.Zero;
+
+            void OnDeath()
+            {
+                enemy.Health.Died -= OnDeath;
+                enemy.SetActive(false);
+                enemy.CharacterMovement.Stop();
+            }
         }
 
         private void SetSpawnType()

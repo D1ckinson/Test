@@ -1,6 +1,5 @@
 using Assets.Code.Loot;
 using Assets.Code.Tools;
-using Assets.Scripts.Tools;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -84,13 +83,13 @@ namespace Assets.Scripts
         public void Run()
         {
             _isRunning = true;
-            UpdateService.Register(TransferExperience);
+            UpdateService.RegisterUpdate(TransferExperience);
         }
 
         public void Stop()
         {
             _isRunning = false;
-            UpdateService.Unregister(TransferExperience);
+            UpdateService.UnregisterUpdate(TransferExperience);
         }
 
         public void TransferGold()

@@ -1,5 +1,4 @@
 ﻿using Assets.Code.Tools;
-using Assets.Scripts.Tools;
 using System;
 using UnityEngine;
 
@@ -18,9 +17,23 @@ namespace Assets.Scripts.Movement
         public void SetTarget(Transform target)
         {
             _target = target.ThrowIfNull();
+            UpdateService.RegisterUpdate(CalculateDirection);
         }
 
-        private void Update()
+        public void Stop()
+        {
+            UpdateService.UnregisterUpdate(CalculateDirection);
+
+            _moveDirection = Vector3.zero;
+            DirectionChanged?.Invoke(_moveDirection);
+        }
+
+        public void Run()
+        {
+            UpdateService.RegisterUpdate(CalculateDirection);
+        }
+
+        private void CalculateDirection()
         {
             if (this.IsActive() == false || _target.IsNull() || _target.IsActive() == false)
             {

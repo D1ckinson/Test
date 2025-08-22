@@ -1,11 +1,12 @@
 ﻿using Assets.Code.Shop;
-using Assets.Code.Tools;
 using Assets.Code.Ui;
+using Assets.Code.Ui.Buttons;
 using Assets.Code.Ui.LevelUp;
+using Assets.Code.Ui.Windows;
 using Assets.Scripts.State_Machine;
 using UnityEngine;
 
-namespace Assets.Scripts.Ui
+namespace Assets.Code.Data
 {
     [CreateAssetMenu(menuName = "Game/UIConfig")]
     public class UIConfig : ScriptableObject
@@ -26,6 +27,7 @@ namespace Assets.Scripts.Ui
         public DeathWindow DeathWindow;
         public TestCanvasUiFactory TestCanvasUiFactory;
         public BaseWindow FadeWindow;
-        public FPSView FPSView;
+        public FPSWindow FPSWindow;
+        public MenuWindow1 MenuWindow;
     }
 }

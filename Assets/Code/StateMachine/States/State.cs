@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Tools;
+﻿using Assets.Code.Tools;
 
 namespace Assets.Scripts.State_Machine
 {

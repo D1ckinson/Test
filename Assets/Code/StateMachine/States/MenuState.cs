@@ -1,6 +1,7 @@
 ﻿using Assets.Code.Shop;
+using Assets.Code.Tools;
+using Assets.Code.Ui;
 using Assets.Code.Ui.Windows;
-using Assets.Scripts.Tools;
 
 namespace Assets.Scripts.State_Machine
 {
@@ -23,7 +24,8 @@ namespace Assets.Scripts.State_Machine
         public override void Enter()
         {
             _uiFactory.Create<FadeWindow>().Hide();
-            _menu.Toggle(true);
+            _uiFactory.Create<MenuWindow1>();
+            //_menu.Toggle(true);
         }
 
         public override void Exit()

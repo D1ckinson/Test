@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Tools;
+﻿using Assets.Code.Tools;
 using System;
 
 namespace Assets.Scripts.Movement

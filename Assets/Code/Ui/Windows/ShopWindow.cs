@@ -2,7 +2,6 @@
 using Assets.Code.Tools;
 using Assets.Scripts;
 using Assets.Scripts.Configs;
-using Assets.Scripts.Tools;
 using System;
 using System.Collections.Generic;
 using TMPro;

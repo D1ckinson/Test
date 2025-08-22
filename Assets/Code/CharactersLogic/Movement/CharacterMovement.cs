@@ -1,5 +1,4 @@
 ﻿using Assets.Code.Tools;
-using Assets.Scripts.Tools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,17 +16,6 @@ namespace Assets.Scripts.Movement
         private Rotator _rotator;
         private Vector3 _direction;
         private Rigidbody _rigidbody;
-
-        private void FixedUpdate()
-        {
-            if (_direction == Vector3.zero)
-            {
-                return;
-            }
-
-            _mover.Move(_direction);
-            _rotator.Rotate(_direction);
-        }
 
         private void OnDisable()
         {
@@ -60,6 +48,17 @@ namespace Assets.Scripts.Movement
         public void SetMoveStat(float moveSpeed)
         {
             _mover.SetSpeed(moveSpeed.ThrowIfZeroOrLess());
+        }
+
+        private void Move()
+        {
+            if (_direction == Vector3.zero)
+            {
+                return;
+            }
+
+            _mover.Move(_direction);
+            _rotator.Rotate(_direction);
         }
 
         private void SetDirection(Vector3 vector)
@@ -101,6 +100,18 @@ namespace Assets.Scripts.Movement
         public void SetAdditionalSpeed(int value)
         {
             _mover.AddSpeed(value.ThrowIfNegative());
+        }
+
+        public void Run()
+        {
+            _directionSource.Run();
+            UpdateService.RegisterFixedUpdate(Move);
+        }
+
+        public void Stop()
+        {
+            _directionSource.Stop();
+            UpdateService.UnregisterFixedUpdate(Move);
         }
     }
 }

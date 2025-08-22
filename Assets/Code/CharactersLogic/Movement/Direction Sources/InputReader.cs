@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Tools;
+﻿using Assets.Code.Tools;
 using System;
 using UnityEngine;
 
@@ -37,6 +37,16 @@ namespace Assets.Scripts.Movement
 
             _moveDirection = moveDirection;
             DirectionChanged?.Invoke(new(_moveDirection.x, Constants.Zero, _moveDirection.y));
+        }
+
+        public void Run()
+        {
+
+        }
+
+        public void Stop()
+        {
+
         }
     }
 }

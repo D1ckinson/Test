@@ -1,9 +1,9 @@
-﻿using Assets.Code.CharactersLogic;
+﻿using Assets.Code.Tools;
+using Assets.Scripts;
 using Assets.Scripts.Movement;
-using Assets.Scripts.Tools;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Code.CharactersLogic.EnemyLogic
 {
     [RequireComponent(typeof(DirectionTeller))]
     [RequireComponent(typeof(CharacterMovement))]

@@ -1,4 +1,4 @@
-using Assets.Scripts.Tools;
+using Assets.Code.Tools;
 using System;
 using UnityEngine;
 
@@ -20,6 +20,7 @@ namespace Assets.Scripts
         public float Value { get; private set; }
         public float MaxValue { get; private set; }
         private bool IsInvincible => _invincibleTimer > Constants.Zero;
+        private bool IsDead => Value <= Constants.Zero;
 
         private void Awake()
         {
@@ -61,7 +62,7 @@ namespace Assets.Scripts
 
         public void TakeDamage(float damage)
         {
-            if (IsInvincible)
+            if (IsInvincible || IsDead)
             {
                 return;
             }
@@ -72,7 +73,6 @@ namespace Assets.Scripts
             {
                 Value = Constants.Zero;
                 Died?.Invoke();
-                gameObject.SetActive(false);
             }
             else
             {
@@ -109,6 +109,12 @@ namespace Assets.Scripts
         {
             float tempValue = Value + _regeneration;
             Value = tempValue > MaxValue ? MaxValue : tempValue;
+        }
+
+        public void ResetValue()
+        {
+            Value = MaxValue;
+            ValueChanged?.Invoke(Value);
         }
     }
 }

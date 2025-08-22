@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Assets.Code.Tools.Exceptions;
+using System;
 using System.Collections;
 using UnityEngine;
 
-namespace Assets.Scripts.Tools
+namespace Assets.Code.Tools
 {
     public static class ThrowHelper
     {

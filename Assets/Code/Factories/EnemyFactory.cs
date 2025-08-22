@@ -1,4 +1,5 @@
-﻿using Assets.Code.Tools;
+﻿using Assets.Code.CharactersLogic.EnemyLogic;
+using Assets.Code.Tools;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Tools;
 using System.Collections.Generic;
@@ -42,6 +43,7 @@ namespace Assets.Scripts.Factories
             }
 
             SetTransform(enemy.transform);
+            enemy.CharacterMovement.Run();
 
             return enemy;
         }
@@ -50,6 +52,18 @@ namespace Assets.Scripts.Factories
         {
             _pool.DisableAll();
             _lootFactory.DisableAll();
+        }
+
+        public void StopAll()
+        {
+            List<EnemyComponents> enemyComponents = _pool.GetAllActive();
+            enemyComponents.ForEach(enemyComponent => enemyComponent.CharacterMovement.Stop());
+        }
+
+        public void ContinueAll()
+        {
+            List<EnemyComponents> enemyComponents = _pool.GetAllActive();
+            enemyComponents.ForEach(enemyComponent => enemyComponent.CharacterMovement.Run());
         }
 
         private void SetStats(EnemyComponents enemy, CharacterConfig config)
@@ -65,16 +79,16 @@ namespace Assets.Scripts.Factories
         private EnemyComponents Create()
         {
             CharacterConfig config = _enemiesConfigs.Values.First();
-            EnemyComponents enemyComponents = Object.Instantiate(config.Prefab).GetComponentOrThrow<EnemyComponents>();
+            EnemyComponents enemy = Object.Instantiate(config.Prefab).GetComponentOrThrow<EnemyComponents>();
 
-            enemyComponents.CharacterMovement.Initialize(config.MoveSpeed, config.RotationSpeed);
-            enemyComponents.Health.Initialize(config.MaxHealth, config.InvincibilityDuration);
-            enemyComponents.CollisionDamage.Initialize(config.Damage, config.DamageLayer);
-            enemyComponents.DeathTriger.Initialize(enemyComponents.Health, _lootFactory, config.Loot);
-            enemyComponents.DirectionTeller.SetTarget(_hero);
-            enemyComponents.SetType(config.Type);
+            enemy.CharacterMovement.Initialize(config.MoveSpeed, config.RotationSpeed);
+            enemy.Health.Initialize(config.MaxHealth, config.InvincibilityDuration);
+            enemy.CollisionDamage.Initialize(config.Damage, config.DamageLayer);
+            enemy.DeathTriger.Initialize(enemy.Health, _lootFactory, config.Loot);
+            enemy.DirectionTeller.SetTarget(_hero);
+            enemy.SetType(config.Type);
 
-            return enemyComponents;
+            return enemy;
         }
 
         private void SetTransform(Transform enemy)
@@ -101,10 +115,6 @@ namespace Assets.Scripts.Factories
 
         private bool IsPositionInGameArea(Vector3 position)
         {
-            //float sqrDistance = (_gameAreaSettings.Center - position).sqrMagnitude;
-
-            //return sqrDistance <= Mathf.Sqrt(_gameAreaSettings.Radius);
-
             float distance = Vector3.Distance(_gameAreaSettings.Center, position);
             return distance <= _gameAreaSettings.Radius;
         }

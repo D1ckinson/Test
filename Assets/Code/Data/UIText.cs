@@ -11,10 +11,10 @@ namespace Assets.Code.Data
         public static string Shop { get; private set; }
         public static string Upgrade { get; private set; }
         public static string Leaderboard { get; private set; }
-        public static string EarnedText { get; internal set; }
-        public static string YourTimeText { get; internal set; }
-        public static string MinutesText { get; internal set; }
-        public static string ContinueText { get; internal set; }
+        public static string Earned { get; internal set; }
+        public static string YourTime { get; internal set; }
+        public static string Minutes { get; internal set; }
+        public static string Continue { get; internal set; }
         public static string MenuText { get; internal set; }
 
         static UIText()
@@ -43,10 +43,10 @@ namespace Assets.Code.Data
             Shop = "Магазин";
             Upgrade = "Улучшить";
             Leaderboard = "Таблица лидеров";
-            EarnedText = "Заработано";
-            YourTimeText = "Ваше время";
-            MinutesText = "Минут";
-            ContinueText = "Продолжить";
+            Earned = "Заработано";
+            YourTime = "Ваше время";
+            Minutes = "Минут";
+            Continue = "Продолжить";
             MenuText = "Меню";
         }
 
@@ -58,10 +58,10 @@ namespace Assets.Code.Data
             Shop = "Shop";
             Upgrade = "Upgrade";
             Leaderboard = "Leaderboard";
-            EarnedText = "Earned";
-            YourTimeText = "Your time";
-            MinutesText = "Minutes";
-            ContinueText = "Continue";
+            Earned = "Earned";
+            YourTime = "Your time";
+            Minutes = "Minutes";
+            Continue = "Continue";
             MenuText = "Menu";
         }
 

@@ -1,5 +1,4 @@
 ﻿using Assets.Code.Tools;
-using Assets.Scripts.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +17,14 @@ namespace Assets.Code.AbilitySystem
             _abilities = new();
         }
 
-        private void Update()
+        public void Run()
         {
-            _abilities.ForEachValues(ability => ability.Update());
+            _abilities.ForEachValues(_ability => _ability.Run());
+        }
+
+        public void Stop()
+        {
+            _abilities.ForEachValues(_abilities => _abilities.Stop());
         }
 
         public void Add(Ability ability)

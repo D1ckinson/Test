@@ -1,6 +1,6 @@
 ﻿using Assets.Code.Data.Interfaces;
+using Assets.Code.Tools;
 using Assets.Scripts.Configs;
-using Assets.Scripts.Tools;
 using System;
 
 namespace Assets.Scripts
@@ -37,6 +37,7 @@ namespace Assets.Scripts
             _buffer = Constants.Zero;
             Level = Constants.One;
             Value = Constants.Zero;
+            _levelUpValue = _experienceFormula.Invoke(Level);
         }
 
         public void SetLootPercent(int percent)

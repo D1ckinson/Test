@@ -1,7 +1,7 @@
 using Assets.Code;
 using Assets.Code.Data.Setting_Structures;
 using Assets.Code.Shop;
-using Assets.Scripts.Tools;
+using Assets.Code.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;

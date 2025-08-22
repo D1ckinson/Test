@@ -1,6 +1,6 @@
-﻿using Assets.Scripts;
+﻿using Assets.Code.Tools;
+using Assets.Scripts;
 using Assets.Scripts.Movement;
-using Assets.Scripts.Tools;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

@@ -1,7 +1,7 @@
-﻿using Assets.Scripts;
+﻿using Assets.Code.Tools;
+using Assets.Scripts;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Factories;
-using Assets.Scripts.Tools;
 using UnityEngine;
 
 namespace Assets.Code.CharactersLogic

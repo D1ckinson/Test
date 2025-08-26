@@ -1,0 +1,34 @@
+﻿using Assets.Code.Data;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Assets.Code.Shop
+{
+    public class ShopOption1 : MonoBehaviour
+    {
+        [field: SerializeField] public TMP_Text AbilityName { get; private set; }
+        [field: SerializeField] public TMP_Text UpgradeText { get; private set; }
+        [field: SerializeField] public TMP_Text Cost { get; private set; }
+        [field: SerializeField] public TMP_Text LevelText { get; private set; }
+        [field: SerializeField] public TMP_Text LevelNumber { get; private set; }
+        [field: SerializeField] public TMP_Text LevelMaxText { get; private set; }
+        [field: SerializeField] public Image AbilityIcon { get; private set; }
+        [field: SerializeField] public RectTransform OfferDescription { get; private set; }
+        [field: SerializeField] public Button UpgradeButton { get; private set; }
+
+        public AbilityType AbilityType { get; private set; }
+
+        public ShopOption1 Initialize(AbilityType abilityType)
+        {
+            AbilityType = abilityType;
+
+            AbilityName.SetText(UIText.AbilityName[abilityType]);
+            UpgradeText.SetText(UIText.Upgrade);
+            LevelText.SetText(UIText.Level);
+            LevelMaxText.SetText(UIText.LevelMax);
+
+            return this;
+        }
+    }
+}

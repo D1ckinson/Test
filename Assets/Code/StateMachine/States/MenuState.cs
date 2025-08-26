@@ -2,52 +2,49 @@
 using Assets.Code.Tools;
 using Assets.Code.Ui;
 using Assets.Code.Ui.Windows;
+using System;
 
 namespace Assets.Scripts.State_Machine
 {
     public class MenuState : State
     {
-        private readonly MenuWindow _menu;
-        private readonly ShopWindow _shop;
         private readonly UiFactory _uiFactory;
 
-        public MenuState(StateMachine stateMachine, MenuWindow menu, ShopWindow shop, UiFactory uiFactory) : base(stateMachine)
+        public MenuState(StateMachine stateMachine, UiFactory uiFactory) : base(stateMachine)
         {
-            _menu = menu.ThrowIfNull();
-            _shop = shop.ThrowIfNull();
             _uiFactory = uiFactory.ThrowIfNull();
-
-            _menu.Subscribe(ButtonType.Play, () => SetState<GameState>());
-            _menu.Subscribe(ButtonType.Shop, () => ShowShop());
         }
 
         public override void Enter()
         {
-            _uiFactory.Create<FadeWindow>().Hide();
-            _uiFactory.Create<MenuWindow1>();
-            //_menu.Toggle(true);
-        }
+            _uiFactory.Create<FadeWindow>().Hide(ShowMenu);
 
-        public override void Exit()
-        {
-            _menu.Toggle(false);
-        }
+            void ShowMenu()
+            {
+                _uiFactory.Create<ShopWindow1>().ExitButton.Subscribe(() => _uiFactory.Create<MenuWindow1>());
+                _uiFactory.HideAll();
 
-        public override void Update()
-        {
+                MenuWindow1 menuWindow = _uiFactory.Create<MenuWindow1>();
+                menuWindow.ShopButton.Subscribe(ShowShop);
+                menuWindow.PlayButton.Subscribe(SetState<GameState>);
+            }
         }
 
         private void ShowShop()
         {
-            _menu.Toggle(false);
-            _shop.Toggle(true);
-            _shop.Exiting += TurnOnMaiMenu;
+            _uiFactory.Hide<MenuWindow1>();
+            _uiFactory.Create<ShopWindow1>();
         }
 
-        private void TurnOnMaiMenu(ShopWindow shopWindow)
+        public override void Exit()
         {
-            _menu.Toggle(true);
-            shopWindow.Exiting -= TurnOnMaiMenu;
+            _uiFactory.Create<ShopWindow1>().ExitButton.UnsubscribeAll();
+            _uiFactory.Create<MenuWindow1>().ShopButton.UnsubscribeAll();
+            _uiFactory.HideAll();
+        }
+
+        public override void Update()
+        {
         }
     }
 }

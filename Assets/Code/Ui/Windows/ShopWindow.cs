@@ -113,7 +113,7 @@ namespace Assets.Code.Shop
                 int availableLevel = _playerData.AbilityUnlockLevel.GetValueOrThrow(abilityType);
                 int cost = _upgradeCost.GetCost(abilityType, availableLevel + Constants.One);
 
-                string buyText = availableLevel == abilityConfig.MaxLevel ? UIText.LevelMaxed : UIText.Upgrade;
+                string buyText = availableLevel == abilityConfig.MaxLevel ? UIText.LevelMax : UIText.Upgrade;
 
                 option.Initialize(abilityConfig.Icon, abilityConfig.Name);
                 SetDescription(abilityType, option);
@@ -143,7 +143,7 @@ namespace Assets.Code.Shop
             int availableLevel = _playerData.AbilityUnlockLevel.GetValueOrThrow(abilityType);
             int cost = _upgradeCost.GetCost(abilityType, availableLevel + Constants.One);
 
-            string buyText = availableLevel >= abilityConfig.MaxLevel ? UIText.LevelMaxed : UIText.Upgrade;
+            string buyText = availableLevel >= abilityConfig.MaxLevel ? UIText.LevelMax : UIText.Upgrade;
             option.SetDescription(availableLevel, buyText, cost);
         }
     }

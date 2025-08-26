@@ -42,6 +42,8 @@ namespace Assets.Code.Ui.Windows
         {
             if (_isVisible || _showSequence.IsPlaying())
             {
+                onComplete?.Invoke();
+
                 return;
             }
 
@@ -57,6 +59,8 @@ namespace Assets.Code.Ui.Windows
         {
             if (_isVisible == false || _showSequence.IsPlaying())
             {
+                onComplete?.Invoke();
+
                 return;
             }
 

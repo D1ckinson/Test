@@ -22,3 +22,4 @@ MonoBehaviour:
   TestCanvasUiFactory: {fileID: 5412977917443885292, guid: 6eb302bf21148a84e85472d8b4974671, type: 3}
   FadeWindow: {fileID: 4848070085250355947, guid: 539177ec45e95cf4bb81b33e20c85e02, type: 3}
   FPSWindow: {fileID: 535586762388858540, guid: 103db9827fabc7f42ad0e086823d08b4, type: 3}
+  MenuWindow: {fileID: 5489575721698403354, guid: fd9db8f34bbff94468fe942a33bb93b2, type: 3}

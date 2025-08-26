@@ -125,9 +125,31 @@ namespace Assets.Code.Tools
             button.onClick.AddListener(action);
         }
 
+        public static void SetColor(this Button button, Color color)
+        {
+            const float HighlightedMultiplier = 1.2f;
+            const float PressedMultiplier = 0.8f;
+            const float DisabledMultiplier = 0.5f;
+
+            ColorBlock colors = button.colors;
+
+            colors.normalColor = color;
+            colors.highlightedColor = color * HighlightedMultiplier;
+            colors.pressedColor = color * PressedMultiplier;
+            colors.selectedColor = color;
+            colors.disabledColor = color * DisabledMultiplier;
+
+            button.colors = colors;
+        }
+
         public static void UnsubscribeAll(this Button button)
         {
             button.onClick.RemoveAllListeners();
+        }
+
+        public static void Unsubscribe(this Button button, UnityAction action)
+        {
+            button.onClick.RemoveListener(action);
         }
 
         public static int IndexOf<T>(this T[] values, T value)
@@ -145,6 +167,16 @@ namespace Assets.Code.Tools
         public static T Instantiate<T>(this T component, Transform parent, bool worldPositionStays) where T : MonoBehaviour
         {
             return Object.Instantiate(component, parent, worldPositionStays);
+        }
+
+        public static T Instantiate<T>(this T component) where T : MonoBehaviour
+        {
+            return Object.Instantiate(component);
+        }
+
+        public static void SetText(this TMP_Text textWindow,int value)
+        {
+            textWindow.SetText(value.ToString());
         }
     }
 }

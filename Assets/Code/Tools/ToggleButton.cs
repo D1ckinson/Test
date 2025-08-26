@@ -9,15 +9,36 @@ namespace Assets.Code.Tools
         [SerializeField] private Image _icon;
         [SerializeField] private Sprite _turnOnSprite;
         [SerializeField] private Sprite _turnOffSprite;
+        [SerializeField] private Button _button;
 
         public bool IsOn { get; private set; }
 
-        public event Action<bool> OnClick;
+        public event Action<bool> Clicked;
 
-        public void Toggle(bool isOn)
+        private void Awake()
         {
-            _icon.sprite = isOn ? _turnOnSprite : _turnOffSprite;
-            OnClick?.Invoke(isOn);
+            _button.Subscribe(OnClick);
+        }
+
+        private void OnDestroy()
+        {
+            if (_button != null)
+            {
+                _button.Unsubscribe(OnClick);
+            }
+        }
+
+        public void SetState(bool isOn)
+        {
+            IsOn = isOn;
+            _icon.sprite = IsOn ? _turnOnSprite : _turnOffSprite;
+        }
+
+        private void OnClick()
+        {
+            IsOn = !IsOn;
+            _icon.sprite = IsOn ? _turnOnSprite : _turnOffSprite;
+            Clicked?.Invoke(IsOn);
         }
     }
 }

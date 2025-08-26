@@ -18,11 +18,11 @@ namespace Assets.Code.Shop
         [SerializeField] private TMP_Text _costText;
 
         public int Cost => _costText.text.ParseOrThrow();
-        public bool IsMaxed => _buyText.text == UIText.LevelMaxed;
+        public bool IsMaxed => _buyText.text == UIText.LevelMax;
 
-        public void Initialize(Sprite sprite, string abilityName)
+        public void Initialize(Sprite abilityIcon, string abilityName)
         {
-            _abilityIcon.sprite = sprite.ThrowIfNull();
+            _abilityIcon.sprite = abilityIcon.ThrowIfNull();
             _abilityName.text = abilityName.ThrowIfNullOrEmpty();
         }
 

@@ -11,7 +11,7 @@ namespace Assets.Scripts
 
         public event Action<float> ValueChanged;
 
-        public int CoinsQuantity { get; private set; } = 0;
+        public float CoinsQuantity { get; private set; } = 0;
 
         public void Add(int value)
         {
@@ -21,7 +21,7 @@ namespace Assets.Scripts
 
         public void Spend(int value)
         {
-            CoinsQuantity -= value.ThrowIfNegative().ThrowIfMoreThan(CoinsQuantity + Constants.One);
+            CoinsQuantity -= value.ThrowIfNegative().ThrowIfMoreThan((int)CoinsQuantity + Constants.One);
             ValueChanged?.Invoke(CoinsQuantity);
         }
 

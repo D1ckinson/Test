@@ -43,8 +43,8 @@ namespace Assets.Scripts.Configs
             return (int)(_fixedExperience * current + _experienceCoefficient * MathF.Pow(current, _degree));
         }
 
-        public Dictionary<AbilityType, AbilityConfig> AbilityConfigs => _abilitiesConfigs.ToDictionary(config => config.Type, config => config);
+        public Dictionary<AbilityType, AbilityConfig> AbilityConfigs => _abilitiesConfigs.ToDictionary(config => config.Type);
 
-        public Dictionary<CharacterType, CharacterConfig> EnemyConfigs => _enemiesConfigs.ToDictionary(config => config.Type, config => config);
+        public Dictionary<CharacterType, CharacterConfig> EnemyConfigs => _enemiesConfigs.ToDictionary(config => config.Type);
     }
 }

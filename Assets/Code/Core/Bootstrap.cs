@@ -13,6 +13,7 @@ using Assets.Scripts.State_Machine;
 using Assets.Scripts.Tools;
 using Assets.Scripts.Ui;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using YG;
 
@@ -44,6 +45,7 @@ namespace Assets.Scripts
         private void Awake()
         {
             PlayerData playerData = YG2.saves.Load();
+            playerData.Wallet.Add(1000);///////////////////////////////
             HeroLevel heroLevel = new(_levelSettings.CalculateExperienceForNextLevel);
             GameAreaSettings gameAreaSettings = _levelSettings.GameAreaSettings;
             HeroComponents heroComponents = new HeroFactory(_levelSettings.HeroConfig, playerData.Wallet, heroLevel).Create(gameAreaSettings.Center);
@@ -60,14 +62,14 @@ namespace Assets.Scripts
 
             EnemySpawner enemySpawner = new(enemyFactory, _levelSettings.SpawnTypeByTimes);
 
-            MenuWindow menu = new(_uIConfig.MenuButton, _uIConfig.MenuCanvas);
-            ShopWindow shop = new(playerData, _levelSettings, _levelSettings.UpgradeCost, _uIConfig.ShopCanvas, _uIConfig.ShopButton);
-            UiFactory uiFactory = new(_uIConfig);
+            _levelSettings.UpgradeCost.Initialize();
+            Dictionary<AbilityType, int> abilityMaxLevel = _levelSettings.AbilityConfigs.ToDictionary(pair => pair.Key, pair => pair.Value.MaxLevel);
+            UiFactory uiFactory = new(_uIConfig, playerData.Wallet, _levelSettings.UpgradeCost, _levelSettings.AbilityConfigs, playerData.AbilityUnlockLevel, abilityMaxLevel);
             uiFactory.Create<FPSWindow>();
 
             _stateMachine = new();
             _stateMachine
-                .AddState(new MenuState(_stateMachine, menu, shop, uiFactory))
+                .AddState(new MenuState(_stateMachine, uiFactory))
                 .AddState(new GameState(_stateMachine, heroComponents, enemySpawner, abilityFactory, uiFactory));
 
             _stateMachine.SetState<MenuState>();

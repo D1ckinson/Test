@@ -1,33 +1,43 @@
 ﻿using System;
+using System.Collections.Generic;
 using YG;
 
 namespace Assets.Code.Data
 {
     public static class UIText
     {
-        public static string LevelMaxed { get; private set; }
+        private const string Russian = "ru";
+        private const string English = "en";
+        private const string Turkish = "tr";
+
+        private static Dictionary<AbilityType, string> _abilityName;
+
+        public static string LevelMax { get; private set; }
         public static string Level { get; private set; }
         public static string Play { get; private set; }
         public static string Shop { get; private set; }
         public static string Upgrade { get; private set; }
         public static string Leaderboard { get; private set; }
-        public static string Earned { get; internal set; }
-        public static string YourTime { get; internal set; }
-        public static string Minutes { get; internal set; }
-        public static string Continue { get; internal set; }
-        public static string MenuText { get; internal set; }
+        public static string Earned { get; private set; }
+        public static string YourTime { get; private set; }
+        public static string Minutes { get; private set; }
+        public static string Continue { get; private set; }
+        public static string MenuText { get; private set; }
+        public static string PersonalBest { get; private set; }
+
+        public static IReadOnlyDictionary<AbilityType, string> AbilityName => _abilityName;
 
         static UIText()
         {
             switch (YG2.envir.language)
             {
-                case "ru":
+                case Russian:
                     FillRu();
                     break;
-                case "en":
+                case English:
                     FillEn();
                     break;
-                case "tr":
+                case Turkish:
                     FillTr();
                     break;
                 default:
@@ -37,7 +47,7 @@ namespace Assets.Code.Data
 
         private static void FillRu()
         {
-            LevelMaxed = "Макс";
+            LevelMax = "Макс";
             Level = "Ур";
             Play = "Играть";
             Shop = "Магазин";
@@ -48,11 +58,17 @@ namespace Assets.Code.Data
             Minutes = "Минут";
             Continue = "Продолжить";
             MenuText = "Меню";
+            PersonalBest = "Личный рекорд";
+
+            _abilityName = new()
+            {
+                [AbilityType.SwordStrike] = "Удар мечом"
+            };
         }
 
         private static void FillEn()
         {
-            LevelMaxed = "Max";
+            LevelMax = "Max";
             Level = "Lvl";
             Play = "Play";
             Shop = "Shop";
@@ -63,6 +79,12 @@ namespace Assets.Code.Data
             Minutes = "Minutes";
             Continue = "Continue";
             MenuText = "Menu";
+            PersonalBest = "Personal best";
+
+            _abilityName = new()
+            {
+                [AbilityType.SwordStrike] = "Sword strike"
+            };
         }
 
         private static void FillTr()

@@ -34,9 +34,9 @@ namespace Assets.Scripts.Movement
             }
         }
 
-        public void Initialize(float moveSpeed, float rotationSpeed)
+        public void Initialize(float moveSpeed, float rotationSpeed, ITellDirection directionSource)
         {
-            _directionSource = this.GetComponentOrThrow<ITellDirection>();
+            _directionSource = directionSource.ThrowIfNull();
             _directionSource.DirectionChanged += SetDirection;
 
             _rigidbody = GetComponent<Rigidbody>();

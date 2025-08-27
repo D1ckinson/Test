@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Assets.Code.CharactersLogic.EnemyLogic
 {
-    [RequireComponent(typeof(DirectionTeller))]
     [RequireComponent(typeof(CharacterMovement))]
     [RequireComponent(typeof(Health))]
     [RequireComponent(typeof(CollisionDamage))]
@@ -21,11 +20,15 @@ namespace Assets.Code.CharactersLogic.EnemyLogic
 
         private void Awake()
         {
-            DirectionTeller = GetComponent<DirectionTeller>();
             CharacterMovement = GetComponent<CharacterMovement>();
             Health = GetComponent<Health>();
             CollisionDamage = GetComponent<CollisionDamage>();
             DeathTriger = GetComponent<DeathTriger>();
+        }
+
+        public void Initialize(DirectionTeller directionTeller)
+        {
+            DirectionTeller = directionTeller.ThrowIfNull();
         }
 
         public void SetType(CharacterType characterType)

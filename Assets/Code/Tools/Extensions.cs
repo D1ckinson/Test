@@ -49,6 +49,14 @@ namespace Assets.Code.Tools
             throw new KeyNotFoundException();
         }
 
+        public static bool Compare(this Vector2 v1, Vector2 v2, int accuracy)
+        {
+            bool x = (int)(v1.x * accuracy) == (int)(v2.x * accuracy);
+            bool y = (int)(v1.y * accuracy) == (int)(v2.y * accuracy);
+
+            return x && y;
+        }
+
         public static T GetComponentOrThrow<T>(this Component component)
         {
             if (component.TryGetComponent(out T value))
@@ -174,7 +182,7 @@ namespace Assets.Code.Tools
             return Object.Instantiate(component);
         }
 
-        public static void SetText(this TMP_Text textWindow,int value)
+        public static void SetText(this TMP_Text textWindow, int value)
         {
             textWindow.SetText(value.ToString());
         }

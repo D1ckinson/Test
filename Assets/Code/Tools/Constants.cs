@@ -8,6 +8,7 @@ namespace Assets.Code.Tools
         public const int Zero = 0;
         public const int One = 1;
         public const int Two = 2;
+        public const int CompareAccuracy = 10;
         public const int FullCircleDegrees = 360;
         public const int Hundred = 100;
 

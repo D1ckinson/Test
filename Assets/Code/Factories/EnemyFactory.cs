@@ -80,8 +80,9 @@ namespace Assets.Scripts.Factories
         {
             CharacterConfig config = _enemiesConfigs.Values.First();
             EnemyComponents enemy = Object.Instantiate(config.Prefab).GetComponentOrThrow<EnemyComponents>();
+            enemy.Initialize(new(enemy.transform));
 
-            enemy.CharacterMovement.Initialize(config.MoveSpeed, config.RotationSpeed);
+            enemy.CharacterMovement.Initialize(config.MoveSpeed, config.RotationSpeed, enemy.DirectionTeller);
             enemy.Health.Initialize(config.MaxHealth, config.InvincibilityDuration);
             enemy.CollisionDamage.Initialize(config.Damage, config.DamageLayer);
             enemy.DeathTriger.Initialize(enemy.Health, _lootFactory, config.Loot);

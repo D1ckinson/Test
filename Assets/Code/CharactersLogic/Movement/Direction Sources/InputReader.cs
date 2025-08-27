@@ -4,33 +4,23 @@ using UnityEngine;
 
 namespace Assets.Scripts.Movement
 {
-    public class InputReader : MonoBehaviour, ITellDirection
+    public class InputReader : ITellDirection
     {
         private InputControls _inputActions;
         private Vector2 _moveDirection;
 
         public event Action<Vector3> DirectionChanged;
 
-        private void Awake()
+        public InputReader(InputControls inputs)
         {
-            _inputActions = new();
+            _inputActions = inputs.ThrowIfNull();
         }
 
-        private void OnEnable()
-        {
-            _inputActions.Enable();
-        }
-
-        private void OnDisable()
-        {
-            _inputActions.Disable();
-        }
-
-        private void Update()
+        private void ReadInput()
         {
             Vector2 moveDirection = _inputActions.Player.Move.ReadValue<Vector2>();
 
-            if (_moveDirection == moveDirection)
+            if (_moveDirection.Compare(moveDirection,Constants.CompareAccuracy))
             {
                 return;
             }
@@ -41,12 +31,14 @@ namespace Assets.Scripts.Movement
 
         public void Run()
         {
-
+            _inputActions.Enable();
+            UpdateService.RegisterUpdate(ReadInput);
         }
 
         public void Stop()
         {
-
+            _inputActions.Disable();
+            UpdateService.UnregisterUpdate(ReadInput);
         }
     }
 }

@@ -9,6 +9,7 @@ using Assets.Code.Ui;
 using Assets.Code.Ui.Windows;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Factories;
+using Assets.Scripts.Movement;
 using Assets.Scripts.State_Machine;
 using Assets.Scripts.Tools;
 using Assets.Scripts.Ui;
@@ -48,7 +49,8 @@ namespace Assets.Scripts
             playerData.Wallet.Add(1000);///////////////////////////////
             HeroLevel heroLevel = new(_levelSettings.CalculateExperienceForNextLevel);
             GameAreaSettings gameAreaSettings = _levelSettings.GameAreaSettings;
-            HeroComponents heroComponents = new HeroFactory(_levelSettings.HeroConfig, playerData.Wallet, heroLevel).Create(gameAreaSettings.Center);
+            InputReader inputReader = new(new());
+            HeroComponents heroComponents = new HeroFactory(_levelSettings.HeroConfig, playerData.Wallet, heroLevel, inputReader).Create(gameAreaSettings.Center);
             heroComponents.Initialize(heroLevel, gameAreaSettings.Center);
 
             Dictionary<AbilityType, AbilityConfig> abilities = _levelSettings.AbilityConfigs;

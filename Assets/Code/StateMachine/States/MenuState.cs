@@ -17,17 +17,20 @@ namespace Assets.Scripts.State_Machine
 
         public override void Enter()
         {
-            _uiFactory.Create<FadeWindow>().Hide(ShowMenu);
+            _uiFactory.Create<ShopWindow1>().ExitButton.Subscribe(ShowMenu);
+            _uiFactory.Hide<ShopWindow1>();
 
-            void ShowMenu()
-            {
-                _uiFactory.Create<ShopWindow1>().ExitButton.Subscribe(() => _uiFactory.Create<MenuWindow1>());
-                _uiFactory.HideAll();
+            MenuWindow1 menuWindow = _uiFactory.Create<MenuWindow1>();
+            menuWindow.ShopButton.Subscribe(ShowShop);
+            menuWindow.PlayButton.Subscribe(SetState<GameState>);
+            menuWindow.SetActive(true);
 
-                MenuWindow1 menuWindow = _uiFactory.Create<MenuWindow1>();
-                menuWindow.ShopButton.Subscribe(ShowShop);
-                menuWindow.PlayButton.Subscribe(SetState<GameState>);
-            }
+            _uiFactory.Create<FadeWindow>().Hide();
+        }
+
+        private void ShowMenu()
+        {
+            _uiFactory.Create<MenuWindow1>();
         }
 
         private void ShowShop()
@@ -38,7 +41,7 @@ namespace Assets.Scripts.State_Machine
 
         public override void Exit()
         {
-            _uiFactory.Create<ShopWindow1>().ExitButton.UnsubscribeAll();
+            _uiFactory.Create<ShopWindow1>().ExitButton.Unsubscribe(ShowMenu);
             _uiFactory.Create<MenuWindow1>().ShopButton.UnsubscribeAll();
             _uiFactory.HideAll();
         }

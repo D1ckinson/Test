@@ -1,11 +1,10 @@
 ﻿using Assets.Code;
 using Assets.Code.CharactersLogic.HeroLogic;
+using Assets.Code.InputActions;
 using Assets.Code.Spawners;
 using Assets.Code.Tools;
 using Assets.Code.Ui;
 using Assets.Code.Ui.Windows;
-using System;
-using UnityEngine;
 using YG;
 
 namespace Assets.Scripts.State_Machine
@@ -18,14 +17,16 @@ namespace Assets.Scripts.State_Machine
         private readonly UiFactory _uiFactory;
         private readonly string _resurrectRewardId = "resurrect";
         private readonly Timer _timer;
+        private readonly IInputService _inputService;
 
-        public GameState(StateMachine stateMachine, HeroComponents heroComponents,
-            EnemySpawner enemySpawner, AbilityFactory abilityFactory, UiFactory uiFactory) : base(stateMachine)
+        public GameState(StateMachine stateMachine, HeroComponents heroComponents, EnemySpawner enemySpawner,
+            AbilityFactory abilityFactory, UiFactory uiFactory, IInputService inputService) : base(stateMachine)
         {
             _hero = heroComponents.ThrowIfNull();
             _enemySpawner = enemySpawner.ThrowIfNull();
             _abilityFactory = abilityFactory.ThrowIfNull();
             _uiFactory = uiFactory.ThrowIfNull();
+            _inputService = inputService.ThrowIfNull();
             _timer = new();
         }
 
@@ -42,7 +43,10 @@ namespace Assets.Scripts.State_Machine
 
         public override void Update()
         {
+            if (true)
+            {
 
+            }
         }
 
         public override void Exit()

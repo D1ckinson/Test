@@ -1,44 +1,66 @@
-﻿using Assets.Code.Tools;
+﻿using Assets.Code.InputActions;
+using Assets.Code.Tools;
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Assets.Scripts.Movement
 {
-    public class InputReader : ITellDirection
+    public class InputReader : IInputService
     {
-        private InputControls _inputActions;
-        private Vector2 _moveDirection;
+        private readonly InputControls _inputControls;
 
-        public event Action<Vector3> DirectionChanged;
+        private Vector2 _previousDirection;
 
-        public InputReader(InputControls inputs)
+        public InputReader()
         {
-            _inputActions = inputs.ThrowIfNull();
+            _inputControls = new InputControls();
+            _inputControls.Player.Move.performed += OnMovePerformed;
+            _inputControls.Player.Move.canceled += OnMoveCanceled;
+            //_inputControls.Player.Pause.performed += OnPausePerformed;
         }
 
-        private void ReadInput()
+        ~InputReader()
         {
-            Vector2 moveDirection = _inputActions.Player.Move.ReadValue<Vector2>();
+            _inputControls.Disable();
+            _inputControls.Dispose();
+        }
 
-            if (_moveDirection.Compare(moveDirection,Constants.CompareAccuracy))
+        public event Action<Vector3> DirectionChanged;
+        public event Action PausePressed;
+
+        private void OnMovePerformed(InputAction.CallbackContext context)
+        {
+            Vector2 direction = context.ReadValue<Vector2>();
+
+            if (direction.Compare(_previousDirection, Constants.CompareAccuracy))
             {
                 return;
             }
 
-            _moveDirection = moveDirection;
-            DirectionChanged?.Invoke(new(_moveDirection.x, Constants.Zero, _moveDirection.y));
+            _previousDirection = direction;
+            DirectionChanged?.Invoke(new Vector3(direction.x, Constants.Zero, direction.y));
         }
 
-        public void Run()
+        private void OnMoveCanceled(InputAction.CallbackContext context)
         {
-            _inputActions.Enable();
-            UpdateService.RegisterUpdate(ReadInput);
+            _previousDirection = Vector2.zero;
+            DirectionChanged?.Invoke(_previousDirection);
         }
 
-        public void Stop()
+        private void OnPausePerformed(InputAction.CallbackContext context)
         {
-            _inputActions.Disable();
-            UpdateService.UnregisterUpdate(ReadInput);
+            PausePressed?.Invoke();
+        }
+
+        public void Enable()
+        {
+            _inputControls.Enable();
+        }
+
+        public void Disable()
+        {
+            _inputControls.Disable();
         }
     }
 }

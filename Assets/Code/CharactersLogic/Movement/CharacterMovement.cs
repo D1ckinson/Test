@@ -37,8 +37,6 @@ namespace Assets.Scripts.Movement
         public void Initialize(float moveSpeed, float rotationSpeed, ITellDirection directionSource)
         {
             _directionSource = directionSource.ThrowIfNull();
-            _directionSource.DirectionChanged += SetDirection;
-
             _rigidbody = GetComponent<Rigidbody>();
 
             _mover = new(_rigidbody, moveSpeed);
@@ -104,13 +102,13 @@ namespace Assets.Scripts.Movement
 
         public void Run()
         {
-            _directionSource.Run();
+            _directionSource.DirectionChanged += SetDirection;
             UpdateService.RegisterFixedUpdate(Move);
         }
 
         public void Stop()
         {
-            _directionSource.Stop();
+            _directionSource.DirectionChanged -= SetDirection;
             UpdateService.UnregisterFixedUpdate(Move);
         }
     }

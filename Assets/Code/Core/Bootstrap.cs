@@ -2,7 +2,7 @@
 using Assets.Code.AbilitySystem;
 using Assets.Code.CharactersLogic.HeroLogic;
 using Assets.Code.Data;
-using Assets.Code.Shop;
+using Assets.Code.InputActions;
 using Assets.Code.Spawners;
 using Assets.Code.Tools;
 using Assets.Code.Ui;
@@ -47,10 +47,10 @@ namespace Assets.Scripts
         {
             PlayerData playerData = YG2.saves.Load();
             playerData.Wallet.Add(1000);///////////////////////////////
+            IInputService inputService = new InputReader();
             HeroLevel heroLevel = new(_levelSettings.CalculateExperienceForNextLevel);
             GameAreaSettings gameAreaSettings = _levelSettings.GameAreaSettings;
-            InputReader inputReader = new(new());
-            HeroComponents heroComponents = new HeroFactory(_levelSettings.HeroConfig, playerData.Wallet, heroLevel, inputReader).Create(gameAreaSettings.Center);
+            HeroComponents heroComponents = new HeroFactory(_levelSettings.HeroConfig, playerData.Wallet, heroLevel, inputService).Create(gameAreaSettings.Center);
             heroComponents.Initialize(heroLevel, gameAreaSettings.Center);
 
             Dictionary<AbilityType, AbilityConfig> abilities = _levelSettings.AbilityConfigs;
@@ -72,7 +72,7 @@ namespace Assets.Scripts
             _stateMachine = new();
             _stateMachine
                 .AddState(new MenuState(_stateMachine, uiFactory))
-                .AddState(new GameState(_stateMachine, heroComponents, enemySpawner, abilityFactory, uiFactory));
+                .AddState(new GameState(_stateMachine, heroComponents, enemySpawner, abilityFactory, uiFactory, inputService));
 
             _stateMachine.SetState<MenuState>();
         }

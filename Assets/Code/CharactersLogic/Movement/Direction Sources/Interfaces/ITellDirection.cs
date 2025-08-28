@@ -7,8 +7,8 @@ namespace Assets.Scripts.Movement
     {
         public event Action<Vector3> DirectionChanged;
 
-        public void Run();
+        public void Enable();
 
-        public void Stop();
+        public void Disable();
     }
 }

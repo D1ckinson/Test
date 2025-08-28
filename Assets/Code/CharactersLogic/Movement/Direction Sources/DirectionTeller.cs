@@ -26,12 +26,12 @@ namespace Assets.Scripts.Movement
             _target = target.ThrowIfNull();
         }
 
-        public void Run()
+        public void Enable()
         {
             UpdateService.RegisterUpdate(CalculateDirection);
         }
 
-        public void Stop()
+        public void Disable()
         {
             UpdateService.UnregisterUpdate(CalculateDirection);
 
@@ -44,7 +44,7 @@ namespace Assets.Scripts.Movement
         {
             if (_owner.IsActive() == false || _target.IsNull() || _target.IsActive() == false)
             {
-                Stop();
+                Disable();
 
                 return;
             }

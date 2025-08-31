@@ -17,11 +17,12 @@ namespace Assets.Code.AbilitySystem
         private readonly LevelUpWindow _levelUpWindow;
         private readonly AbilityFactory _abilityFactory;
         private readonly Dictionary<AbilityType, int> _abilityUnlockLevel;
+        private readonly ITimeService _timeService;
 
         public UpgradeTrigger
             (HeroLevel heroExperience, Dictionary<AbilityType, AbilityConfig> abilityConfigs,
             AbilityContainer abilityContainer, LevelUpWindow levelUpWindow, AbilityFactory abilityFactory,
-            Dictionary<AbilityType, int> abilityUnlockLevel)
+            Dictionary<AbilityType, int> abilityUnlockLevel, ITimeService timeService)
         {
             _heroExperience = heroExperience.ThrowIfNull();
             _abilityContainer = abilityContainer.ThrowIfNull();
@@ -29,6 +30,7 @@ namespace Assets.Code.AbilitySystem
             _levelUpWindow = levelUpWindow.ThrowIfNull();
             _abilityFactory = abilityFactory.ThrowIfNull();
             _abilityUnlockLevel = abilityUnlockLevel;
+            _timeService = timeService.ThrowIfNull();
 
             _heroExperience.LevelRaised += GenerateUpgrades;
             _levelUpWindow.UpgradeChosen += UpgradeAbility;
@@ -89,6 +91,7 @@ namespace Assets.Code.AbilitySystem
                 return;
             }
 
+            _timeService.Pause();
             _levelUpWindow.Show(upgradeOptions, level);
         }
 
@@ -123,6 +126,8 @@ namespace Assets.Code.AbilitySystem
                     _abilityContainer.Add(_abilityFactory.Create(abilityType));
                     break;
             }
+
+            _timeService.UnPause();
         }
     }
 }

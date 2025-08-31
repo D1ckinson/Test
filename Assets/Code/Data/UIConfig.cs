@@ -20,15 +20,15 @@ namespace Assets.Code.Data
 
         [Header("Shop")]
         public Canvas ShopCanvas;
-        public ShopOption ShopButton;
 
         [Header("Other")]
         public DeathWindow DeathWindow;
         public TestCanvasUiFactory TestCanvasUiFactory;
         public BaseWindow FadeWindow;
         public FPSWindow FPSWindow;
-        public MenuWindow1 MenuWindow;
-        public ShopWindow1 ShopWindow;
-        public ShopOption1 ShopOption;
+        public MenuWindow MenuWindow;
+        public ShopWindow ShopWindow;
+        public ShopOption ShopOption;
+        public Joystick Joystick;
     }
 }

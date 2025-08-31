@@ -1,150 +1,120 @@
-﻿using Assets.Code.Data;
+﻿using Assets.Code.Shop;
 using Assets.Code.Tools;
 using Assets.Scripts;
-using Assets.Scripts.Configs;
 using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
-namespace Assets.Code.Shop
+namespace Assets.Code.Ui.Windows
 {
-    public class ShopWindow
+    public class ShopWindow : BaseWindow
     {
-        private readonly PlayerData _playerData;
-        private readonly LevelSettings _levelSettings;
-        private readonly Canvas _canvas;
-        private readonly List<ShopOption> _options;
-        private readonly UpgradeCost _upgradeCost;
-        private readonly Button _exit;
-        private readonly TMP_Text _walletView;
+        [SerializeField] private TMP_Text _coinsQuantity;
+        [SerializeField] private Transform _layoutGroup;
 
-        public ShopWindow(PlayerData playerData, LevelSettings levelSettings, UpgradeCost upgradeCost, Canvas canvas, ShopOption buttonPrefab)
+        [field: SerializeField] public Button ExitButton { get; private set; }
+
+        private readonly Dictionary<AbilityType, ShopOption> _options = new();
+        private readonly Color _upgradeMaxed = Color.yellow;
+        private readonly Color _upgradeAvailable = Color.green;
+        private readonly Color _upgradeUnavailable = Color.red;
+        private Dictionary<AbilityType, int> _abilityUnlockLevel;
+        private Dictionary<AbilityType, int> _abilityMaxLevel;
+        private UpgradeCost _upgradeCost;
+        private Wallet _wallet;
+
+        private void OnDestroy()
         {
-            _playerData = playerData.ThrowIfNull();
-            _levelSettings = levelSettings.ThrowIfNull();
-            _upgradeCost = upgradeCost.ThrowIfNull().Initialize();
-
-            _canvas = Object.Instantiate(canvas);
-            _exit = _canvas.GetComponentInChildrenOrThrow<ExitButton>().Button;
-            _walletView = _canvas.GetComponentInChildrenOrThrow<WalletView>().Text;
-            _exit.Subscribe(OnExit);
-
-            Transform layoutGroup = _canvas.GetComponentInChildrenOrThrow<LayoutGroup>().transform;
-            _options = CreateOptions(buttonPrefab.ThrowIfNull(), layoutGroup);
-
-            UpdateElementsDescription(_playerData.Wallet.CoinsQuantity);
-
-            _canvas.SetActive(false);
-            _options.ForEach(option => option.SetActive(false));
-        }
-
-        ~ShopWindow()
-        {
-            _playerData.Wallet.ValueChanged -= UpdateElementsDescription;
-            _exit.UnsubscribeAll();
-        }
-
-        public event Action<ShopWindow> Exiting;
-
-        public void Toggle(bool? isActive = null)
-        {
-            isActive ??= _canvas.IsActive() == false;
-
-            _canvas.SetActive((bool)isActive);
-            _options.ForEach(option => option.SetActive((bool)isActive));
-            _walletView.SetText(_playerData.Wallet.CoinsQuantity.ToString());
-
-            switch (isActive)
+            foreach (ShopOption shopOption in _options.Values)
             {
-                case true:
-                    _playerData.Wallet.ValueChanged += UpdateElementsDescription;
-                    break;
-                case false:
-                    _playerData.Wallet.ValueChanged -= UpdateElementsDescription;
-                    break;
-                default:
-                    break;
+                if (shopOption.NotNull() && shopOption.UpgradeButton.NotNull())
+                {
+                    shopOption.UpgradeButton.UnsubscribeAll();
+                }
+            }
+
+            if (ExitButton.NotNull())
+            {
+                ExitButton.UnsubscribeAll();
             }
         }
 
-        private void UpdateElementsDescription(float coinsQuantity)
+        public ShopWindow Initialize(Dictionary<AbilityType, int> abilityUnlockLevel, Dictionary<AbilityType, int> abilityMaxLevel, UpgradeCost upgradeCost, Wallet wallet)
         {
-            _walletView.text = coinsQuantity.ToString();
-            _options.ForEach(SetOptionColor);
+            _abilityUnlockLevel = abilityUnlockLevel.ThrowIfNullOrEmpty();
+            _abilityMaxLevel = abilityMaxLevel.ThrowIfNullOrEmpty();
+            _upgradeCost = upgradeCost.ThrowIfNull();
+            _wallet = wallet.ThrowIfNull();
+            _coinsQuantity.SetText((int)_wallet.CoinsQuantity);
+            _wallet.ValueChanged += UpdateAllOptions;
+            ExitButton.Subscribe(() => this.SetActive(false));
+
+            return this;
         }
 
-        private void OnExit()
+        public void AddOption(ShopOption option)
         {
-            Toggle(false);
-            Exiting?.Invoke(this);
+            option.ThrowIfNull().transform.SetParent(_layoutGroup, false);
+            AbilityType abilityType = option.AbilityType;
+
+            option.LevelNumber.SetText(_abilityUnlockLevel[abilityType]);
+            UpdateOption(option, _wallet.CoinsQuantity);
+
+            option.UpgradeButton.Subscribe(() => IncreaseUnlockLevel(abilityType));
+            _options.Add(option.AbilityType, option);
         }
 
-        private void SetOptionColor(ShopOption option)
+        private void UpdateOption(ShopOption option, float coinsQuantity)
         {
-            if (option.IsMaxed)
+            AbilityType abilityType = option.AbilityType;
+            int unlockLevel = _abilityUnlockLevel[abilityType];
+            int maxLevel = _abilityMaxLevel[abilityType];
+
+            if (unlockLevel == maxLevel)
             {
-                option.SetColor(Color.yellow);
+                option.OfferDescription.SetActive(false);
+                option.LevelMaxText.SetActive(true);
+                option.UpgradeButton.interactable = false;
+                option.UpgradeButton.SetColor(_upgradeMaxed);
             }
-            else if (option.Cost > _playerData.Wallet.CoinsQuantity)
+            else if (unlockLevel < maxLevel)
             {
-                option.SetColor(Color.red);
+                int upgradeCost = _upgradeCost.GetCost(abilityType, unlockLevel + Constants.One);
+                option.Cost.SetText(upgradeCost);
+
+                if (coinsQuantity >= upgradeCost)
+                {
+                    option.UpgradeButton.SetColor(_upgradeAvailable);
+                    option.UpgradeButton.interactable = true;
+                }
+                else
+                {
+                    option.UpgradeButton.SetColor(_upgradeUnavailable);
+                    option.UpgradeButton.interactable = false;
+                }
             }
             else
             {
-                option.SetColor(Color.green);
+                throw new NotImplementedException();
             }
         }
 
-        private List<ShopOption> CreateOptions(ShopOption prefab, Transform parent)
+        private void IncreaseUnlockLevel(AbilityType abilityType)
         {
-            List<ShopOption> options = new();
-            Dictionary<AbilityType, AbilityConfig> abilityConfigs = _levelSettings.AbilityConfigs;
-            IEnumerable<AbilityType> abilityTypes = Constants.GetEnums<AbilityType>();
+            int unlockLevel = _abilityUnlockLevel[abilityType] + Constants.One;
+            _wallet.Spend(_upgradeCost.GetCost(abilityType, unlockLevel));
+            _abilityUnlockLevel[abilityType] = unlockLevel;
+            _options[abilityType].LevelNumber.SetText(unlockLevel);
 
-            foreach (AbilityType abilityType in abilityTypes)
-            {
-                ShopOption option = Object.Instantiate(prefab, parent, false);
-
-                AbilityConfig abilityConfig = abilityConfigs.GetValueOrThrow(abilityType);
-
-                int availableLevel = _playerData.AbilityUnlockLevel.GetValueOrThrow(abilityType);
-                int cost = _upgradeCost.GetCost(abilityType, availableLevel + Constants.One);
-
-                string buyText = availableLevel == abilityConfig.MaxLevel ? UIText.LevelMax : UIText.Upgrade;
-
-                option.Initialize(abilityConfig.Icon, abilityConfig.Name);
-                SetDescription(abilityType, option);
-
-                SetOptionColor(option);
-                option.Subscribe(() => IncreaseUnlockLevel(abilityType, option));
-
-                options.Add(option);
-            }
-
-            return options;
+            UpdateAllOptions(_wallet.CoinsQuantity);
         }
 
-        private void IncreaseUnlockLevel(AbilityType abilityType, ShopOption option)
+        private void UpdateAllOptions(float coinsQuantity)
         {
-            int unlockLevel = _playerData.AbilityUnlockLevel[abilityType] + Constants.One;
-
-            _playerData.Wallet.Spend(_upgradeCost.GetCost(abilityType, unlockLevel));
-            _playerData.AbilityUnlockLevel[abilityType] = unlockLevel;
-            SetDescription(abilityType, option);
-        }
-
-        private void SetDescription(AbilityType abilityType, ShopOption option)
-        {
-            AbilityConfig abilityConfig = _levelSettings.AbilityConfigs.GetValueOrThrow(abilityType);
-
-            int availableLevel = _playerData.AbilityUnlockLevel.GetValueOrThrow(abilityType);
-            int cost = _upgradeCost.GetCost(abilityType, availableLevel + Constants.One);
-
-            string buyText = availableLevel >= abilityConfig.MaxLevel ? UIText.LevelMax : UIText.Upgrade;
-            option.SetDescription(availableLevel, buyText, cost);
+            _coinsQuantity.SetText((int)coinsQuantity);
+            _options.ForEachValues(option => UpdateOption(option, coinsQuantity));
         }
     }
 }

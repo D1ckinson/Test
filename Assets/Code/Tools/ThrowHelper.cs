@@ -15,6 +15,14 @@ namespace Assets.Code.Tools
             }
         }
 
+        public static void ThrowIfNotNormalize(this Vector2 vector)
+        {
+            if (Mathf.Approximately(vector.sqrMagnitude, Constants.One) == false)
+            {
+                throw new VectorNotNormalizedException();
+            }
+        }
+
         public static T ThrowIfNullOrEmpty<T>(this T collection) where T : ICollection
         {
             collection.ThrowIfNull();
@@ -58,11 +66,11 @@ namespace Assets.Code.Tools
             }
         }
 
-        public static T ThrowIfNull<T>(this T argument)
+        public static T ThrowIfNull<T>(this T argument, string message = null)
         {
             if (argument == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(message);
             }
 
             return argument;

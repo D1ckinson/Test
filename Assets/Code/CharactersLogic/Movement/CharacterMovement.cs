@@ -103,12 +103,16 @@ namespace Assets.Scripts.Movement
         public void Run()
         {
             _directionSource.DirectionChanged += SetDirection;
+            _directionSource.Enable();
+
             UpdateService.RegisterFixedUpdate(Move);
         }
 
         public void Stop()
         {
+            _directionSource.Disable();
             _directionSource.DirectionChanged -= SetDirection;
+
             UpdateService.UnregisterFixedUpdate(Move);
         }
     }

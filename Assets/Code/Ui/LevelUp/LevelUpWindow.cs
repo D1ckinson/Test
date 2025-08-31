@@ -37,8 +37,6 @@ namespace Assets.Scripts.Ui
         {
             upgradeOptions.ThrowIfNullOrEmpty();
 
-            Time.timeScale = Constants.Zero;
-
             for (int i = Constants.Zero; i < upgradeOptions.Count; i++)
             {
                 LevelUpButton button = _buttons[i];
@@ -61,8 +59,6 @@ namespace Assets.Scripts.Ui
 
             _canvas.SetActive(false);
             UpgradeChosen?.Invoke(abilityType);
-
-            Time.timeScale = Constants.One;
         }
     }
 }

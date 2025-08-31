@@ -47,9 +47,15 @@ namespace Assets.Scripts
         {
             PlayerData playerData = YG2.saves.Load();
             playerData.Wallet.Add(1000);///////////////////////////////
-            IInputService inputService = new InputReader();
-            HeroLevel heroLevel = new(_levelSettings.CalculateExperienceForNextLevel);
+            ITimeService timeService = new TimeService();
+            Dictionary<AbilityType, int> abilityMaxLevel = _levelSettings.AbilityConfigs.ToDictionary(pair => pair.Key, pair => pair.Value.MaxLevel);
+            UiFactory uiFactory = new(_uIConfig, playerData.Wallet, _levelSettings.UpgradeCost, _levelSettings.AbilityConfigs, playerData.AbilityUnlockLevel, abilityMaxLevel);
+
+            IInputService inputService = new InputReader(uiFactory.Create<Joystick>(), timeService);
+
             GameAreaSettings gameAreaSettings = _levelSettings.GameAreaSettings;
+
+            HeroLevel heroLevel = new(_levelSettings.CalculateExperienceForNextLevel);
             HeroComponents heroComponents = new HeroFactory(_levelSettings.HeroConfig, playerData.Wallet, heroLevel, inputService).Create(gameAreaSettings.Center);
             heroComponents.Initialize(heroLevel, gameAreaSettings.Center);
 
@@ -60,13 +66,11 @@ namespace Assets.Scripts
             EnemyFactory enemyFactory = new(_levelSettings.EnemyConfigs, lootFactory, heroComponents.transform, _levelSettings.EnemySpawnerSettings, gameAreaSettings);
 
             LevelUpWindow levelUpWindow = new(_uIConfig.LevelUpCanvas, _uIConfig.LevelUpButton);
-            new UpgradeTrigger(heroLevel, abilities, heroComponents.AbilityContainer, levelUpWindow, abilityFactory, playerData.AbilityUnlockLevel);
+            new UpgradeTrigger(heroLevel, abilities, heroComponents.AbilityContainer, levelUpWindow, abilityFactory, playerData.AbilityUnlockLevel, timeService);
 
             EnemySpawner enemySpawner = new(enemyFactory, _levelSettings.SpawnTypeByTimes);
 
             _levelSettings.UpgradeCost.Initialize();
-            Dictionary<AbilityType, int> abilityMaxLevel = _levelSettings.AbilityConfigs.ToDictionary(pair => pair.Key, pair => pair.Value.MaxLevel);
-            UiFactory uiFactory = new(_uIConfig, playerData.Wallet, _levelSettings.UpgradeCost, _levelSettings.AbilityConfigs, playerData.AbilityUnlockLevel, abilityMaxLevel);
             uiFactory.Create<FPSWindow>();
 
             _stateMachine = new();

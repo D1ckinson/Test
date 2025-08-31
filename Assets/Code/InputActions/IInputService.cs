@@ -5,6 +5,6 @@ namespace Assets.Code.InputActions
 {
     public interface IInputService : ITellDirection
     {
-        public event Action PausePressed;
+        public event Action BackPressed;
     }
 }

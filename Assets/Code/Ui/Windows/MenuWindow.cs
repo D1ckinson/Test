@@ -1,54 +1,44 @@
 ﻿using Assets.Code.Data;
 using Assets.Code.Tools;
-using Assets.Code.Ui.Buttons;
-using System.Collections.Generic;
+using Assets.Scripts;
+using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.State_Machine
+namespace Assets.Code.Ui.Windows
 {
-    public class MenuWindow
+    public class MenuWindow : BaseWindow
     {
-        private readonly Dictionary<ButtonType, TextButton> _buttons;
-        private readonly Canvas _canvas;
+        [SerializeField] private TMP_Text _personalBestText;
+        [SerializeField] private TMP_Text _minutesText;
+        [SerializeField] private TMP_Text _playText;
+        [SerializeField] private TMP_Text _minutesQuantity;
+        [SerializeField] private TMP_Text _coinsQuantity;
 
-        public MenuWindow(TextButton buttonPrefab, Canvas canvasPrefab)
+        [field: SerializeField] public Button VolumeButton { get; private set; }
+        [field: SerializeField] public Button LeaderboardButton { get; private set; }
+        [field: SerializeField] public Button RemoveAdButton { get; private set; }
+        [field: SerializeField] public Button ShopButton { get; private set; }
+        [field: SerializeField] public Button PlayButton { get; private set; }
+
+        private Wallet _wallet;
+
+        public MenuWindow Initialize(Wallet wallet)
         {
-            buttonPrefab.ThrowIfNull();
-            _canvas = Object.Instantiate(canvasPrefab.ThrowIfNull());
-            Transform layoutGroup = _canvas.GetComponentInChildrenOrThrow<LayoutGroup>().transform;
+            _personalBestText.SetText(UIText.PersonalBest);
+            _minutesText.SetText(UIText.Minutes);
+            _playText.SetText(UIText.Play);
+            _wallet = wallet.ThrowIfNull();
 
-            _buttons = new()
-            {
-                [ButtonType.Play] = Object.Instantiate(buttonPrefab, layoutGroup, false),
-                [ButtonType.Shop] = Object.Instantiate(buttonPrefab, layoutGroup, false),
-                [ButtonType.Leaderboard] = Object.Instantiate(buttonPrefab, layoutGroup, false),
-            };
+            UpdateCoinsQuantity((int)_wallet.CoinsQuantity);
+            _wallet.ValueChanged += UpdateCoinsQuantity;
 
-            _buttons[ButtonType.Play].Text.text = UIText.Play;
-            _buttons[ButtonType.Shop].Text.text = UIText.Shop;
-            _buttons[ButtonType.Leaderboard].Text.text = UIText.Leaderboard;
-
-            Toggle(false);
+            return this;
         }
 
-        public void Toggle(bool? isActive = null)
+        private void UpdateCoinsQuantity(float coinsQuantity)
         {
-            isActive ??= _canvas.IsActive() == false;
-
-            _canvas.SetActive((bool)isActive);
-            _buttons.ForEachValues(button => button.SetActive((bool)isActive));
-        }
-
-        public void Subscribe(ButtonType buttonType, UnityAction call)
-        {
-            _buttons.GetValueOrThrow(buttonType.ThrowIfNull()).Button.Subscribe(call.ThrowIfNull());
-        }
-
-        public void UnsubscribeAll()
-        {
-            _buttons.ForEachValues(button => button.Button.UnsubscribeAll());
+            _coinsQuantity.SetText((int)coinsQuantity);
         }
     }
 }

@@ -9,25 +9,40 @@ namespace Assets.Scripts.Movement
     public class InputReader : IInputService
     {
         private readonly InputControls _inputControls;
+        private readonly Joystick _joystick;
+        private readonly ITimeService _timeService;
 
         private Vector2 _previousDirection;
 
-        public InputReader()
+        public InputReader(Joystick joystick, ITimeService timeService)
         {
             _inputControls = new InputControls();
+            _joystick = joystick.ThrowIfNull();
+            _timeService = timeService.ThrowIfNull();
+            _joystick.SetActive(false);
+
             _inputControls.Player.Move.performed += OnMovePerformed;
             _inputControls.Player.Move.canceled += OnMoveCanceled;
-            //_inputControls.Player.Pause.performed += OnPausePerformed;
+            _inputControls.Ui.Back.performed += OnPausePerformed;
+
+            _joystick.DirectionChanged += OnJoystickMove;
+            _timeService.TimeChanged += ToggleJoystick;
         }
 
         ~InputReader()
         {
+            _joystick.DirectionChanged -= OnJoystickMove;
+            _timeService.TimeChanged -= ToggleJoystick;
+
+            _inputControls.Player.Move.performed -= OnMovePerformed;
+            _inputControls.Player.Move.canceled -= OnMoveCanceled;
+            _inputControls.Ui.Back.performed -= OnPausePerformed;
             _inputControls.Disable();
             _inputControls.Dispose();
         }
 
         public event Action<Vector3> DirectionChanged;
-        public event Action PausePressed;
+        public event Action BackPressed;
 
         private void OnMovePerformed(InputAction.CallbackContext context)
         {
@@ -48,19 +63,40 @@ namespace Assets.Scripts.Movement
             DirectionChanged?.Invoke(_previousDirection);
         }
 
+        private void OnJoystickMove(Vector2 vector)
+        {
+            DirectionChanged?.Invoke(new Vector3(vector.x, Constants.Zero, vector.y));
+        }
+
+        private void ToggleJoystick()
+        {
+            switch (Time.timeScale)
+            {
+                case Constants.One:
+                    _joystick.SetActive(true);
+                    break;
+
+                case Constants.Zero:
+                    _joystick.SetActive(false);
+                    break;
+            }
+        }
+
         private void OnPausePerformed(InputAction.CallbackContext context)
         {
-            PausePressed?.Invoke();
+            BackPressed?.Invoke();
         }
 
         public void Enable()
         {
             _inputControls.Enable();
+            _joystick.SetActive(true);
         }
 
         public void Disable()
         {
             _inputControls.Disable();
+            _joystick.SetActive(false);
         }
     }
 }

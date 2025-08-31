@@ -36,8 +36,9 @@ namespace Assets.Code.Ui
                 [typeof(DeathWindow)] = CreateDeathWindow,
                 [typeof(FadeWindow)] = CreateFadeWindow,
                 [typeof(FPSWindow)] = CreateFPSView,
-                [typeof(MenuWindow1)] = CreateMenuWindow,
-                [typeof(ShopWindow1)] = CreateShopWindow
+                [typeof(MenuWindow)] = CreateMenuWindow,
+                [typeof(ShopWindow)] = CreateShopWindow,
+                [typeof(Joystick)] = CreateJoystick
             };
         }
 
@@ -88,17 +89,22 @@ namespace Assets.Code.Ui
 
         private BaseWindow CreateShopWindow()
         {
-            ShopWindow1 shopWindow = _uIConfig.ShopWindow.Instantiate(_canvas.transform, false).Initialize(_abilityUnlockLevel, _abilityMaxLevel, _upgradeCost, _wallet);
+            ShopWindow shopWindow = _uIConfig.ShopWindow.Instantiate(_canvas.transform, false).Initialize(_abilityUnlockLevel, _abilityMaxLevel, _upgradeCost, _wallet);
 
             foreach (AbilityType abilityType in Constants.GetEnums<AbilityType>())
             {
-                ShopOption1 shopOption = _uIConfig.ShopOption.Instantiate().Initialize(abilityType);
+                ShopOption shopOption = _uIConfig.ShopOption.Instantiate().Initialize(abilityType);
                 shopOption.AbilityIcon.sprite = _abilityConfigs[abilityType].Icon;
 
                 shopWindow.AddOption(shopOption);
             }
 
             return shopWindow;
+        }
+
+        private BaseWindow CreateJoystick()
+        {
+            return _uIConfig.Joystick.Instantiate(_canvas.transform, false);
         }
     }
 }

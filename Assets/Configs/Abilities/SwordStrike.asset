@@ -30,6 +30,34 @@ MonoBehaviour:
     <Range>k__BackingField: 12
     <ProjectilesCount>k__BackingField: 0
   - <Cooldown>k__BackingField: 0.8
-    <Damage>k__BackingField: 17
+    <Damage>k__BackingField: 19
     <Range>k__BackingField: 14
+    <ProjectilesCount>k__BackingField: 0
+  - <Cooldown>k__BackingField: 0.8
+    <Damage>k__BackingField: 20
+    <Range>k__BackingField: 14
+    <ProjectilesCount>k__BackingField: 0
+  - <Cooldown>k__BackingField: 0.8
+    <Damage>k__BackingField: 30
+    <Range>k__BackingField: 14
+    <ProjectilesCount>k__BackingField: 0
+  - <Cooldown>k__BackingField: 0.8
+    <Damage>k__BackingField: 30
+    <Range>k__BackingField: 15
+    <ProjectilesCount>k__BackingField: 0
+  - <Cooldown>k__BackingField: 0.7
+    <Damage>k__BackingField: 30
+    <Range>k__BackingField: 15
+    <ProjectilesCount>k__BackingField: 0
+  - <Cooldown>k__BackingField: 0.6
+    <Damage>k__BackingField: 30
+    <Range>k__BackingField: 15
+    <ProjectilesCount>k__BackingField: 0
+  - <Cooldown>k__BackingField: 0.6
+    <Damage>k__BackingField: 30
+    <Range>k__BackingField: 20
+    <ProjectilesCount>k__BackingField: 0
+  - <Cooldown>k__BackingField: 0.1
+    <Damage>k__BackingField: 100
+    <Range>k__BackingField: 100
     <ProjectilesCount>k__BackingField: 0

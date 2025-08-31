@@ -507,7 +507,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8348794494615386319}
-  - component: {fileID: 7006632268564582405}
   - component: {fileID: 7513231466184946847}
   m_Layer: 5
   m_Name: Option
@@ -540,25 +539,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 600, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &7006632268564582405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1244780815292298993}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bf6adf0551a5414f80e4e1eb2fa5ab7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _abilityIcon: {fileID: 4314523002470197275}
-  _goldIcon: {fileID: 9175762900916471592}
-  _abilityName: {fileID: 1882100541288408115}
-  _levelDescription: {fileID: 6655599966603680866}
-  _button: {fileID: 2731194817173089287}
-  _buyText: {fileID: 3275357181085774478}
-  _costText: {fileID: 5066645254221589244}
 --- !u!114 &7513231466184946847
 MonoBehaviour:
   m_ObjectHideFlags: 0

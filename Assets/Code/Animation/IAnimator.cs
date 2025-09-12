@@ -2,8 +2,8 @@
 
 namespace Assets.Code.Animation
 {
-    public interface IAnimator<T> where T : Enum
+    public interface IAnimator
     {
-        public void Play(T animation);
+        public void Play(Enum animation);
     }
 }

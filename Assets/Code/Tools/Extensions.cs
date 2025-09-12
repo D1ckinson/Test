@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Code.Animation;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -95,7 +96,7 @@ namespace Assets.Code.Tools
 
         public static void PlayAsNew(this Animator animator, int hash, int layer = 0)
         {
-            animator.Play(hash, layer, 0);
+            animator.Play(hash, layer, Zero);
         }
 
         public static int LastIndex<T>(this ICollection<T> collection)
@@ -116,11 +117,6 @@ namespace Assets.Code.Tools
         public static void SetActive(this Component component, bool isActive)
         {
             component.gameObject.SetActive(isActive);
-        }
-
-        public static bool IsFinished(this AnimatorStateInfo stateInfo)
-        {
-            return stateInfo.normalizedTime >= One || stateInfo.loop;
         }
 
         public static bool IsActive(this Component component)
@@ -185,6 +181,27 @@ namespace Assets.Code.Tools
         public static void SetText(this TMP_Text textWindow, int value)
         {
             textWindow.SetText(value.ToString());
+        }
+
+        public static int GetStateLayerIndex(this Animator animator, int hash)
+        {
+            for (int i = Zero; i < animator.layerCount; i++)
+            {
+                if (animator.HasState(i, hash))
+                {
+                    return i;
+                }
+            }
+
+            return -One;
+        }
+
+        public static bool IsAnimationFinished(this Animator animator, int hash, int layerIndex = 0)
+        {
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(layerIndex);
+            bool isCurrentState = stateInfo.shortNameHash == hash;
+
+            return isCurrentState == false && (stateInfo.normalizedTime >= One || stateInfo.loop);
         }
     }
 }

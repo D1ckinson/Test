@@ -1,5 +1,4 @@
-﻿using Assets.Code.Shop;
-using Assets.Code.Ui;
+﻿using Assets.Code.Ui;
 using Assets.Code.Ui.Buttons;
 using Assets.Code.Ui.LevelUp;
 using Assets.Code.Ui.Windows;
@@ -30,5 +29,7 @@ namespace Assets.Code.Data
         public ShopWindow ShopWindow;
         public ShopOption ShopOption;
         public Joystick Joystick;
+        public LeaderboardWindow Leaderboard;
+        public PauseWindow PauseWindow;
     }
 }

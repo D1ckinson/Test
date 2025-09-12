@@ -143,11 +143,11 @@ namespace Assets.Code.Tools
             return value;
         }
 
-        public static int ThrowIfNegative(this int value)
+        public static int ThrowIfNegative(this int value, Exception exception = null)
         {
             if (value < 0)
             {
-                throw new ArgumentOutOfRangeException();
+                throw exception ?? new ArgumentOutOfRangeException();
             }
 
             return value;

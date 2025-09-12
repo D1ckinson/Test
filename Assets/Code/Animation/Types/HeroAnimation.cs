@@ -2,6 +2,11 @@
 {
     public enum HeroAnimation
     {
-        
+        Idle,
+        Run,
+        Attack,
+        Die,
+        DieRecover,
+        HitEffect
     }
 }

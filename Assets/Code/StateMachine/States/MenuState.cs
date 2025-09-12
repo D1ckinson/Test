@@ -1,8 +1,7 @@
-﻿using Assets.Code.Shop;
-using Assets.Code.Tools;
+﻿using Assets.Code.Tools;
 using Assets.Code.Ui;
 using Assets.Code.Ui.Windows;
-using System;
+using YG;
 
 namespace Assets.Scripts.State_Machine
 {
@@ -19,11 +18,14 @@ namespace Assets.Scripts.State_Machine
         {
             _uiFactory.Create<ShopWindow>().ExitButton.Subscribe(ShowMenu);
             _uiFactory.Hide<ShopWindow>();
+            _uiFactory.Create<LeaderboardWindow>().ExitButton.Subscribe(ShowMenu);
+            _uiFactory.Hide<LeaderboardWindow>();
 
             MenuWindow menuWindow = _uiFactory.Create<MenuWindow>();
             menuWindow.ShopButton.Subscribe(ShowShop);
             menuWindow.PlayButton.Subscribe(SetState<GameState>);
             menuWindow.SetActive(true);
+            menuWindow.LeaderboardButton.Subscribe(ShowLeaderboard);
 
             _uiFactory.Create<FadeWindow>().Hide();
         }
@@ -39,6 +41,13 @@ namespace Assets.Scripts.State_Machine
             _uiFactory.Create<ShopWindow>();
         }
 
+        private void ShowLeaderboard()
+        {
+            _uiFactory.Hide<MenuWindow>();
+            LeaderboardWindow leaderboard = _uiFactory.Create<LeaderboardWindow>();
+            leaderboard.Leaderboard.UpdateLB();
+        }
+
         public override void Exit()
         {
             _uiFactory.Create<ShopWindow>().ExitButton.Unsubscribe(ShowMenu);
@@ -46,8 +55,6 @@ namespace Assets.Scripts.State_Machine
             _uiFactory.HideAll();
         }
 
-        public override void Update()
-        {
-        }
+        public override void Update() { }
     }
 }

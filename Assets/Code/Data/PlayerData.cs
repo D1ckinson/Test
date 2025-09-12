@@ -10,6 +10,7 @@ namespace Assets.Scripts
         public Wallet Wallet;
         public AbilityType StartAbility;
         public Dictionary<AbilityType, int> AbilityUnlockLevel;
+        public float ScoreRecord;
 
         public PlayerData()
         {

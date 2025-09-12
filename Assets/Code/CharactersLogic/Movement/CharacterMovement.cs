@@ -17,6 +17,9 @@ namespace Assets.Scripts.Movement
         private Vector3 _direction;
         private Rigidbody _rigidbody;
 
+        private Action _onMove;
+        private Action _onIdle;
+
         private void OnDisable()
         {
             if (_rigidbody != null)
@@ -34,13 +37,16 @@ namespace Assets.Scripts.Movement
             }
         }
 
-        public void Initialize(float moveSpeed, float rotationSpeed, ITellDirection directionSource)
+        public void Initialize(float moveSpeed, float rotationSpeed, ITellDirection directionSource, Action onMove = null, Action onIdle = null)
         {
             _directionSource = directionSource.ThrowIfNull();
             _rigidbody = GetComponent<Rigidbody>();
 
             _mover = new(_rigidbody, moveSpeed);
             _rotator = new(_rigidbody, rotationSpeed);
+
+            _onMove = onMove;
+            _onIdle = onIdle;
         }
 
         public void SetMoveStat(float moveSpeed)
@@ -62,6 +68,16 @@ namespace Assets.Scripts.Movement
         private void SetDirection(Vector3 vector)
         {
             _direction = vector;
+
+            switch (vector == Vector3.zero)
+            {
+                case true:
+                    _onIdle?.Invoke();
+                    break;
+                case false:
+                    _onMove?.Invoke();
+                    break;
+            }
         }
 
         public void AddSlow(SlowEffect slow)

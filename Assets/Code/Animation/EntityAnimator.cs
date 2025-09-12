@@ -1,4 +1,5 @@
 ﻿using Assets.Code.Tools;
+using Assets.Code.Tools.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,55 +7,56 @@ using UnityEngine;
 
 namespace Assets.Code.Animation
 {
-    public sealed class EntityAnimator<T> : IAnimator<T> where T : Enum
+    public sealed class EntityAnimator<T> : IAnimator where T : Enum
     {
         private const float TransitionDuration = 0.1f;
 
         private readonly Animator _animator;
-        private readonly Dictionary<T, AnimationData> _animationData;
-
-        private AnimationData _currentAnimationInfo;
+        private readonly Dictionary<Enum, AnimationData> _animationData;
+        private readonly Dictionary<int, AnimationData> _currentAnimation = new();
 
         public EntityAnimator(Animator animator)
         {
             _animator = animator.ThrowIfNull();
             _animationData = CreateAnimationData();
+
+            for (int i = 0; i < _animator.layerCount; i++)
+            {
+                _currentAnimation[i] = AnimationData.Empty;
+            }
         }
 
-        public void Play(T animation)
+        public void Play(Enum animation)
         {
-            AnimationData animationInfo = _animationData.GetValueOrThrow(animation.ThrowIfNull());
+            AnimationData animationInfo = _animationData[animation.ThrowIfNull()];
+            int layerIndex = animationInfo.LayerIndex;
 
-            if (animationInfo.Hash == _currentAnimationInfo.Hash)
+            AnimationData currentAnimationInfo = _currentAnimation[layerIndex];
+
+            if (animationInfo.Hash == _animator.GetCurrentAnimatorStateInfo(layerIndex).shortNameHash)
             {
                 return;
             }
 
-            if (animationInfo.Priority > _currentAnimationInfo.Priority || IsAnimationFinished())
+            if (animationInfo.Priority >= currentAnimationInfo.Priority || _animator.IsAnimationFinished(animationInfo.Hash, layerIndex))
             {
-                _animator.CrossFade(animationInfo.Hash, TransitionDuration);
-                _currentAnimationInfo = animationInfo;
+                _animator.CrossFade(animationInfo.Hash, TransitionDuration, layerIndex);
+                _currentAnimation[layerIndex] = animationInfo;
             }
         }
 
-        private bool IsAnimationFinished()
-        {
-            AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(Constants.Zero);
-            bool isCurrentState = stateInfo.shortNameHash == _currentAnimationInfo.Hash;
-
-            return isCurrentState && stateInfo.IsFinished();
-        }
-
-        private Dictionary<T, AnimationData> CreateAnimationData()
+        private Dictionary<Enum, AnimationData> CreateAnimationData()
         {
             IEnumerable<T> animationsNames = Constants.GetEnums<T>();
-            Dictionary<T, AnimationData> animationHashes = new(animationsNames.Count());
+
+            Dictionary<Enum, AnimationData> animationHashes = new(animationsNames.Count());
 
             foreach (T name in animationsNames)
             {
-                AnimationData animationInfo = AnimationData.Create(name);
-                _animator.ThrowIfAnimationMissing(animationInfo.Hash);
+                int hash = Animator.StringToHash(name.ToString());
+                int layerIndex = _animator.GetStateLayerIndex(hash).ThrowIfNegative(new MissingAnimationException());
 
+                AnimationData animationInfo = AnimationData.Create(name, layerIndex);
                 animationHashes.Add(name, animationInfo);
             }
 

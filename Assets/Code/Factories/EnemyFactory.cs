@@ -1,4 +1,5 @@
-﻿using Assets.Code.CharactersLogic.EnemyLogic;
+﻿using Assets.Code.Animation;
+using Assets.Code.CharactersLogic.EnemyLogic;
 using Assets.Code.Tools;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Tools;
@@ -81,9 +82,10 @@ namespace Assets.Scripts.Factories
             CharacterConfig config = _enemiesConfigs.Values.First();
             EnemyComponents enemy = Object.Instantiate(config.Prefab).GetComponentOrThrow<EnemyComponents>();
             enemy.Initialize(new(enemy.transform));
+            IAnimator animator = new EntityAnimator<EnemyAnimation>(enemy.Animator);
 
             enemy.CharacterMovement.Initialize(config.MoveSpeed, config.RotationSpeed, enemy.DirectionTeller);
-            enemy.Health.Initialize(config.MaxHealth, config.InvincibilityDuration);
+            enemy.Health.Initialize(config.MaxHealth, config.InvincibilityDuration, animator, () => animator.Play(EnemyAnimation.HitEffect));
             enemy.CollisionDamage.Initialize(config.Damage, config.DamageLayer);
             enemy.DeathTriger.Initialize(enemy.Health, _lootFactory, config.Loot);
             enemy.DirectionTeller.SetTarget(_hero);

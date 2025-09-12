@@ -5,6 +5,7 @@ using Assets.Code.Spawners;
 using Assets.Code.Tools;
 using Assets.Code.Ui;
 using Assets.Code.Ui.Windows;
+using System;
 using YG;
 
 namespace Assets.Scripts.State_Machine
@@ -17,16 +18,22 @@ namespace Assets.Scripts.State_Machine
         private readonly UiFactory _uiFactory;
         private readonly string _resurrectRewardId = "resurrect";
         private readonly Timer _timer;
+        private readonly PlayerData _playerData;
         private readonly IInputService _inputService;
+        private readonly ITimeService _timeService;
 
         public GameState(StateMachine stateMachine, HeroComponents heroComponents, EnemySpawner enemySpawner,
-            AbilityFactory abilityFactory, UiFactory uiFactory, IInputService inputService) : base(stateMachine)
+            AbilityFactory abilityFactory, UiFactory uiFactory, PlayerData playerData, IInputService inputService
+            , ITimeService timeService) : base(stateMachine)
         {
             _hero = heroComponents.ThrowIfNull();
             _enemySpawner = enemySpawner.ThrowIfNull();
             _abilityFactory = abilityFactory.ThrowIfNull();
             _uiFactory = uiFactory.ThrowIfNull();
+            _playerData = playerData.ThrowIfNull();
             _inputService = inputService.ThrowIfNull();
+            _timeService = timeService.ThrowIfNull();
+
             _timer = new();
         }
 
@@ -39,14 +46,13 @@ namespace Assets.Scripts.State_Machine
             _hero.CharacterMovement.Run();
             _enemySpawner.Run();
             _timer.Start();
+
+            _inputService.BackPressed += Pause;
         }
 
         public override void Update()
         {
-            if (true)
-            {
 
-            }
         }
 
         public override void Exit()
@@ -66,8 +72,21 @@ namespace Assets.Scripts.State_Machine
             _hero.SetActive(true);
             _hero.SetDefaultPosition();
 
+            if (_timer.Duration > _playerData.ScoreRecord)
+            {
+                _playerData.ScoreRecord = _timer.Duration;
+                YG2.SetLBTimeConvert(Constants.LeaderboardName, _playerData.ScoreRecord);
+            }
+
+            _inputService.BackPressed -= Pause;
             _timer.Stop();
             _enemySpawner.Reset();
+        }
+
+        private void Pause()
+        {
+            //_uiFactory.Create<PauseWindow>();
+            _timeService.Pause();
         }
 
         private void ShowDeathWindow()
@@ -105,7 +124,7 @@ namespace Assets.Scripts.State_Machine
             deathWindow.ContinueForAddButton.interactable = false;
             deathWindow.SetActive(false);
             deathWindow.BackToMenuButton.UnsubscribeAll();
-            deathWindow.ContinueForAddButton.UnsubscribeAll();
+            deathWindow.ContinueForAddButton.Unsubscribe(ShowAdd);
         }
     }
 }

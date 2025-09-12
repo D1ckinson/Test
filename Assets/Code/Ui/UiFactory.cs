@@ -38,7 +38,8 @@ namespace Assets.Code.Ui
                 [typeof(FPSWindow)] = CreateFPSView,
                 [typeof(MenuWindow)] = CreateMenuWindow,
                 [typeof(ShopWindow)] = CreateShopWindow,
-                [typeof(Joystick)] = CreateJoystick
+                [typeof(Joystick)] = CreateJoystick,
+                [typeof(LeaderboardWindow)] = CreateLeaderboardWindow
             };
         }
 
@@ -105,6 +106,11 @@ namespace Assets.Code.Ui
         private BaseWindow CreateJoystick()
         {
             return _uIConfig.Joystick.Instantiate(_canvas.transform, false);
+        }
+
+        private BaseWindow CreateLeaderboardWindow()
+        {
+            return _uIConfig.Leaderboard.Instantiate(_canvas.transform, false).Initialize();
         }
     }
 }

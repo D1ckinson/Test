@@ -10,6 +10,7 @@ namespace Assets.Code.CharactersLogic.HeroLogic
     [RequireComponent(typeof(Health))]
     [RequireComponent(typeof(LootCollector))]
     [RequireComponent(typeof(AbilityContainer))]
+    [RequireComponent(typeof(Animator))]
     public class HeroComponents : MonoBehaviour
     {
         public CharacterMovement CharacterMovement { get; private set; }
@@ -17,6 +18,7 @@ namespace Assets.Code.CharactersLogic.HeroLogic
         public LootCollector LootCollector { get; private set; }
         public AbilityContainer AbilityContainer { get; private set; }
         public HeroLevel HeroLevel { get; private set; }
+        public Animator Animator { get; private set; }
 
         private Vector3 _defaultPosition;
 
@@ -26,6 +28,7 @@ namespace Assets.Code.CharactersLogic.HeroLogic
             Health = GetComponent<Health>();
             LootCollector = GetComponent<LootCollector>();
             AbilityContainer = GetComponent<AbilityContainer>();
+            Animator = GetComponent<Animator>();
         }
 
         public void Initialize(HeroLevel heroLevel, Vector3 defaultPosition)

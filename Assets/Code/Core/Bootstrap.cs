@@ -76,7 +76,7 @@ namespace Assets.Scripts
             _stateMachine = new();
             _stateMachine
                 .AddState(new MenuState(_stateMachine, uiFactory))
-                .AddState(new GameState(_stateMachine, heroComponents, enemySpawner, abilityFactory, uiFactory, inputService));
+                .AddState(new GameState(_stateMachine, heroComponents, enemySpawner, abilityFactory, uiFactory, playerData, inputService, timeService));
 
             _stateMachine.SetState<MenuState>();
         }

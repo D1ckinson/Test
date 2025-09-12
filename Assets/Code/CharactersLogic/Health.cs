@@ -1,10 +1,10 @@
+using Assets.Code.Animation;
 using Assets.Code.Tools;
 using System;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
-    [RequireComponent(typeof(HitEffect))]
     public class Health : MonoBehaviour
     {
         private float _invincibleTimer;
@@ -12,7 +12,8 @@ namespace Assets.Scripts
         private float _regeneration;
         private float _additionalValue;
         private float _resistMultiplier = 1;
-        private HitEffect _hitEffect;
+        private IAnimator _animator;
+        private Action _hitEffect;
 
         public event Action Died;
         public event Action<float> ValueChanged;
@@ -21,11 +22,6 @@ namespace Assets.Scripts
         public float MaxValue { get; private set; }
         private bool IsInvincible => _invincibleTimer > Constants.Zero;
         private bool IsDead => Value <= Constants.Zero;
-
-        private void Awake()
-        {
-            _hitEffect = GetComponent<HitEffect>();
-        }
 
         private void OnEnable()
         {
@@ -46,10 +42,12 @@ namespace Assets.Scripts
             }
         }
 
-        public void Initialize(float maxValue, float invincibilityDuration)
+        public void Initialize(float maxValue, float invincibilityDuration, IAnimator animator, Action hitEffect = null)
         {
             MaxValue = maxValue.ThrowIfZeroOrLess();
             Value = MaxValue;
+            _animator = animator.ThrowIfNull();
+            _hitEffect = hitEffect;
 
             _invincibilityDuration = invincibilityDuration.ThrowIfNegative();
             ValueChanged?.Invoke(Value);
@@ -78,7 +76,8 @@ namespace Assets.Scripts
             {
                 Value = tempValue;
                 _invincibleTimer = _invincibilityDuration;
-                _hitEffect.Play();
+                //_animator.Play(AdditionalAnimations.HitEffect);
+                _hitEffect?.Invoke();
             }
 
             ValueChanged?.Invoke(Value);

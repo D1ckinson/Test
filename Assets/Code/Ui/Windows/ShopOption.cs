@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Code.Shop
+namespace Assets.Code.Ui.Windows
 {
     public class ShopOption : MonoBehaviour
     {

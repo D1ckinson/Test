@@ -2,6 +2,7 @@
 using Assets.Scripts;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Factories;
+using Assets.Scripts.Movement;
 using UnityEngine;
 
 namespace Assets.Code.CharactersLogic
@@ -11,13 +12,32 @@ namespace Assets.Code.CharactersLogic
         private Health _health;
         private LootFactory _lootFactory;
         private LootConfig[] _loots;
+        private CharacterMovement _characterMovement;
 
-        public void Initialize(Health health, LootFactory lootFactory, LootConfig[] loots)
+        private void OnEnable()
+        {
+            if (_health.NotNull())
+            {
+                _health.Died += OnDeath;
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (_health.NotNull())
+            {
+                _health.Died -= OnDeath;
+            }
+        }
+
+        public void Initialize(Health health, LootFactory lootFactory, LootConfig[] loots, CharacterMovement characterMovement)
         {
             _health = health.ThrowIfNull();
             _lootFactory = lootFactory.ThrowIfNull();
             _loots = loots.ThrowIfNullOrEmpty();
-            _health.Died += SpawnLoot;
+            _characterMovement = characterMovement.ThrowIfNull();
+
+            _health.Died += OnDeath;
         }
 
         public void SetLoot(LootConfig[] loots)
@@ -25,7 +45,7 @@ namespace Assets.Code.CharactersLogic
             _loots = loots.ThrowIfNullOrEmpty();
         }
 
-        private void SpawnLoot()
+        private void OnDeath()
         {
             foreach (LootConfig lootConfig in _loots)
             {
@@ -36,6 +56,9 @@ namespace Assets.Code.CharactersLogic
 
                 _lootFactory.Spawn(lootConfig.Prefab, transform.position, lootConfig.Count);
             }
+
+            this.SetActive(false);
+            _characterMovement.Stop();
         }
     }
 }

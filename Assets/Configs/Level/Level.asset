@@ -14,7 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemiesConfigs:
   - {fileID: 11400000, guid: 607ebda76c4a6104a9c32d54cb275c9f, type: 2}
+  - {fileID: 11400000, guid: e9234968c6a07bb449d16371522ca3b4, type: 2}
+  - {fileID: 11400000, guid: d842995ccc6070c4f87436525db662f1, type: 2}
+  - {fileID: 11400000, guid: 4540f2f1431b6964cb8f1efa83067a2f, type: 2}
+  - {fileID: 11400000, guid: dab2e0bd17f7bf64db4dd343eadbfc44, type: 2}
+  - {fileID: 11400000, guid: 4d9c3023ce4e09544b3d3857607f88d0, type: 2}
+  - {fileID: 11400000, guid: 39621402c91580f45ae29115b7cbc051, type: 2}
   <HeroConfig>k__BackingField: {fileID: 11400000, guid: eb372052ffe188444a7ed3f183ab727a, type: 2}
+  <GoldEnemy>k__BackingField: {fileID: 11400000, guid: 45ee0fb9f383e30478ef607f14c07b40, type: 2}
   <Loots>k__BackingField:
   - {fileID: 8437288460240149484, guid: e894acc6883e27a4dbca2941bed52c75, type: 3}
   - {fileID: 8665370823113824047, guid: 8c7580ed5a56c9c4eb243ca3369efe52, type: 3}
@@ -25,10 +32,10 @@ MonoBehaviour:
     <Delay>k__BackingField: 0.6
     <SpawnLimit>k__BackingField: 50
   <SpawnTypeByTimes>k__BackingField:
-  - <Time>k__BackingField: 0
+  - <Time>k__BackingField: 10
     <Type>k__BackingField: 1
-  - <Time>k__BackingField: 120
-    <Type>k__BackingField: 1
+  - <Time>k__BackingField: 10
+    <Type>k__BackingField: 2
   <GameAreaSettings>k__BackingField:
     <Center>k__BackingField: {x: 100, y: 0, z: 100}
     <Radius>k__BackingField: 90

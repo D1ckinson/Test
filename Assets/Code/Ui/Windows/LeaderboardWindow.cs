@@ -10,16 +10,14 @@ namespace Assets.Code.Ui.Windows
         [field: SerializeField] public Button ExitButton { get; private set; }
         [field: SerializeField] public LeaderboardYG Leaderboard { get; private set; }
 
-        private void OnDestroy()
+        private void Awake()
         {
-            ExitButton.UnsubscribeAll();
+            ExitButton.Subscribe(Disable);
         }
 
-        public LeaderboardWindow Initialize()
+        private void OnDestroy()
         {
-            ExitButton.Subscribe(() => this.SetActive(false));
-
-            return this;
+            ExitButton.Unsubscribe(Disable);
         }
     }
 }

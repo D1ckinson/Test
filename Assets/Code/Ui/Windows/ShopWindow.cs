@@ -25,6 +25,11 @@ namespace Assets.Code.Ui.Windows
         private UpgradeCost _upgradeCost;
         private Wallet _wallet;
 
+        private void Awake()
+        {
+            ExitButton.Subscribe(Disable);
+        }
+
         private void OnDestroy()
         {
             foreach (ShopOption shopOption in _options.Values)
@@ -35,10 +40,12 @@ namespace Assets.Code.Ui.Windows
                 }
             }
 
-            if (ExitButton.NotNull())
+            if (_wallet.NotNull())
             {
-                ExitButton.UnsubscribeAll();
+                _wallet.ValueChanged -= UpdateAllOptions;
             }
+
+            ExitButton.Unsubscribe(Disable);
         }
 
         public ShopWindow Initialize(Dictionary<AbilityType, int> abilityUnlockLevel, Dictionary<AbilityType, int> abilityMaxLevel, UpgradeCost upgradeCost, Wallet wallet)
@@ -49,7 +56,6 @@ namespace Assets.Code.Ui.Windows
             _wallet = wallet.ThrowIfNull();
             _coinsQuantity.SetText((int)_wallet.CoinsQuantity);
             _wallet.ValueChanged += UpdateAllOptions;
-            ExitButton.Subscribe(() => this.SetActive(false));
 
             return this;
         }

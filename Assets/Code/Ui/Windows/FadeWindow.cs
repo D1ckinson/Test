@@ -13,42 +13,45 @@ namespace Assets.Code.Ui.Windows
 
         private Sequence _showSequence;
         private Sequence _hideSequence;
-        private Action _currentCallback;
-        private bool _isVisible;
+
+        private Action _onShow;
+        private Action _onHide;
+
+        private bool IsVisible => gameObject.activeSelf && _image.color.a == Constants.One;
 
         private void Awake()
         {
-            _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, 0f);
-            gameObject.SetActive(false);
-
             _showSequence = DOTween.Sequence()
                 .SetAutoKill(false)
                 .Append(_image.DOFade(Constants.One, _fadeDuration))
-                .OnComplete(InvokeCallback)
-                .Pause();
+                .OnComplete(() => _onShow?.Invoke());
 
             _hideSequence = DOTween.Sequence()
+                .SetAutoKill(false)
                 .Append(_image.DOFade(Constants.Zero, _fadeDuration))
                 .OnComplete(() =>
                 {
-                    InvokeCallback();
+                    _onHide?.Invoke();
                     gameObject.SetActive(false);
-                })
-                .SetAutoKill(false)
-                .Pause();
+                });
+        }
+
+        private void OnDestroy()
+        {
+            _showSequence?.Kill();
+            _hideSequence?.Kill();
         }
 
         public void Show(Action onComplete = null)
         {
-            if (_isVisible || _showSequence.IsPlaying())
+            if (IsVisible || _showSequence.IsPlaying())
             {
                 onComplete?.Invoke();
 
                 return;
             }
 
-            _isVisible = true;
-            _currentCallback = onComplete;
+            _onShow = onComplete;
             gameObject.SetActive(true);
 
             DOTween.Kill(this);
@@ -57,30 +60,17 @@ namespace Assets.Code.Ui.Windows
 
         public void Hide(Action onComplete = null)
         {
-            if (_isVisible == false || _showSequence.IsPlaying())
+            if (IsVisible == false || _hideSequence.IsPlaying())
             {
                 onComplete?.Invoke();
 
                 return;
             }
 
-            _isVisible = false;
-            _currentCallback = onComplete;
+            _onHide = onComplete;
 
             DOTween.Kill(this);
             _hideSequence.Restart();
-        }
-
-        private void InvokeCallback()
-        {
-            _currentCallback?.Invoke();
-            _currentCallback = null;
-        }
-
-        private void OnDestroy()
-        {
-            _showSequence?.Kill();
-            _hideSequence?.Kill();
         }
     }
 }

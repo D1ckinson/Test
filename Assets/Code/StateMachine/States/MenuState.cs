@@ -1,7 +1,6 @@
 ﻿using Assets.Code.Tools;
 using Assets.Code.Ui;
 using Assets.Code.Ui.Windows;
-using YG;
 
 namespace Assets.Scripts.State_Machine
 {
@@ -16,18 +15,18 @@ namespace Assets.Scripts.State_Machine
 
         public override void Enter()
         {
-            _uiFactory.Create<ShopWindow>().ExitButton.Subscribe(ShowMenu);
-            _uiFactory.Hide<ShopWindow>();
-            _uiFactory.Create<LeaderboardWindow>().ExitButton.Subscribe(ShowMenu);
-            _uiFactory.Hide<LeaderboardWindow>();
+            _uiFactory.Create<FadeWindow>().Hide(OnHide);
 
-            MenuWindow menuWindow = _uiFactory.Create<MenuWindow>();
-            menuWindow.ShopButton.Subscribe(ShowShop);
-            menuWindow.PlayButton.Subscribe(SetState<GameState>);
-            menuWindow.SetActive(true);
-            menuWindow.LeaderboardButton.Subscribe(ShowLeaderboard);
+            void OnHide()
+            {
+                _uiFactory.Create<ShopWindow>(false).ExitButton.Subscribe(ShowMenu);
+                _uiFactory.Create<LeaderboardWindow>(false).ExitButton.Subscribe(ShowMenu);
 
-            _uiFactory.Create<FadeWindow>().Hide();
+                MenuWindow menuWindow = _uiFactory.Create<MenuWindow>();
+                menuWindow.ShopButton.Subscribe(ShowShop);
+                menuWindow.PlayButton.Subscribe(SetState<GameState>);
+                menuWindow.LeaderboardButton.Subscribe(ShowLeaderboard);
+            }
         }
 
         private void ShowMenu()
@@ -37,22 +36,24 @@ namespace Assets.Scripts.State_Machine
 
         private void ShowShop()
         {
-            _uiFactory.Hide<MenuWindow>();
             _uiFactory.Create<ShopWindow>();
         }
 
         private void ShowLeaderboard()
         {
-            _uiFactory.Hide<MenuWindow>();
             LeaderboardWindow leaderboard = _uiFactory.Create<LeaderboardWindow>();
             leaderboard.Leaderboard.UpdateLB();
         }
 
         public override void Exit()
         {
-            _uiFactory.Create<ShopWindow>().ExitButton.Unsubscribe(ShowMenu);
-            _uiFactory.Create<MenuWindow>().ShopButton.UnsubscribeAll();
-            _uiFactory.HideAll();
+            _uiFactory.Create<ShopWindow>(false).ExitButton.Unsubscribe(ShowMenu);
+            _uiFactory.Create<LeaderboardWindow>(false).ExitButton.Unsubscribe(ShowMenu);
+
+            MenuWindow menuWindow = _uiFactory.Create<MenuWindow>(false);
+            menuWindow.ShopButton.Unsubscribe(ShowShop);
+            menuWindow.PlayButton.Unsubscribe(SetState<GameState>);
+            menuWindow.LeaderboardButton.Unsubscribe(ShowLeaderboard);
         }
 
         public override void Update() { }

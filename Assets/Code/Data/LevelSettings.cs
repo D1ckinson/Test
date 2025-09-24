@@ -15,6 +15,7 @@ namespace Assets.Scripts.Configs
         [field: Header("Characters Configs")]
         [field: SerializeField] private CharacterConfig[] _enemiesConfigs;
         [field: SerializeField] public CharacterConfig HeroConfig { get; private set; }
+        [field: SerializeField] public CharacterConfig GoldEnemy { get; private set; }
 
         [field: Header("All Loot")]
         [field: SerializeField] public Loot[] Loots { get; private set; }

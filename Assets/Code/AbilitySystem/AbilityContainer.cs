@@ -37,6 +37,7 @@ namespace Assets.Code.AbilitySystem
 
         public void RemoveAll()
         {
+            Stop();
             _abilities.Clear();
         }
 

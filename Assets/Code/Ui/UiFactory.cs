@@ -39,21 +39,22 @@ namespace Assets.Code.Ui
                 [typeof(MenuWindow)] = CreateMenuWindow,
                 [typeof(ShopWindow)] = CreateShopWindow,
                 [typeof(Joystick)] = CreateJoystick,
-                [typeof(LeaderboardWindow)] = CreateLeaderboardWindow
+                [typeof(LeaderboardWindow)] = CreateLeaderboardWindow,
+                [typeof(PauseWindow)] = CreatePauseWindow
             };
         }
 
-        public T Create<T>() where T : BaseWindow
+        public T Create<T>(bool isActive = true) where T : BaseWindow
         {
-            if (_windows.TryGetValue(typeof(T), out BaseWindow window))
-            {
-                window.SetActive(true);
+            Type windowType = typeof(T);
 
-                return (T)window;
+            if (_windows.TryGetValue(windowType, out BaseWindow window) == false)
+            {
+                window = _createMethods[windowType].Invoke();
+                _windows.Add(windowType, window);
             }
 
-            window = _createMethods[typeof(T)].Invoke();
-            _windows.Add(typeof(T), window);
+            window.SetActive(isActive);
 
             return (T)window;
         }
@@ -110,7 +111,12 @@ namespace Assets.Code.Ui
 
         private BaseWindow CreateLeaderboardWindow()
         {
-            return _uIConfig.Leaderboard.Instantiate(_canvas.transform, false).Initialize();
+            return _uIConfig.Leaderboard.Instantiate(_canvas.transform, false);
+        }
+
+        private BaseWindow CreatePauseWindow()
+        {
+            return _uIConfig.PauseWindow.Instantiate(_canvas.transform, false);
         }
     }
 }

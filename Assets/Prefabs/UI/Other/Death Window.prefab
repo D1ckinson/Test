@@ -541,7 +541,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: YourTime
+  m_text: Your Time
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -752,8 +752,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5c4ba35788cfc5047b0a29b69882a1f5, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: be6bd7d6b0635ee4485ce2e91272cfc1, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1086,8 +1086,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5c4ba35788cfc5047b0a29b69882a1f5, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: be6bd7d6b0635ee4485ce2e91272cfc1, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1655,7 +1655,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 898c9874c2295ac4fb1a8c6d330dfe96, type: 3}
+  m_Sprite: {fileID: 21300000, guid: db5263b046379084ab45db07d80922dd, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1

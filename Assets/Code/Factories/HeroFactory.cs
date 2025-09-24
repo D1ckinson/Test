@@ -26,12 +26,11 @@ namespace Assets.Scripts.Factories
 
         public HeroComponents Create(Vector3 position)
         {
-            Transform hero = Object.Instantiate(_heroConfig.Prefab, position + Vector3.up, Quaternion.identity);// убрать "+ Vector3.up"
+            Transform hero = Object.Instantiate(_heroConfig.Prefab, position, Quaternion.identity);
             HeroComponents heroComponents = hero.GetComponentOrThrow<HeroComponents>();
-            IAnimator animator = new EntityAnimator<HeroAnimation>(heroComponents.Animator);
 
-            heroComponents.CharacterMovement.Initialize(_heroConfig.MoveSpeed, _heroConfig.RotationSpeed, _inputService, () => animator.Play(HeroAnimation.Run), () => animator.Play(HeroAnimation.Idle));
-            heroComponents.Health.Initialize(_heroConfig.MaxHealth, _heroConfig.InvincibilityDuration, animator, () => animator.Play(HeroAnimation.HitEffect));
+            heroComponents.CharacterMovement.Initialize(_heroConfig.MoveSpeed, _heroConfig.RotationSpeed, _inputService);
+            heroComponents.Health.Initialize(_heroConfig.MaxHealth, _heroConfig.InvincibilityDuration);
             heroComponents.LootCollector.Initialize(_heroConfig.AttractionRadius, _heroConfig.PullSpeed, _wallet, _heroLevel);
 
             Camera.main.GetComponentOrThrow<Follower>().Follow(hero);

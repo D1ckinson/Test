@@ -7,6 +7,7 @@ using UnityEngine;
 namespace Assets.Scripts.Movement
 {
     [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(Animator))]
     public class CharacterMovement : MonoBehaviour
     {
         private readonly Dictionary<Type, Coroutine> _slowTimers;
@@ -16,9 +17,12 @@ namespace Assets.Scripts.Movement
         private Rotator _rotator;
         private Vector3 _direction;
         private Rigidbody _rigidbody;
+        private Animator _animator;
 
-        private Action _onMove;
-        private Action _onIdle;
+        private void Awake()
+        {
+            _animator = GetComponent<Animator>();
+        }
 
         private void OnDisable()
         {
@@ -37,16 +41,13 @@ namespace Assets.Scripts.Movement
             }
         }
 
-        public void Initialize(float moveSpeed, float rotationSpeed, ITellDirection directionSource, Action onMove = null, Action onIdle = null)
+        public void Initialize(float moveSpeed, float rotationSpeed, ITellDirection directionSource)
         {
             _directionSource = directionSource.ThrowIfNull();
             _rigidbody = GetComponent<Rigidbody>();
 
             _mover = new(_rigidbody, moveSpeed);
             _rotator = new(_rigidbody, rotationSpeed);
-
-            _onMove = onMove;
-            _onIdle = onIdle;
         }
 
         public void SetMoveStat(float moveSpeed)
@@ -69,15 +70,7 @@ namespace Assets.Scripts.Movement
         {
             _direction = vector;
 
-            switch (vector == Vector3.zero)
-            {
-                case true:
-                    _onIdle?.Invoke();
-                    break;
-                case false:
-                    _onMove?.Invoke();
-                    break;
-            }
+            _animator.SetBool(AnimationParameters.IsMoving, _direction != Vector3.zero);
         }
 
         public void AddSlow(SlowEffect slow)

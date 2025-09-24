@@ -1,7 +1,9 @@
 ﻿using Assets.Code.Animation;
 using Assets.Code.CharactersLogic.EnemyLogic;
+using Assets.Code.CharactersLogic.Movement.Direction_Sources;
 using Assets.Code.Tools;
 using Assets.Scripts.Configs;
+using Assets.Scripts.Movement;
 using Assets.Scripts.Tools;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,32 +18,36 @@ namespace Assets.Scripts.Factories
         private readonly Transform _hero;
         private readonly EnemySpawnerSettings _spawnerSettings;
         private readonly GameAreaSettings _gameAreaSettings;
-        private readonly Pool<EnemyComponents> _pool;
+        private readonly Dictionary<CharacterType, Pool<EnemyComponents>> _pools;
+        private readonly CharacterConfig _goldEnemy;
 
-        public EnemyFactory(Dictionary<CharacterType, CharacterConfig> enemiesConfigs, LootFactory lootFactory, Transform hero, EnemySpawnerSettings spawnerSettings, GameAreaSettings gameAreaSettings)
+        public EnemyFactory(Dictionary<CharacterType, CharacterConfig> enemiesConfigs, LootFactory lootFactory,
+            Transform hero, EnemySpawnerSettings spawnerSettings, GameAreaSettings gameAreaSettings, CharacterConfig goldEnemy)
         {
             _enemiesConfigs = enemiesConfigs.ThrowIfNullOrEmpty();
             _lootFactory = lootFactory.ThrowIfNull();
             _hero = hero.ThrowIfNull();
+            _goldEnemy = goldEnemy.ThrowIfNull();
 
             _spawnerSettings = spawnerSettings.ThrowIfDefault();
             _gameAreaSettings = gameAreaSettings.ThrowIfDefault();
 
-            _pool = new(Create);
+            _pools = new();
+
+            foreach (KeyValuePair<CharacterType, CharacterConfig> pair in enemiesConfigs)
+            {
+                _pools.Add(pair.Key, new(() => Create(pair.Value)));
+            }
+
+            _pools.Add(CharacterType.GoldEnemy, new(CreateGoldEnemy));
         }
 
-        public bool IsSpawnLimitReached => _pool.ReleaseCount == _spawnerSettings.SpawnLimit;
+        public bool IsSpawnLimitReached => _pools.Values.Sum(pool => pool.ReleaseCount) == _spawnerSettings.SpawnLimit;
         public float Delay => _spawnerSettings.Delay;
 
         public EnemyComponents Spawn(CharacterType characterType)
         {
-            characterType.ThrowIfNull();
-            EnemyComponents enemy = _pool.Get();
-
-            if (enemy.CharacterType != characterType)
-            {
-                SetStats(enemy, _enemiesConfigs[characterType]);
-            }
+            EnemyComponents enemy = _pools[characterType.ThrowIfNull()].Get();
 
             SetTransform(enemy.transform);
             enemy.CharacterMovement.Run();
@@ -51,45 +57,48 @@ namespace Assets.Scripts.Factories
 
         public void DisableAll()
         {
-            _pool.DisableAll();
+            _pools.ForEachValues(pool => pool.DisableAll());
             _lootFactory.DisableAll();
         }
 
         public void StopAll()
         {
-            List<EnemyComponents> enemyComponents = _pool.GetAllActive();
+            IEnumerable<EnemyComponents> enemyComponents = _pools.Values.SelectMany(pool => pool.GetAllActive());
             enemyComponents.ForEach(enemyComponent => enemyComponent.CharacterMovement.Stop());
         }
 
         public void ContinueAll()
         {
-            List<EnemyComponents> enemyComponents = _pool.GetAllActive();
+            IEnumerable<EnemyComponents> enemyComponents = _pools.Values.SelectMany(pool => pool.GetAllActive());
             enemyComponents.ForEach(enemyComponent => enemyComponent.CharacterMovement.Run());
         }
 
-        private void SetStats(EnemyComponents enemy, CharacterConfig config)
+        private EnemyComponents Create(CharacterConfig config)
         {
-            enemy.CharacterMovement.SetMoveStat(config.MoveSpeed);
-            enemy.Health.SetMaxValue(config.MaxHealth);
-            enemy.CollisionDamage.SetDamage(config.Damage);
-            enemy.DeathTriger.SetLoot(config.Loot);
-            enemy.SetType(config.Type);
-            //смена цвета материала
-        }
-
-        private EnemyComponents Create()
-        {
-            CharacterConfig config = _enemiesConfigs.Values.First();
             EnemyComponents enemy = Object.Instantiate(config.Prefab).GetComponentOrThrow<EnemyComponents>();
-            enemy.Initialize(new(enemy.transform));
-            IAnimator animator = new EntityAnimator<EnemyAnimation>(enemy.Animator);
+            enemy.Initialize(new DirectionTellerTo(enemy.transform));
 
             enemy.CharacterMovement.Initialize(config.MoveSpeed, config.RotationSpeed, enemy.DirectionTeller);
-            enemy.Health.Initialize(config.MaxHealth, config.InvincibilityDuration, animator, () => animator.Play(EnemyAnimation.HitEffect));
+            enemy.Health.Initialize(config.MaxHealth, config.InvincibilityDuration);
             enemy.CollisionDamage.Initialize(config.Damage, config.DamageLayer);
-            enemy.DeathTriger.Initialize(enemy.Health, _lootFactory, config.Loot);
+            enemy.DeathTriger.Initialize(enemy.Health, _lootFactory, config.Loot, enemy.CharacterMovement);
             enemy.DirectionTeller.SetTarget(_hero);
             enemy.SetType(config.Type);
+
+            return enemy;
+        }
+
+        private EnemyComponents CreateGoldEnemy()
+        {
+            EnemyComponents enemy = Object.Instantiate(_goldEnemy.Prefab).GetComponentOrThrow<EnemyComponents>();
+            enemy.Initialize(new DirectionTellerFrom(enemy.transform));
+
+            enemy.CharacterMovement.Initialize(_goldEnemy.MoveSpeed, _goldEnemy.RotationSpeed, enemy.DirectionTeller);
+            enemy.Health.Initialize(_goldEnemy.MaxHealth, _goldEnemy.InvincibilityDuration);
+            enemy.CollisionDamage.Initialize(_goldEnemy.Damage, _goldEnemy.DamageLayer);
+            enemy.DeathTriger.Initialize(enemy.Health, _lootFactory, _goldEnemy.Loot, enemy.CharacterMovement);
+            enemy.DirectionTeller.SetTarget(_hero);
+            enemy.SetType(_goldEnemy.Type);
 
             return enemy;
         }

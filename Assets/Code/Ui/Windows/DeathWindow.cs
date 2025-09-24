@@ -1,4 +1,5 @@
 ﻿using Assets.Code.Data;
+using Assets.Code.Tools;
 using Assets.Code.Ui.Windows;
 using TMPro;
 using UnityEngine;
@@ -16,6 +17,18 @@ public class DeathWindow : BaseWindow
     [field: SerializeField] public TMP_Text MinutesQuantity { get; private set; }
     [field: SerializeField] public Button ContinueForAddButton { get; private set; }
     [field: SerializeField] public Button BackToMenuButton { get; private set; }
+
+    private void Awake()
+    {
+        ContinueForAddButton.Subscribe(Disable);
+        BackToMenuButton.Subscribe(Disable);
+    }
+
+    private void OnDestroy()
+    {
+        ContinueForAddButton.Unsubscribe(Disable);
+        BackToMenuButton.Unsubscribe(Disable);
+    }
 
     public DeathWindow Initialize()
     {

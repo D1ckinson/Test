@@ -127,7 +127,7 @@ namespace Assets.Code.AbilitySystem
                     break;
             }
 
-            _timeService.UnPause();
+            _timeService.Unpause();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Assets.Code.Animation;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -73,7 +72,7 @@ namespace Assets.Code.Tools
             return component.GetComponentInChildren<T>() ?? throw new MissingComponentException();
         }
 
-        public static void ForEach<T>(this ICollection<T> collection, Action<T> action)
+        public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action)
         {
             foreach (T item in collection)
             {

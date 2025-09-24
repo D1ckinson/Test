@@ -1,6 +1,8 @@
 ﻿using Assets.Code.Tools;
 using Assets.Scripts;
+using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Assets.Code
 {
@@ -11,11 +13,12 @@ namespace Assets.Code
         private readonly ParticleSystem _swingEffect;
         private readonly LayerMask _damageLayer;
         private readonly Collider[] _colliders;
+        private readonly Animator _animator;
 
         private float _damage;
         private float _radius;
 
-        public SwordStrike(AbilityConfig config, Transform transform, int level = 1) : base(config, transform, level)
+        public SwordStrike(AbilityConfig config, Transform transform, Animator animator, int level = 1) : base(config, transform, level)
         {
             config.ThrowIfNull();
 
@@ -28,6 +31,7 @@ namespace Assets.Code
             _damage = stats.Damage;
             _radius = stats.Range;
             SetEffectShape();
+            _animator = animator;
         }
 
         protected sealed override void Apply()
@@ -47,6 +51,7 @@ namespace Assets.Code
             }
 
             _swingEffect.Play();
+            _animator.SetTrigger(AnimationParameters.IsAttacking);
         }
 
         protected override void UpdateStats(float damage, float range, float projectilesCount)

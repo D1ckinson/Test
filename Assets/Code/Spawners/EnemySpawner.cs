@@ -1,6 +1,7 @@
 ﻿using Assets.Code.CharactersLogic.EnemyLogic;
 using Assets.Code.Data.Setting_Structures;
 using Assets.Code.Tools;
+using Assets.Scripts;
 using Assets.Scripts.Factories;
 using UnityEngine;
 
@@ -12,8 +13,12 @@ namespace Assets.Code.Spawners
         private readonly Timer _timer;
         private readonly SpawnTypeByTime[] _spawnTypeByTime;
 
-        private SpawnTypeByTime _spawnType;
+        private int _spawnTypeIndex = -1;
         private float _delay;
+
+        private const float GoldEnemyMinSpawnDelay = 10;
+        private const float GoldEnemyMaxSpawnDelay = 10;
+        private float _goldEnemySpawnDelay;
 
         public EnemySpawner(EnemyFactory enemyFactory, SpawnTypeByTime[] spawnTypeByTime)
         {
@@ -25,9 +30,9 @@ namespace Assets.Code.Spawners
 
         public void Run()
         {
-            _spawnType = _spawnTypeByTime[Constants.Zero];
             SetSpawnType();
             UpdateService.RegisterUpdate(SpawnEnemy);
+            _goldEnemySpawnDelay = Random.Range(GoldEnemyMinSpawnDelay, GoldEnemyMaxSpawnDelay);
         }
 
         public void Pause()
@@ -47,7 +52,8 @@ namespace Assets.Code.Spawners
         public void Reset()
         {
             UpdateService.UnregisterUpdate(SpawnEnemy);
-            _timer.Pause();
+            _spawnTypeIndex = -Constants.One;
+            _timer.Stop();
             _timer.Completed -= SetSpawnType;
             _enemyFactory.DisableAll();
         }
@@ -60,37 +66,43 @@ namespace Assets.Code.Spawners
             }
 
             _delay += Time.deltaTime;
+            _goldEnemySpawnDelay -= Time.deltaTime;
 
             if (_delay < _enemyFactory.Delay)
             {
                 return;
             }
 
-            EnemyComponents enemy = _enemyFactory.Spawn(_spawnType.Type);
-            enemy.Health.Died += OnDeath;
+            EnemyComponents enemy = TrySpawnGoldEnemy() ?? _enemyFactory.Spawn(_spawnTypeByTime[_spawnTypeIndex].Type);
             _delay = Constants.Zero;
-
-            void OnDeath()
-            {
-                enemy.Health.Died -= OnDeath;
-                enemy.SetActive(false);
-                enemy.CharacterMovement.Stop();
-            }
         }
 
         private void SetSpawnType()
         {
             _timer.Completed -= SetSpawnType;
-            int nextIndex = _spawnTypeByTime.IndexOf(_spawnType) + Constants.One;
+            int nextIndex = _spawnTypeIndex + Constants.One;
 
-            if (nextIndex == Constants.Zero)
+            if (_spawnTypeByTime.Length == nextIndex)
             {
                 return;
             }
 
             int time = _spawnTypeByTime[nextIndex].Time;
+            _spawnTypeIndex = nextIndex;
             _timer.Start(time);
             _timer.Completed += SetSpawnType;
+        }
+
+        private EnemyComponents TrySpawnGoldEnemy()
+        {
+            if (_goldEnemySpawnDelay > Constants.Zero)
+            {
+                return null;
+            }
+
+            _goldEnemySpawnDelay = Random.Range(GoldEnemyMinSpawnDelay, GoldEnemyMaxSpawnDelay);
+
+            return _enemyFactory.Spawn(CharacterType.GoldEnemy);
         }
     }
 }

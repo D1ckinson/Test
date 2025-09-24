@@ -1,10 +1,10 @@
-using Assets.Code.Animation;
 using Assets.Code.Tools;
 using System;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
+    [RequireComponent(typeof(Animator))]
     public class Health : MonoBehaviour
     {
         private float _invincibleTimer;
@@ -12,8 +12,7 @@ namespace Assets.Scripts
         private float _regeneration;
         private float _additionalValue;
         private float _resistMultiplier = 1;
-        private IAnimator _animator;
-        private Action _hitEffect;
+        private Animator _animator;
 
         public event Action Died;
         public event Action<float> ValueChanged;
@@ -22,6 +21,11 @@ namespace Assets.Scripts
         public float MaxValue { get; private set; }
         private bool IsInvincible => _invincibleTimer > Constants.Zero;
         private bool IsDead => Value <= Constants.Zero;
+
+        private void Awake()
+        {
+            _animator = GetComponent<Animator>();
+        }
 
         private void OnEnable()
         {
@@ -42,15 +46,14 @@ namespace Assets.Scripts
             }
         }
 
-        public void Initialize(float maxValue, float invincibilityDuration, IAnimator animator, Action hitEffect = null)
+        public void Initialize(float maxValue, float invincibilityDuration)
         {
             MaxValue = maxValue.ThrowIfZeroOrLess();
             Value = MaxValue;
-            _animator = animator.ThrowIfNull();
-            _hitEffect = hitEffect;
 
             _invincibilityDuration = invincibilityDuration.ThrowIfNegative();
             ValueChanged?.Invoke(Value);
+            _animator.SetBool(AnimationParameters.IsAlive, Value >= Constants.Zero);
         }
 
         public void SetMaxValue(float value)
@@ -76,11 +79,11 @@ namespace Assets.Scripts
             {
                 Value = tempValue;
                 _invincibleTimer = _invincibilityDuration;
-                //_animator.Play(AdditionalAnimations.HitEffect);
-                _hitEffect?.Invoke();
+                _animator.SetTrigger(AnimationParameters.GetHit);
             }
 
             ValueChanged?.Invoke(Value);
+            _animator.SetBool(AnimationParameters.IsAlive, Value > Constants.Zero);
         }
 
         public void SetAdditionalValue(int value)
@@ -92,6 +95,7 @@ namespace Assets.Scripts
             Value += tempValue;
 
             ValueChanged?.Invoke(Value);
+            _animator.SetBool(AnimationParameters.IsAlive, Value >= Constants.Zero);
         }
 
         public void SetRegeneration(int value)
@@ -108,12 +112,14 @@ namespace Assets.Scripts
         {
             float tempValue = Value + _regeneration;
             Value = tempValue > MaxValue ? MaxValue : tempValue;
+            _animator.SetBool(AnimationParameters.IsAlive, Value >= Constants.Zero);
         }
 
         public void ResetValue()
         {
             Value = MaxValue;
             ValueChanged?.Invoke(Value);
+            _animator.SetBool(AnimationParameters.IsAlive, Value >= Constants.Zero);
         }
     }
 }

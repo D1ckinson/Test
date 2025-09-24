@@ -8,6 +8,6 @@ namespace Assets.Scripts
 
         public void Pause();
 
-        public void UnPause();
+        public void Unpause();
     }
 }

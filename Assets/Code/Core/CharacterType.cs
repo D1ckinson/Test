@@ -2,7 +2,14 @@
 {
     public enum CharacterType
     {
-        Hero = 0,
-        Enemy = 1
+        Hero,
+        Enemy1,
+        Enemy2,
+        Enemy3,
+        Enemy4,
+        Enemy5,
+        Enemy6,
+        Enemy7,
+        GoldEnemy
     }
 }

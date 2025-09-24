@@ -23,6 +23,25 @@ namespace Assets.Code.Ui.Windows
 
         private Wallet _wallet;
 
+        private void Awake()
+        {
+            LeaderboardButton.Subscribe(Disable);
+            ShopButton.Subscribe(Disable);
+            PlayButton.Subscribe(Disable);
+        }
+
+        private void OnDestroy()
+        {
+            LeaderboardButton.Unsubscribe(Disable);
+            ShopButton.Unsubscribe(Disable);
+            PlayButton.Unsubscribe(Disable);
+
+            if (_wallet.NotNull())
+            {
+                _wallet.ValueChanged -= UpdateCoinsQuantity;
+            }
+        }
+
         public MenuWindow Initialize(Wallet wallet)
         {
             _personalBestText.SetText(UIText.PersonalBest);
@@ -30,7 +49,7 @@ namespace Assets.Code.Ui.Windows
             _playText.SetText(UIText.Play);
             _wallet = wallet.ThrowIfNull();
 
-            UpdateCoinsQuantity((int)_wallet.CoinsQuantity);
+            UpdateCoinsQuantity(_wallet.CoinsQuantity);
             _wallet.ValueChanged += UpdateCoinsQuantity;
 
             return this;

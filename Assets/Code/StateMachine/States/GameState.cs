@@ -5,7 +5,6 @@ using Assets.Code.Spawners;
 using Assets.Code.Tools;
 using Assets.Code.Ui;
 using Assets.Code.Ui.Windows;
-using System;
 using YG;
 
 namespace Assets.Scripts.State_Machine
@@ -39,6 +38,14 @@ namespace Assets.Scripts.State_Machine
 
         public override void Enter()
         {
+            PauseWindow pauseWindow = _uiFactory.Create<PauseWindow>(false);
+            pauseWindow.ExitButton.Subscribe(OnExit);
+            pauseWindow.ContinueButton.Subscribe(_timeService.Unpause);
+
+            DeathWindow deathWindow = _uiFactory.Create<DeathWindow>(false);
+            deathWindow.BackToMenuButton.Subscribe(OnExit);
+            deathWindow.ContinueForAddButton.Subscribe(ShowAdd);
+
             _hero.AbilityContainer.Add(_abilityFactory.Create(AbilityType.SwordStrike));
             _hero.AbilityContainer.Run();
             _hero.Health.Died += ShowDeathWindow;
@@ -57,11 +64,14 @@ namespace Assets.Scripts.State_Machine
 
         public override void Exit()
         {
-            DeathWindow deathWindow = _uiFactory.Create<DeathWindow>();
-            deathWindow.BackToMenuButton.UnsubscribeAll();
-            deathWindow.ContinueForAddButton.UnsubscribeAll();
-            deathWindow.SetActive(false);
+            DeathWindow deathWindow = _uiFactory.Create<DeathWindow>(false);
+            deathWindow.BackToMenuButton.Unsubscribe(OnExit);
+            deathWindow.ContinueForAddButton.Unsubscribe(ShowAdd);
             deathWindow.ContinueForAddButton.interactable = true;
+
+            PauseWindow pauseWindow = _uiFactory.Create<PauseWindow>(false);
+            pauseWindow.ExitButton.Subscribe(OnExit);
+            pauseWindow.ContinueButton.Subscribe(_timeService.Unpause);
 
             _hero.Health.Died -= ShowDeathWindow;
             _hero.AbilityContainer.RemoveAll();
@@ -69,7 +79,6 @@ namespace Assets.Scripts.State_Machine
             _hero.LootCollector.TransferGold();
             _hero.HeroLevel.Reset();
             _hero.Health.ResetValue();
-            _hero.SetActive(true);
             _hero.SetDefaultPosition();
 
             if (_timer.Duration > _playerData.ScoreRecord)
@@ -83,10 +92,16 @@ namespace Assets.Scripts.State_Machine
             _enemySpawner.Reset();
         }
 
+        private void OnExit()
+        {
+            _timeService.Unpause();
+            _uiFactory.Create<FadeWindow>().Show(SetState<MenuState>);
+        }
+
         private void Pause()
         {
-            //_uiFactory.Create<PauseWindow>();
             _timeService.Pause();
+            _uiFactory.Create<PauseWindow>();
         }
 
         private void ShowDeathWindow()
@@ -101,8 +116,6 @@ namespace Assets.Scripts.State_Machine
             DeathWindow deathWindow = _uiFactory.Create<DeathWindow>();
             deathWindow.CoinsQuantity.SetText(_hero.LootCollector.CollectedGold.ToString(StringFormat.WholeNumber));
             deathWindow.MinutesQuantity.SetText(_timer.Duration.ToMinutesString());
-            deathWindow.BackToMenuButton.Subscribe(() => _uiFactory.Create<FadeWindow>().Show(SetState<MenuState>));
-            deathWindow.ContinueForAddButton.Subscribe(ShowAdd);
         }
 
         private void ShowAdd()
@@ -120,11 +133,7 @@ namespace Assets.Scripts.State_Machine
             _enemySpawner.Continue();
             _timer.Continue();
 
-            DeathWindow deathWindow = _uiFactory.Create<DeathWindow>();
-            deathWindow.ContinueForAddButton.interactable = false;
-            deathWindow.SetActive(false);
-            deathWindow.BackToMenuButton.UnsubscribeAll();
-            deathWindow.ContinueForAddButton.Unsubscribe(ShowAdd);
+            _uiFactory.Create<DeathWindow>(false).ContinueForAddButton.interactable = false;
         }
     }
 }

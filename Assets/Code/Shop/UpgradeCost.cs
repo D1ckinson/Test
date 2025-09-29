@@ -10,6 +10,7 @@ namespace Assets.Code.Shop
     public class UpgradeCost : ScriptableObject
     {
         [field: SerializeField] private Cost[] _costArray;
+        [SerializeField] private AbilityType _abilityType;
 
         private Dictionary<AbilityType, Cost> _cost;
 

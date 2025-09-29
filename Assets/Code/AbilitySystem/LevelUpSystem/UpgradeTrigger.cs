@@ -4,6 +4,7 @@ using Assets.Code.Tools;
 using System.Collections.Generic;
 using System.Linq;
 using Random = UnityEngine.Random;
+using UnityEngine;
 
 namespace Assets.Code.AbilitySystem
 {
@@ -68,17 +69,16 @@ namespace Assets.Code.AbilitySystem
                 int abilityLevel = _abilityContainer.GetAbilityLevel(abilityType);
 
                 AbilityConfig abilityConfig = _abilityConfigs[abilityType];
-                AbilityStats currentStats = abilityConfig.GetStats(abilityLevel);
+                AbilityStats nextStats = abilityConfig.GetStats(abilityLevel + Constants.One);
                 List<string> statsDescription;
 
                 if (abilityLevel > Constants.Zero)
                 {
-                    AbilityStats nextStats = abilityConfig.GetStats(abilityLevel + Constants.One);
-                    statsDescription = (nextStats - currentStats).GetStatsDescription();
+                    statsDescription = (nextStats - abilityConfig.GetStats(abilityLevel)).GetStatsDescription();
                 }
                 else
                 {
-                    statsDescription = currentStats.GetStatsDescription();
+                    statsDescription = nextStats.GetStatsDescription();
                 }
 
                 upgradeOptions.Add(new(abilityType, abilityLevel, statsDescription, abilityConfig.Icon, abilityConfig.Name));
@@ -99,11 +99,24 @@ namespace Assets.Code.AbilitySystem
         {
             List<AbilityType> possibleUpgrades = Constants.GetEnums<AbilityType>().Except(_abilityContainer.MaxedAbilities).ToList();
 
-            for (int i = 0; i < possibleUpgrades.Count; i++)
+            IEnumerable<AbilityType> maxedAbilities = _abilityContainer.MaxedAbilities;
+            //Debug.Log("замкшено");
+            Debug.Log(maxedAbilities.Count());
+            //foreach (var item in maxedAbilities)
+            //{
+            //    Debug.Log(item.ToString());
+            //}
+            //Debug.Log("анлоки");
+            //foreach (var item in _abilityUnlockLevel)
+            //{
+            //    Debug.Log(item.Key.ToString() + item.Value);
+            //}
+
+            for (int i = Constants.Zero; i < possibleUpgrades.Count; i++)
             {
                 AbilityType type = possibleUpgrades[i];
 
-                if (_abilityUnlockLevel[type] == _abilityContainer.GetAbilityLevel(type))
+                if (_abilityUnlockLevel[type] <= _abilityContainer.GetAbilityLevel(type))
                 {
                     possibleUpgrades.Remove(type);
                 }

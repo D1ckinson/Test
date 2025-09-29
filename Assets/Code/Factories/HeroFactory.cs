@@ -1,4 +1,3 @@
-using Assets.Code.Animation;
 using Assets.Code.CharactersLogic.HeroLogic;
 using Assets.Code.InputActions;
 using Assets.Code.Tools;

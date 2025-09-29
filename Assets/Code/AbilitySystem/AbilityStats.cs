@@ -11,7 +11,8 @@ namespace Assets.Code
         [field: SerializeField] public float Cooldown { get; private set; }
         [field: SerializeField] public float Damage { get; private set; }
         [field: SerializeField] public float Range { get; private set; }
-        [field: SerializeField] public float ProjectilesCount { get; private set; }
+        [field: SerializeField] public int ProjectilesCount { get; private set; }
+        [field: SerializeField] public bool IsPiercing { get; private set; }
 
         public static AbilityStats operator -(AbilityStats a, AbilityStats b)
         {

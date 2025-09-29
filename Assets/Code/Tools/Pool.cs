@@ -31,10 +31,10 @@ namespace Assets.Scripts.Tools
             return _items.FindAll(item => item.IsActive());
         }
 
-        public T Get()
+        public T Get(bool isActive = true)
         {
             T item = _items.FirstOrDefault(item => item.gameObject.activeSelf == false) ?? Create();
-            item.gameObject.SetActive(true);
+            item.gameObject.SetActive(isActive);
 
             return item;
         }
@@ -51,6 +51,11 @@ namespace Assets.Scripts.Tools
             item.gameObject.SetActive(false);
 
             return item;
+        }
+
+        public void ForEach(Action<T> action)
+        {
+            _items.ForEach(action);
         }
     }
 }

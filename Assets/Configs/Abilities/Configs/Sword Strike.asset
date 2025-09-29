@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 101ae2e3c0766ec4d989024aa13dfe6c, type: 3}
-  m_Name: SwordStrike
+  m_Name: Sword Strike
   m_EditorClassIdentifier: Assembly-CSharp:Assets.Scripts:AbilityConfig
   <ProjectilePrefab>k__BackingField: {fileID: 0}
   <Effect>k__BackingField: {fileID: 4223243733374450931, guid: 2c1ef1f242ee55b4791d1b2db10b279d, type: 3}
@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Bits: 64
   <Type>k__BackingField: 0
   <Icon>k__BackingField: {fileID: 21300000, guid: 90c9b0811749b974b92025ced2c45d94, type: 3}
-  <Name>k__BackingField: "\u0423\u0434\u0430\u0440 \u043C\u0435\u0447\u043E\u043C"
+  <Name>k__BackingField: Sword Strike
   _abilityStats:
   - <Cooldown>k__BackingField: 1
     <Damage>k__BackingField: 10

@@ -17,8 +17,6 @@ namespace Assets.Code.Ui.Windows
         private Action _onShow;
         private Action _onHide;
 
-        private bool IsVisible => gameObject.activeSelf && _image.color.a == Constants.One;
-
         private void Awake()
         {
             _showSequence = DOTween.Sequence()
@@ -31,8 +29,8 @@ namespace Assets.Code.Ui.Windows
                 .Append(_image.DOFade(Constants.Zero, _fadeDuration))
                 .OnComplete(() =>
                 {
-                    _onHide?.Invoke();
                     gameObject.SetActive(false);
+                    _onHide?.Invoke();
                 });
         }
 
@@ -44,15 +42,9 @@ namespace Assets.Code.Ui.Windows
 
         public void Show(Action onComplete = null)
         {
-            if (IsVisible || _showSequence.IsPlaying())
-            {
-                onComplete?.Invoke();
-
-                return;
-            }
-
+            _image.color = new(Constants.Zero, Constants.Zero, Constants.Zero, Constants.Zero);
             _onShow = onComplete;
-            gameObject.SetActive(true);
+            this.SetActive(true);
 
             DOTween.Kill(this);
             _showSequence.Restart();
@@ -60,13 +52,6 @@ namespace Assets.Code.Ui.Windows
 
         public void Hide(Action onComplete = null)
         {
-            if (IsVisible == false || _hideSequence.IsPlaying())
-            {
-                onComplete?.Invoke();
-
-                return;
-            }
-
             _onHide = onComplete;
 
             DOTween.Kill(this);

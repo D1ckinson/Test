@@ -1,5 +1,4 @@
-﻿using Assets.Code.Animation;
-using Assets.Code.CharactersLogic.EnemyLogic;
+﻿using Assets.Code.CharactersLogic.EnemyLogic;
 using Assets.Code.CharactersLogic.Movement.Direction_Sources;
 using Assets.Code.Tools;
 using Assets.Scripts.Configs;

@@ -15,11 +15,12 @@ namespace Assets.Scripts
         public PlayerData()
         {
             Wallet = new();
-            StartAbility = AbilityType.SwordStrike;
+            StartAbility = AbilityType.GhostSwords;
 
             AbilityUnlockLevel = new()
             {
                 [AbilityType.SwordStrike] = 5,
+                [AbilityType.GhostSwords] = 5,
             };
         }
     }

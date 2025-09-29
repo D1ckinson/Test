@@ -1,10 +1,8 @@
 ﻿using Assets.Code.Tools;
 using Assets.Scripts;
-using System;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
-namespace Assets.Code
+namespace Assets.Code.AbilitySystem.Abilities
 {
     public class SwordStrike : Ability
     {
@@ -20,13 +18,11 @@ namespace Assets.Code
 
         public SwordStrike(AbilityConfig config, Transform transform, Animator animator, int level = 1) : base(config, transform, level)
         {
-            config.ThrowIfNull();
-
             _colliders = new Collider[MaxStrikeCount];
-            _swingEffect = Object.Instantiate(config.Effect, transform.ThrowIfNull());
+            _swingEffect = config.Effect.Instantiate(transform.ThrowIfNull());
             _damageLayer = config.DamageLayer;
 
-            AbilityStats stats = config.GetStats(level.ThrowIfZeroOrLess());
+            AbilityStats stats = config.ThrowIfNull().GetStats(level.ThrowIfZeroOrLess());
 
             _damage = stats.Damage;
             _radius = stats.Range;
@@ -54,7 +50,7 @@ namespace Assets.Code
             _animator.SetTrigger(AnimationParameters.IsAttacking);
         }
 
-        protected override void UpdateStats(float damage, float range, float projectilesCount)
+        protected override void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing)
         {
             _damage = damage.ThrowIfNegative();
             _radius = range.ThrowIfNegative();

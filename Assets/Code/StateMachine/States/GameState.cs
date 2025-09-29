@@ -46,7 +46,7 @@ namespace Assets.Scripts.State_Machine
             deathWindow.BackToMenuButton.Subscribe(OnExit);
             deathWindow.ContinueForAddButton.Subscribe(ShowAdd);
 
-            _hero.AbilityContainer.Add(_abilityFactory.Create(AbilityType.SwordStrike));
+            _hero.AbilityContainer.Add(_abilityFactory.Create(_playerData.StartAbility));
             _hero.AbilityContainer.Run();
             _hero.Health.Died += ShowDeathWindow;
             _hero.LootCollector.Run();

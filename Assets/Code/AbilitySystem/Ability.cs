@@ -1,7 +1,7 @@
 ﻿using Assets.Code.Tools;
 using UnityEngine;
 
-namespace Assets.Code
+namespace Assets.Code.AbilitySystem
 {
     public abstract class Ability
     {
@@ -54,7 +54,7 @@ namespace Assets.Code
             AbilityStats stats = _config.GetStats(Level);
 
             _maxCooldown = stats.Cooldown;
-            UpdateStats(stats.Damage + _additionalDamage, stats.Range, stats.ProjectilesCount);
+            UpdateStats(stats.Damage + _additionalDamage, stats.Range, stats.ProjectilesCount,stats.IsPiercing);
         }
 
         protected Vector3 GetPosition()
@@ -62,7 +62,7 @@ namespace Assets.Code
             return _transform.position;
         }
 
-        protected abstract void UpdateStats(float damage, float range, float projectilesCount);
+        protected abstract void UpdateStats(float damage, float range, int projectilesCount,bool isPiercing);
 
         protected abstract void Apply();
 
@@ -71,7 +71,7 @@ namespace Assets.Code
             _additionalDamage = value.ThrowIfNegative();
 
             AbilityStats stats = _config.GetStats(Level);
-            UpdateStats(stats.Damage + _additionalDamage, stats.Range, stats.ProjectilesCount);
+            UpdateStats(stats.Damage + _additionalDamage, stats.Range, stats.ProjectilesCount,stats.IsPiercing);
         }
 
         public void SetCooldownPercent(float percent)

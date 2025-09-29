@@ -30,8 +30,9 @@ namespace Assets.Code.AbilitySystem
         public void Add(Ability ability)
         {
             ability.ThrowIfNull();
-            _abilities.ContainsKey(ability.Type).ThrowIfTrue(new ArgumentException());
+            ability.Run();
 
+            _abilities.ContainsKey(ability.Type).ThrowIfTrue(new ArgumentException());
             _abilities.Add(ability.Type, ability);
         }
 

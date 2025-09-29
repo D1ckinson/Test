@@ -1,4 +1,6 @@
-﻿using Assets.Code.Tools;
+﻿using Assets.Code.AbilitySystem;
+using Assets.Code.AbilitySystem.Abilities;
+using Assets.Code.Tools;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,7 +24,8 @@ namespace Assets.Code
 
             _createFunctions = new()
             {
-                [AbilityType.SwordStrike] = CreateSwordStrike
+                [AbilityType.SwordStrike] = CreateSwordStrike,
+                [AbilityType.GhostSwords] = CreateGhostSwords
             };
         }
 
@@ -36,6 +39,13 @@ namespace Assets.Code
             AbilityConfig abilityConfig = _configs[AbilityType.SwordStrike];
 
             return new SwordStrike(abilityConfig, _swingEffectPoint, _hero.GetComponentOrThrow<Animator>());
+        }
+
+        private Ability CreateGhostSwords()
+        {
+            AbilityConfig abilityConfig = _configs[AbilityType.GhostSwords];
+
+            return new GhostSwords(abilityConfig, _hero);
         }
     }
 }

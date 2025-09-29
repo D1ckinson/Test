@@ -15,7 +15,7 @@ namespace Assets.Code.AbilitySystem
         public UpgradeOption(AbilityType type, int nextLevel, List<string> statsDescription, Sprite icon, string name)
         {
             Type = type.ThrowIfNull();
-            NextLevel = nextLevel.ThrowIfZeroOrLess();
+            NextLevel = nextLevel.ThrowIfNegative();
             Stats = statsDescription.ThrowIfNullOrEmpty();
             Icon = icon.ThrowIfNull();
             Name = name.ThrowIfNullOrEmpty();

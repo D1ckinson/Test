@@ -167,9 +167,14 @@ namespace Assets.Code.Tools
             return $"{(int)time.TotalMinutes}:{time.Seconds:00}";
         }
 
-        public static T Instantiate<T>(this T component, Transform parent, bool worldPositionStays) where T : MonoBehaviour
+        public static T Instantiate<T>(this T component, Transform parent, bool worldPositionStays) where T : Object
         {
             return Object.Instantiate(component, parent, worldPositionStays);
+        }
+
+        public static T Instantiate<T>(this T component, Transform parent) where T : Object
+        {
+            return Object.Instantiate(component, parent);
         }
 
         public static T Instantiate<T>(this T component) where T : MonoBehaviour

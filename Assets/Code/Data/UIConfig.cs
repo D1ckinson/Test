@@ -22,7 +22,7 @@ namespace Assets.Code.Data
 
         [Header("Other")]
         public DeathWindow DeathWindow;
-        public TestCanvasUiFactory TestCanvasUiFactory;
+        public UiCanvas TestCanvasUiFactory;
         public BaseWindow FadeWindow;
         public FPSWindow FPSWindow;
         public MenuWindow MenuWindow;

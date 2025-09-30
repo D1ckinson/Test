@@ -8,6 +8,9 @@ namespace Assets.Code.Ui.Windows
 {
     public class FadeWindow : BaseWindow
     {
+        private const float VisibleThreshold = 0.99f;
+        private const float HiddenThreshold = 0.01f;
+
         [SerializeField] private Image _image;
         [SerializeField][Min(0)] private float _fadeDuration = 0.5f;
 
@@ -17,26 +20,22 @@ namespace Assets.Code.Ui.Windows
         private Action _onShow;
         private Action _onHide;
 
+        private bool IsVisible => _image.color.a >= VisibleThreshold;
+        private bool IsHidden => _image.color.a <= HiddenThreshold;
+
         private void Awake()
         {
             _showSequence = DOTween.Sequence()
-                .SetAutoKill(false)
-                .Append(_image.DOFade(Constants.One, _fadeDuration))
-                .OnComplete(() =>
-                {
-                    _image.color = new(0, 0, 0, 0);
-                    _onShow?.Invoke();
-                });
+           .SetAutoKill(false)
+           .Append(_image.DOFade(Constants.One, _fadeDuration))
+           .OnComplete(() => _onShow?.Invoke())
+           .Pause();
 
             _hideSequence = DOTween.Sequence()
                 .SetAutoKill(false)
                 .Append(_image.DOFade(Constants.Zero, _fadeDuration))
-                .OnComplete(() =>
-                {
-                    _image.color = new(0, 0, 0, 1);
-                    gameObject.SetActive(false);
-                    _onHide?.Invoke();
-                });
+                .OnComplete(() => _onHide?.Invoke())
+                .Pause();
         }
 
         private void OnDestroy()
@@ -45,21 +44,42 @@ namespace Assets.Code.Ui.Windows
             _hideSequence?.Kill();
         }
 
+
         public void Show(Action onComplete = null)
         {
-            _image.color = new(Constants.Zero, Constants.Zero, Constants.Zero, Constants.Zero);
-            _onShow = onComplete;
-            this.SetActive(true);
+            if (IsVisible)
+            {
+                onComplete?.Invoke();
+                return;
+            }
 
-            DOTween.Kill(this);
+            if (_showSequence.IsPlaying())
+            {
+                _onShow += onComplete;
+                return;
+            }
+
+            _onShow = onComplete;
+            _hideSequence.Pause();
             _showSequence.Restart();
         }
 
         public void Hide(Action onComplete = null)
         {
-            _onHide = onComplete;
+            if (IsHidden)
+            {
+                onComplete?.Invoke();
+                return;
+            }
 
-            DOTween.Kill(this);
+            if (_hideSequence.IsPlaying())
+            {
+                _onHide += onComplete;
+                return;
+            }
+
+            _onHide = onComplete;
+            _showSequence.Pause();
             _hideSequence.Restart();
         }
     }

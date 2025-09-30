@@ -66,7 +66,14 @@ namespace Assets.Scripts
 
         private void OnDisable()
         {
-            _toCollect.ForEach(loot => loot.Rigidbody.velocity = Vector3.zero);
+            foreach (Loot loot in _toCollect)
+            {
+                if (loot.NotNull())
+                {
+                    loot.Rigidbody.velocity = Vector3.zero;
+                }
+            }
+
             _toCollect.Clear();
         }
 

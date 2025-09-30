@@ -15,18 +15,15 @@ namespace Assets.Scripts.State_Machine
 
         public override void Enter()
         {
-            _uiFactory.Create<FadeWindow>().Hide(OnHide);
+            _uiFactory.Create<FadeWindow>().Hide();
 
-            void OnHide()
-            {
-                _uiFactory.Create<ShopWindow>(false).ExitButton.Subscribe(ShowMenu);
-                _uiFactory.Create<LeaderboardWindow>(false).ExitButton.Subscribe(ShowMenu);
+            _uiFactory.Create<ShopWindow>(false).ExitButton.Subscribe(ShowMenu);
+            _uiFactory.Create<LeaderboardWindow>(false).ExitButton.Subscribe(ShowMenu);
 
-                MenuWindow menuWindow = _uiFactory.Create<MenuWindow>();
-                menuWindow.ShopButton.Subscribe(ShowShop);
-                menuWindow.PlayButton.Subscribe(SetState<GameState>);
-                menuWindow.LeaderboardButton.Subscribe(ShowLeaderboard);
-            }
+            MenuWindow menuWindow = _uiFactory.Create<MenuWindow>();
+            menuWindow.ShopButton.Subscribe(ShowShop);
+            menuWindow.PlayButton.Subscribe(SetState<GameState>);
+            menuWindow.LeaderboardButton.Subscribe(ShowLeaderboard);
         }
 
         private void ShowMenu()

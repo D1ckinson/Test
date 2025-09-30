@@ -13,7 +13,7 @@ namespace Assets.Code.Ui
     {
         private readonly Dictionary<Type, BaseWindow> _windows = new();
         private readonly Dictionary<Type, Func<BaseWindow>> _createMethods;
-        private readonly TestCanvasUiFactory _canvas;
+        private readonly UiCanvas _canvas;
         private readonly UIConfig _uIConfig;
         private readonly Wallet _wallet;
         private readonly Dictionary<AbilityType, AbilityConfig> _abilityConfigs;
@@ -59,19 +59,9 @@ namespace Assets.Code.Ui
             return (T)window;
         }
 
-        public void Hide<T>() where T : BaseWindow
-        {
-            _windows[typeof(T)].SetActive(false);
-        }
-
-        public void HideAll()
-        {
-            _windows.ForEachValues(window => window.SetActive(false));
-        }
-
         private BaseWindow CreateFadeWindow()
         {
-            return _uIConfig.FadeWindow.Instantiate(_canvas.transform, false);
+            return _uIConfig.FadeWindow.Instantiate(_canvas.FadeContainer, false);
         }
 
         private BaseWindow CreateDeathWindow()
@@ -81,17 +71,17 @@ namespace Assets.Code.Ui
 
         private BaseWindow CreateFPSView()
         {
-            return _uIConfig.FPSWindow.Instantiate(_canvas.transform, false);
+            return _uIConfig.FPSWindow.Instantiate(_canvas.Container, false);
         }
 
         private BaseWindow CreateMenuWindow()
         {
-            return _uIConfig.MenuWindow.Instantiate(_canvas.transform, false).Initialize(_wallet);
+            return _uIConfig.MenuWindow.Instantiate(_canvas.Container, false).Initialize(_wallet);
         }
 
         private BaseWindow CreateShopWindow()
         {
-            ShopWindow shopWindow = _uIConfig.ShopWindow.Instantiate(_canvas.transform, false).Initialize(_abilityUnlockLevel, _abilityMaxLevel, _upgradeCost, _wallet);
+            ShopWindow shopWindow = _uIConfig.ShopWindow.Instantiate(_canvas.Container, false).Initialize(_abilityUnlockLevel, _abilityMaxLevel, _upgradeCost, _wallet);
 
             foreach (AbilityType abilityType in Constants.GetEnums<AbilityType>())
             {
@@ -106,17 +96,17 @@ namespace Assets.Code.Ui
 
         private BaseWindow CreateJoystick()
         {
-            return _uIConfig.Joystick.Instantiate(_canvas.transform, false);
+            return _uIConfig.Joystick.Instantiate(_canvas.Container, false);
         }
 
         private BaseWindow CreateLeaderboardWindow()
         {
-            return _uIConfig.Leaderboard.Instantiate(_canvas.transform, false);
+            return _uIConfig.Leaderboard.Instantiate(_canvas.Container, false);
         }
 
         private BaseWindow CreatePauseWindow()
         {
-            return _uIConfig.PauseWindow.Instantiate(_canvas.transform, false);
+            return _uIConfig.PauseWindow.Instantiate(_canvas.Container, false);
         }
     }
 }

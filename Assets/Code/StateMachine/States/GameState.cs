@@ -1,10 +1,12 @@
 ﻿using Assets.Code;
+using Assets.Code.AbilitySystem;
 using Assets.Code.CharactersLogic.HeroLogic;
 using Assets.Code.InputActions;
 using Assets.Code.Spawners;
 using Assets.Code.Tools;
 using Assets.Code.Ui;
 using Assets.Code.Ui.Windows;
+using System;
 using YG;
 
 namespace Assets.Scripts.State_Machine
@@ -20,10 +22,11 @@ namespace Assets.Scripts.State_Machine
         private readonly PlayerData _playerData;
         private readonly IInputService _inputService;
         private readonly ITimeService _timeService;
+        private readonly UpgradeTrigger _upgradeTrigger;
 
         public GameState(StateMachine stateMachine, HeroComponents heroComponents, EnemySpawner enemySpawner,
             AbilityFactory abilityFactory, UiFactory uiFactory, PlayerData playerData, IInputService inputService
-            , ITimeService timeService) : base(stateMachine)
+            , ITimeService timeService, UpgradeTrigger upgradeTrigger) : base(stateMachine)
         {
             _hero = heroComponents.ThrowIfNull();
             _enemySpawner = enemySpawner.ThrowIfNull();
@@ -32,6 +35,7 @@ namespace Assets.Scripts.State_Machine
             _playerData = playerData.ThrowIfNull();
             _inputService = inputService.ThrowIfNull();
             _timeService = timeService.ThrowIfNull();
+            _upgradeTrigger = upgradeTrigger.ThrowIfNull();
 
             _timer = new();
         }
@@ -40,7 +44,7 @@ namespace Assets.Scripts.State_Machine
         {
             PauseWindow pauseWindow = _uiFactory.Create<PauseWindow>(false);
             pauseWindow.ExitButton.Subscribe(OnExit);
-            pauseWindow.ContinueButton.Subscribe(_timeService.Unpause);
+            pauseWindow.ContinueButton.Subscribe(Continue);
 
             DeathWindow deathWindow = _uiFactory.Create<DeathWindow>(false);
             deathWindow.BackToMenuButton.Subscribe(OnExit);
@@ -53,6 +57,7 @@ namespace Assets.Scripts.State_Machine
             _hero.CharacterMovement.Run();
             _enemySpawner.Run();
             _timer.Start();
+            _upgradeTrigger.Run();
 
             _inputService.BackPressed += Pause;
         }
@@ -70,16 +75,16 @@ namespace Assets.Scripts.State_Machine
             deathWindow.ContinueForAddButton.interactable = true;
 
             PauseWindow pauseWindow = _uiFactory.Create<PauseWindow>(false);
-            pauseWindow.ExitButton.Subscribe(OnExit);
-            pauseWindow.ContinueButton.Subscribe(_timeService.Unpause);
+            pauseWindow.ExitButton.Unsubscribe(OnExit);
+            pauseWindow.ContinueButton.Unsubscribe(_timeService.Continue);
 
             _hero.Health.Died -= ShowDeathWindow;
             _hero.AbilityContainer.RemoveAll();
-            _hero.LootCollector.Stop();
             _hero.LootCollector.TransferGold();
-            _hero.HeroLevel.Reset();
             _hero.Health.ResetValue();
+            _hero.CharacterMovement.Stop();
             _hero.SetDefaultPosition();
+            _upgradeTrigger.Stop();
 
             if (_timer.Duration > _playerData.ScoreRecord)
             {
@@ -94,7 +99,10 @@ namespace Assets.Scripts.State_Machine
 
         private void OnExit()
         {
-            _timeService.Unpause();
+            _hero.HeroLevel.Reset();
+            _hero.LootCollector.Stop();
+
+            _timeService.Continue();
             _uiFactory.Create<FadeWindow>().Show(SetState<MenuState>);
         }
 
@@ -102,6 +110,14 @@ namespace Assets.Scripts.State_Machine
         {
             _timeService.Pause();
             _uiFactory.Create<PauseWindow>();
+        }
+
+        private void Continue()
+        {
+            if (_upgradeTrigger.IsOffering==false)
+            {
+                _timeService.Continue();
+            }
         }
 
         private void ShowDeathWindow()

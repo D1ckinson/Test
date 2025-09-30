@@ -63,7 +63,8 @@ namespace Assets.Code.Data
             _abilityName = new()
             {
                 [AbilityType.SwordStrike] = "Удар мечом",
-                [AbilityType.GhostSwords] = "Призрачные мечи"
+                [AbilityType.GhostSwords] = "Призрачные мечи",
+                [AbilityType.HolyGround] = "Святая земля"
             };
         }
 
@@ -85,7 +86,8 @@ namespace Assets.Code.Data
             _abilityName = new()
             {
                 [AbilityType.SwordStrike] = "Sword strike",
-                [AbilityType.GhostSwords] = "Ghost Swords"
+                [AbilityType.GhostSwords] = "Ghost Swords",
+                [AbilityType.HolyGround] = "Holy Ground"
             };
         }
 

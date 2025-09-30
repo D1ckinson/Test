@@ -8,7 +8,7 @@ namespace Assets.Code.AbilitySystem.Abilities
 {
     public class GhostSwords : Ability
     {
-        private readonly WaitForSeconds _actionWait = new(0.1f);
+        private readonly WaitForSeconds _actionWait = new(0.05f);
         private readonly Transform _hero;
         private readonly Pool<GhostSword> _pool;
         private readonly List<GhostSword> _spawnedSwords = new();
@@ -16,7 +16,7 @@ namespace Assets.Code.AbilitySystem.Abilities
         private float _damage;
         private int _projectilesCount;
 
-        public GhostSwords(AbilityConfig config, Transform transform, int level = 1) : base(config, transform, level)
+        public GhostSwords(AbilityConfig config, Transform transform, Dictionary<AbilityType, int> abilityUnlockLevel, int level = 1) : base(config, transform, abilityUnlockLevel, level)
         {
             AbilityStats stats = config.ThrowIfNull().GetStats(level.ThrowIfZeroOrLess());
             _damage = stats.Damage.ThrowIfNegative();
@@ -36,7 +36,7 @@ namespace Assets.Code.AbilitySystem.Abilities
 
         protected override void Apply()
         {
-            CoroutineService.StartCoroutine(SpawnSwords());
+            CoroutineService.StartCoroutine(SpawnSwords(), this);
         }
 
         protected override void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing)
@@ -48,23 +48,23 @@ namespace Assets.Code.AbilitySystem.Abilities
 
         private IEnumerator SpawnSwords()
         {
-
             for (int i = Constants.Zero; i < _projectilesCount; i++)
             {
                 GhostSword sword = _pool.Get(false);
-                sword.transform.SetParent(_hero);
 
                 float angle = i * (Constants.FullCircleDegrees / _projectilesCount);
                 Vector3 position = CalculateSwordPosition(angle);
+                sword.transform.position = position;
+                sword.transform.rotation = Quaternion.LookRotation(sword.transform.position - _hero.transform.position);
 
-                sword.transform.SetPositionAndRotation(position, Quaternion.Euler(Constants.Zero, angle, Constants.Zero));
                 sword.SetActive(true);
+                sword.transform.SetParent(_hero);
                 _spawnedSwords.Add(sword);
 
                 yield return _actionWait;
             }
 
-            CoroutineService.StartCoroutine(LaunchSwords());
+            CoroutineService.StartCoroutine(LaunchSwords(), this);
         }
 
         private IEnumerator LaunchSwords()
@@ -87,6 +87,12 @@ namespace Assets.Code.AbilitySystem.Abilities
             float z = playerPosition.z + Mathf.Sin(radianAngle) * Constants.One;
 
             return new Vector3(x, playerPosition.y, z);
+        }
+
+        public override void Dispose()
+        {
+            CoroutineService.StopAllCoroutines(this);
+            _pool.ForEach(sword => sword.DestroyGameObject());
         }
     }
 }

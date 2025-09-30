@@ -2,7 +2,7 @@ using Assets.Code.Tools;
 using System;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Code.CharactersLogic
 {
     [RequireComponent(typeof(Animator))]
     public class Health : MonoBehaviour

@@ -3,6 +3,7 @@
     public enum AbilityType
     {
         SwordStrike,
-        GhostSwords
+        GhostSwords,
+        HolyGround
     }
 }

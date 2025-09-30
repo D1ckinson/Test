@@ -43,6 +43,7 @@ MonoBehaviour:
   _abilitiesConfigs:
   - {fileID: 11400000, guid: 0bca3361efed7af45be0c8a784702a07, type: 2}
   - {fileID: 11400000, guid: 491025efefcca204081a4555832f14fe, type: 2}
+  - {fileID: 11400000, guid: 2e9cc2ed4b97ffc4ea15ea1e86a0747b, type: 2}
   _fixedExperience: 1
   _experienceCoefficient: 1
   _degree: 1

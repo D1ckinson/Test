@@ -33,6 +33,8 @@ namespace Assets.Scripts.Ui
 
         public event Action<AbilityType> UpgradeChosen;
 
+        public bool IsOn => _canvas.IsActive();
+
         public void Show(List<UpgradeOption> upgradeOptions, int level = 1)
         {
             upgradeOptions.ThrowIfNullOrEmpty();
@@ -49,7 +51,7 @@ namespace Assets.Scripts.Ui
             _canvas.SetActive(true);
         }
 
-        private void Callback(AbilityType abilityType)
+        public void Hide()
         {
             foreach (LevelUpButton button in _buttons)
             {
@@ -58,6 +60,11 @@ namespace Assets.Scripts.Ui
             }
 
             _canvas.SetActive(false);
+        }
+
+        private void Callback(AbilityType abilityType)
+        {
+            Hide();
             UpgradeChosen?.Invoke(abilityType);
         }
     }

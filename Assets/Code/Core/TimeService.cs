@@ -14,7 +14,7 @@ namespace Assets.Scripts
             TimeChanged?.Invoke();
         }
 
-        public void Unpause()
+        public void Continue()
         {
             Time.timeScale = Constants.One;
             TimeChanged?.Invoke();

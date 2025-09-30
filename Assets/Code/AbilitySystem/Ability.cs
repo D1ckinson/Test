@@ -1,31 +1,35 @@
 ﻿using Assets.Code.Tools;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Code.AbilitySystem
 {
-    public abstract class Ability
+    public abstract class Ability : IDisposable
     {
         private readonly Transform _transform;
         private readonly AbilityConfig _config;
+        private readonly Dictionary<AbilityType, int> _abilityUnlockLevel;
 
-        private float _maxCooldown;
+        private float _cooldown;
         private float _currentCooldown;
         private float _additionalDamage;
         private float _cooldownMultiplier = 1f;
 
-        protected Ability(AbilityConfig config, Transform transform, int level = 1)
+        protected Ability(AbilityConfig config, Transform transform, Dictionary<AbilityType, int> abilityUnlockLevel, int level = 1)
         {
             _config = config.ThrowIfNull();
             _transform = transform.ThrowIfNull();
             Level = level.ThrowIfZeroOrLess().ThrowIfMoreThan(_config.MaxLevel);
+            _abilityUnlockLevel = abilityUnlockLevel.ThrowIfNullOrEmpty();
 
-            _maxCooldown = _config.GetStats(Level).Cooldown;
-            _currentCooldown = _maxCooldown;
+            _cooldown = _config.GetStats(Level).Cooldown;
+            _currentCooldown = _cooldown;
         }
 
         public AbilityType Type => _config.Type;
         public int Level { get; private set; }
-        public bool IsMaxed => Level == _config.MaxLevel;
+        public bool IsMaxed => Level == _abilityUnlockLevel[_config.Type];
 
         public void Run()
         {
@@ -44,7 +48,7 @@ namespace Assets.Code.AbilitySystem
             if (_currentCooldown < Constants.Zero)
             {
                 Apply();
-                _currentCooldown = _maxCooldown;
+                _currentCooldown = _cooldown;
             }
         }
 
@@ -53,8 +57,8 @@ namespace Assets.Code.AbilitySystem
             Level++;
             AbilityStats stats = _config.GetStats(Level);
 
-            _maxCooldown = stats.Cooldown;
-            UpdateStats(stats.Damage + _additionalDamage, stats.Range, stats.ProjectilesCount,stats.IsPiercing);
+            _cooldown = stats.Cooldown;
+            UpdateStats(stats.Damage + _additionalDamage, stats.Range, stats.ProjectilesCount, stats.IsPiercing);
         }
 
         protected Vector3 GetPosition()
@@ -62,7 +66,7 @@ namespace Assets.Code.AbilitySystem
             return _transform.position;
         }
 
-        protected abstract void UpdateStats(float damage, float range, int projectilesCount,bool isPiercing);
+        protected abstract void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing);
 
         protected abstract void Apply();
 
@@ -71,13 +75,15 @@ namespace Assets.Code.AbilitySystem
             _additionalDamage = value.ThrowIfNegative();
 
             AbilityStats stats = _config.GetStats(Level);
-            UpdateStats(stats.Damage + _additionalDamage, stats.Range, stats.ProjectilesCount,stats.IsPiercing);
+            UpdateStats(stats.Damage + _additionalDamage, stats.Range, stats.ProjectilesCount, stats.IsPiercing);
         }
 
         public void SetCooldownPercent(float percent)
         {
             _cooldownMultiplier = Constants.PercentToMultiplier(percent.ThrowIfNegative());
-            _maxCooldown *= _cooldownMultiplier;
+            _cooldown *= _cooldownMultiplier;
         }
+
+        public abstract void Dispose();
     }
 }

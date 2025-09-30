@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 101ae2e3c0766ec4d989024aa13dfe6c, type: 3}
   m_Name: Ghost Swords
   m_EditorClassIdentifier: 
-  <ProjectilePrefab>k__BackingField: {fileID: 8427225263187680399, guid: eb7b0f771bc985141864b652ba4599c5, type: 3}
+  <ProjectilePrefab>k__BackingField: {fileID: 3465033717930673454, guid: eb7b0f771bc985141864b652ba4599c5, type: 3}
   <Effect>k__BackingField: {fileID: 0}
   <DamageLayer>k__BackingField:
     serializedVersion: 2
@@ -20,34 +20,35 @@ MonoBehaviour:
   <Type>k__BackingField: 1
   <Icon>k__BackingField: {fileID: 21300000, guid: 6cd59cd8c3d1c5443a9d3eeecf2b775e, type: 3}
   <Name>k__BackingField: Ghost Swords
+  <UnlockLevels>k__BackingField: 0
   _abilityStats:
-  - <Cooldown>k__BackingField: 4
-    <Damage>k__BackingField: 200
+  - <Cooldown>k__BackingField: 3
+    <Damage>k__BackingField: 10
     <Range>k__BackingField: 0
     <ProjectilesCount>k__BackingField: 6
     <IsPiercing>k__BackingField: 1
   - <Cooldown>k__BackingField: 3
     <Damage>k__BackingField: 11
     <Range>k__BackingField: 0
-    <ProjectilesCount>k__BackingField: 6
+    <ProjectilesCount>k__BackingField: 7
     <IsPiercing>k__BackingField: 0
   - <Cooldown>k__BackingField: 3
     <Damage>k__BackingField: 12
     <Range>k__BackingField: 0
-    <ProjectilesCount>k__BackingField: 6
+    <ProjectilesCount>k__BackingField: 8
     <IsPiercing>k__BackingField: 0
   - <Cooldown>k__BackingField: 3
     <Damage>k__BackingField: 13
     <Range>k__BackingField: 0
-    <ProjectilesCount>k__BackingField: 6
+    <ProjectilesCount>k__BackingField: 9
     <IsPiercing>k__BackingField: 0
   - <Cooldown>k__BackingField: 3
     <Damage>k__BackingField: 14
     <Range>k__BackingField: 0
-    <ProjectilesCount>k__BackingField: 6
-    <IsPiercing>k__BackingField: 0
+    <ProjectilesCount>k__BackingField: 10
+    <IsPiercing>k__BackingField: 1
   - <Cooldown>k__BackingField: 2
     <Damage>k__BackingField: 15
     <Range>k__BackingField: 0
-    <ProjectilesCount>k__BackingField: 6
-    <IsPiercing>k__BackingField: 0
+    <ProjectilesCount>k__BackingField: 10
+    <IsPiercing>k__BackingField: 1

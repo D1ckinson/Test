@@ -207,5 +207,10 @@ namespace Assets.Code.Tools
 
             return isCurrentState == false && (stateInfo.normalizedTime >= One || stateInfo.loop);
         }
+
+        public static void DestroyGameObject(this Component component)
+        {
+            Object.Destroy(component.gameObject);
+        }
     }
 }

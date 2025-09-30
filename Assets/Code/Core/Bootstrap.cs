@@ -1,6 +1,5 @@
 ﻿using Assets.Code;
 using Assets.Code.AbilitySystem;
-using Assets.Code.Animation;
 using Assets.Code.CharactersLogic.HeroLogic;
 using Assets.Code.Data;
 using Assets.Code.InputActions;
@@ -62,12 +61,12 @@ namespace Assets.Scripts
 
             Dictionary<AbilityType, AbilityConfig> abilities = _levelSettings.AbilityConfigs;
 
-            AbilityFactory abilityFactory = new(abilities, heroComponents.transform,  heroComponents.SwingEffectPoint);
+            AbilityFactory abilityFactory = new(abilities, heroComponents.transform, heroComponents.SwingEffectPoint, playerData.AbilityUnlockLevel, heroComponents.HolyGroundPoint);
             LootFactory lootFactory = new(_levelSettings.Loots);
-            EnemyFactory enemyFactory = new(_levelSettings.EnemyConfigs, lootFactory, heroComponents.transform, _levelSettings.EnemySpawnerSettings, gameAreaSettings,_levelSettings.GoldEnemy);
+            EnemyFactory enemyFactory = new(_levelSettings.EnemyConfigs, lootFactory, heroComponents.transform, _levelSettings.EnemySpawnerSettings, gameAreaSettings, _levelSettings.GoldEnemy);
 
             LevelUpWindow levelUpWindow = new(_uIConfig.LevelUpCanvas, _uIConfig.LevelUpButton);
-            new UpgradeTrigger(heroLevel, abilities, heroComponents.AbilityContainer, levelUpWindow, abilityFactory, playerData.AbilityUnlockLevel, timeService);
+            UpgradeTrigger upgradeTrigger = new(heroLevel, abilities, heroComponents.AbilityContainer, levelUpWindow, abilityFactory, timeService);
 
             EnemySpawner enemySpawner = new(enemyFactory, _levelSettings.SpawnTypeByTimes);
 
@@ -77,7 +76,7 @@ namespace Assets.Scripts
             _stateMachine = new();
             _stateMachine
                 .AddState(new MenuState(_stateMachine, uiFactory))
-                .AddState(new GameState(_stateMachine, heroComponents, enemySpawner, abilityFactory, uiFactory, playerData, inputService, timeService));
+                .AddState(new GameState(_stateMachine, heroComponents, enemySpawner, abilityFactory, uiFactory, playerData, inputService, timeService, upgradeTrigger));
 
             _stateMachine.SetState<MenuState>();
         }

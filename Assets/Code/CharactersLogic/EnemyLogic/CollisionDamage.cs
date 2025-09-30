@@ -1,4 +1,5 @@
-﻿using Assets.Code.Tools;
+﻿using Assets.Code.CharactersLogic;
+using Assets.Code.Tools;
 using UnityEngine;
 
 namespace Assets.Scripts

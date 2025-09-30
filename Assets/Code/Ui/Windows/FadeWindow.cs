@@ -22,13 +22,18 @@ namespace Assets.Code.Ui.Windows
             _showSequence = DOTween.Sequence()
                 .SetAutoKill(false)
                 .Append(_image.DOFade(Constants.One, _fadeDuration))
-                .OnComplete(() => _onShow?.Invoke());
+                .OnComplete(() =>
+                {
+                    _image.color = new(0, 0, 0, 0);
+                    _onShow?.Invoke();
+                });
 
             _hideSequence = DOTween.Sequence()
                 .SetAutoKill(false)
                 .Append(_image.DOFade(Constants.Zero, _fadeDuration))
                 .OnComplete(() =>
                 {
+                    _image.color = new(0, 0, 0, 1);
                     gameObject.SetActive(false);
                     _onHide?.Invoke();
                 });

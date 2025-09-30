@@ -1,5 +1,5 @@
-﻿using Assets.Code.Tools;
-using Assets.Scripts;
+﻿using Assets.Code.CharactersLogic;
+using Assets.Code.Tools;
 using UnityEngine;
 
 namespace Assets.Code.AbilitySystem.Abilities
@@ -24,6 +24,8 @@ namespace Assets.Code.AbilitySystem.Abilities
 
         private void OnDestroy()
         {
+            UpdateService.UnregisterUpdate(Fly);
+
             if (_timer.NotNull())
             {
                 _timer.Completed -= Stop;

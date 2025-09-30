@@ -15,6 +15,7 @@ namespace Assets.Code.CharactersLogic.HeroLogic
     public class HeroComponents : MonoBehaviour
     {
         [field: SerializeField] public Transform SwingEffectPoint { get; private set; }
+        [field: SerializeField] public Transform HolyGroundPoint { get; private set; }
 
         public CharacterMovement CharacterMovement { get; private set; }
         public Health Health { get; private set; }

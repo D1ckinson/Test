@@ -1,5 +1,6 @@
-﻿using Assets.Code.Tools;
-using Assets.Scripts;
+﻿using Assets.Code.CharactersLogic;
+using Assets.Code.Tools;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Code.AbilitySystem.Abilities
@@ -16,7 +17,7 @@ namespace Assets.Code.AbilitySystem.Abilities
         private float _damage;
         private float _radius;
 
-        public SwordStrike(AbilityConfig config, Transform transform, Animator animator, int level = 1) : base(config, transform, level)
+        public SwordStrike(AbilityConfig config, Transform transform, Animator animator, Dictionary<AbilityType, int> abilityUnlockLevel, int level = 1) : base(config, transform, abilityUnlockLevel, level)
         {
             _colliders = new Collider[MaxStrikeCount];
             _swingEffect = config.Effect.Instantiate(transform.ThrowIfNull());
@@ -28,6 +29,11 @@ namespace Assets.Code.AbilitySystem.Abilities
             _radius = stats.Range;
             SetEffectShape();
             _animator = animator;
+        }
+
+        public override void Dispose()
+        {
+            _swingEffect.DestroyGameObject();
         }
 
         protected sealed override void Apply()

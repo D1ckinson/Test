@@ -19,7 +19,7 @@ namespace Assets.Code.AbilitySystem
 
         public void Run()
         {
-            _abilities.ForEachValues(_ability => _ability.Run());
+            _abilities.ForEachValues(ability => ability.Run());
         }
 
         public void Stop()
@@ -29,16 +29,16 @@ namespace Assets.Code.AbilitySystem
 
         public void Add(Ability ability)
         {
-            ability.ThrowIfNull();
-            ability.Run();
+            ability.ThrowIfNull().Run();
 
-            _abilities.ContainsKey(ability.Type).ThrowIfTrue(new ArgumentException());
             _abilities.Add(ability.Type, ability);
         }
 
         public void RemoveAll()
         {
             Stop();
+
+            _abilities.ForEachValues(ability => ability.Dispose());
             _abilities.Clear();
         }
 

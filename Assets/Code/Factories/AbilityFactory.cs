@@ -33,6 +33,7 @@ namespace Assets.Code
                 [AbilityType.GhostSwords] = CreateGhostSwords,
                 [AbilityType.HolyGround] = CreateHolyGround,
                 [AbilityType.MidasHand] = CreateMidasHand,
+                [AbilityType.Bombard] = CreateBombard,
             };
         }
 
@@ -43,30 +44,37 @@ namespace Assets.Code
 
         private SwordStrike CreateSwordStrike()
         {
-            AbilityConfig abilityConfig = _configs[AbilityType.SwordStrike];
+            AbilityConfig config = _configs[AbilityType.SwordStrike];
 
-            return new SwordStrike(abilityConfig, _swingEffectPoint, _hero.GetComponentOrThrow<Animator>(), _abilityUnlockLevel);
+            return new SwordStrike(config, _swingEffectPoint, _hero.GetComponentOrThrow<Animator>(), _abilityUnlockLevel);
         }
 
         private Ability CreateGhostSwords()
         {
-            AbilityConfig abilityConfig = _configs[AbilityType.GhostSwords];
+            AbilityConfig config = _configs[AbilityType.GhostSwords];
 
-            return new GhostSwords(abilityConfig, _swingEffectPoint, _abilityUnlockLevel);
+            return new GhostSwords(config, _swingEffectPoint, _abilityUnlockLevel);
         }
 
         private Ability CreateHolyGround()
         {
-            AbilityConfig abilityConfig = _configs[AbilityType.HolyGround];
+            AbilityConfig config = _configs[AbilityType.HolyGround];
 
-            return new HolyGround(abilityConfig, _hero, _abilityUnlockLevel);
+            return new HolyGround(config, _hero, _abilityUnlockLevel);
         }
 
         private Ability CreateMidasHand()
         {
-            AbilityConfig abilityConfig = _configs[AbilityType.MidasHand];
+            AbilityConfig config = _configs[AbilityType.MidasHand];
 
-            return new MidasHand(abilityConfig, _hero, _abilityUnlockLevel, _lootFactory);
+            return new MidasHand(config, _hero, _abilityUnlockLevel, _lootFactory);
+        }
+
+        private Ability CreateBombard()
+        {
+            AbilityConfig config = _configs[AbilityType.Bombard];
+
+            return new Bombard(config, _hero, _abilityUnlockLevel);
         }
     }
 }

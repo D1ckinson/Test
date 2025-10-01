@@ -1,11 +1,10 @@
-﻿using Assets.Code.Data.Interfaces;
-using Assets.Code.Tools;
+﻿using Assets.Code.Tools;
 using System;
 
 namespace Assets.Scripts
 {
     [Serializable]
-    public class Wallet : IValueContainer
+    public class Wallet
     {
         private float _lootMultiplier = 1;
 

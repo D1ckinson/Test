@@ -80,7 +80,7 @@ namespace Assets.Code.AbilitySystem.Abilities
 
         private Vector3 CalculateSwordPosition(float angle)
         {
-            Vector3 playerPosition = GetPosition();
+            Vector3 playerPosition = Position;
             float radianAngle = angle * Mathf.Deg2Rad;
 
             float x = playerPosition.x + Mathf.Cos(radianAngle) * Constants.One;

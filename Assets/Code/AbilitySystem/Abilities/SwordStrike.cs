@@ -38,7 +38,7 @@ namespace Assets.Code.AbilitySystem.Abilities
 
         protected sealed override void Apply()
         {
-            int count = Physics.OverlapSphereNonAlloc(GetPosition(), _radius, _colliders, _damageLayer);
+            int count = Physics.OverlapSphereNonAlloc(Position, _radius, _colliders, _damageLayer);
 
             for (int i = Constants.Zero; i < count; i++)
             {

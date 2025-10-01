@@ -1,12 +1,10 @@
-﻿using Assets.Code.Data.Interfaces;
-using Assets.Code.Tools;
-using Assets.Scripts.Configs;
+﻿using Assets.Code.Tools;
 using System;
 
 namespace Assets.Scripts
 {
     [Serializable]
-    public class HeroLevel : IValueContainer
+    public class HeroLevel
     {
         private const float TransferValue = 10f;
 

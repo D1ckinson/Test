@@ -77,7 +77,8 @@ namespace Assets.Code.Data
                 [AbilityType.SwordStrike] = "Удар мечом",
                 [AbilityType.GhostSwords] = "Призрачные мечи",
                 [AbilityType.HolyGround] = "Святая земля",
-                [AbilityType.MidasHand] = "Рука Мидаса"
+                [AbilityType.MidasHand] = "Рука Мидаса",
+                [AbilityType.Bombard] = "Бомбарда"
             };
         }
 
@@ -107,7 +108,8 @@ namespace Assets.Code.Data
                 [AbilityType.SwordStrike] = "Sword strike",
                 [AbilityType.GhostSwords] = "Ghost swords",
                 [AbilityType.HolyGround] = "Holy ground",
-                [AbilityType.MidasHand] = "Midas Hand"
+                [AbilityType.MidasHand] = "Midas Hand",
+                [AbilityType.MidasHand] = "Bombard"
             };
         }
 

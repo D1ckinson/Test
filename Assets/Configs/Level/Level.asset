@@ -44,6 +44,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 491025efefcca204081a4555832f14fe, type: 2}
   - {fileID: 11400000, guid: 2e9cc2ed4b97ffc4ea15ea1e86a0747b, type: 2}
   - {fileID: 11400000, guid: 6351cb34aca9afd43a1b76974035a3b4, type: 2}
+  - {fileID: 11400000, guid: ae442e0af0b1c8f4ea6dc90659066ee8, type: 2}
   _fixedExperience: 1
   _experienceCoefficient: 1
   _degree: 1

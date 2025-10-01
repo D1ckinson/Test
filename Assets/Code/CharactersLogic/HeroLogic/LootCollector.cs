@@ -68,7 +68,7 @@ namespace Assets.Scripts
         {
             foreach (Loot loot in _toCollect)
             {
-                if (loot.NotNull())
+                if (loot.NotNull() && loot.Rigidbody.NotNull())
                 {
                     loot.Rigidbody.velocity = Vector3.zero;
                 }

@@ -10,6 +10,8 @@ namespace Assets.Scripts.Factories
 {
     public class LootFactory
     {
+        private const float SpawnOffset = 2;
+
         private readonly Dictionary<LootType, Pool<Loot>> _pools;
 
         public LootFactory(Loot[] loots)
@@ -45,8 +47,8 @@ namespace Assets.Scripts.Factories
         {
             Vector3 offset = new()
             {
-                x = Random.Range(Constants.Zero, Constants.One),
-                z = Random.Range(Constants.Zero, Constants.One)
+                x = Random.Range(-SpawnOffset, SpawnOffset),
+                z = Random.Range(-SpawnOffset, SpawnOffset)
             };
 
             return offset;

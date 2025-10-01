@@ -35,7 +35,7 @@ namespace Assets.Code.AbilitySystem.Abilities
 
         protected override void Apply()
         {
-            int count = Physics.OverlapSphereNonAlloc(GetPosition(), _range, _colliders, _damageLayer);
+            int count = Physics.OverlapSphereNonAlloc(Position, _range, _colliders, _damageLayer);
             float distance = float.MaxValue;
             Collider closest = null;
 

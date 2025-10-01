@@ -5,6 +5,7 @@
         SwordStrike,
         GhostSwords,
         HolyGround,
-        MidasHand
+        MidasHand,
+        Bombard
     }
 }

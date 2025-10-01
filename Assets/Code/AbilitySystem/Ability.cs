@@ -30,6 +30,7 @@ namespace Assets.Code.AbilitySystem
         public AbilityType Type => _config.Type;
         public int Level { get; private set; }
         public bool IsMaxed => Level == _abilityUnlockLevel[_config.Type];
+        protected Vector3 Position => _transform.position;
 
         public void Run()
         {
@@ -61,15 +62,6 @@ namespace Assets.Code.AbilitySystem
             UpdateStats(stats.Damage + _additionalDamage, stats.Range, stats.ProjectilesCount, stats.IsPiercing,stats.HealthPercent);
         }
 
-        protected Vector3 GetPosition()
-        {
-            return _transform.position;
-        }
-
-        protected abstract void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing,int healthPercent);
-
-        protected abstract void Apply();
-
         public void SetAdditionalDamage(int value)
         {
             _additionalDamage = value.ThrowIfNegative();
@@ -85,5 +77,9 @@ namespace Assets.Code.AbilitySystem
         }
 
         public abstract void Dispose();
+
+        protected abstract void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing,int healthPercent);
+
+        protected abstract void Apply();
     }
 }

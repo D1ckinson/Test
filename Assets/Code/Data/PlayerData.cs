@@ -15,7 +15,7 @@ namespace Assets.Scripts
         public PlayerData()
         {
             Wallet = new();
-            StartAbility = AbilityType.MidasHand;
+            StartAbility = AbilityType.Bombard;
 
             AbilityUnlockLevel = new()
             {
@@ -23,6 +23,7 @@ namespace Assets.Scripts
                 [AbilityType.GhostSwords] = 5,
                 [AbilityType.HolyGround] = 3,
                 [AbilityType.MidasHand] = 1,
+                [AbilityType.Bombard] = 1,
             };
         }
     }

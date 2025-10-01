@@ -1,5 +1,6 @@
 ﻿using Assets.Code.Tools;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Code
@@ -13,11 +14,11 @@ namespace Assets.Code
         [field: SerializeField] public LayerMask DamageLayer { get; private set; }
         [field: SerializeField] public AbilityType Type { get; private set; }
         [field: SerializeField] public Sprite Icon { get; private set; }
-        [field: SerializeField] public string Name { get; private set; }
 
         [Header("Upgrades")]
         [SerializeField] private List<AbilityStats> _abilityStats;
 
+        public int[] UpgradesCost => _abilityStats.Select(stat => stat.Cost).ToArray();
         public int MaxLevel => _abilityStats.Count;
 
         public AbilityStats GetStats(int level)

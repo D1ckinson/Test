@@ -27,7 +27,7 @@ namespace Assets.Scripts.Configs
         [field: SerializeField][field: Min(1f)] public float PullSpeed { get; private set; } = 5f;
 
         [field: Header("Loot Droop Settings")]
-        [field: SerializeField] public LootConfig[] Loot { get; private set; }
+        [field: SerializeField] public LootDropInfo[] Loot { get; private set; }
 
 #if UNITY_EDITOR
         private void OnValidate()

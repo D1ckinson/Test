@@ -39,7 +39,7 @@ namespace Assets.Code.AbilitySystem.Abilities
             CoroutineService.StartCoroutine(SpawnSwords(), this);
         }
 
-        protected override void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing)
+        protected override void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing, int healthPercent)
         {
             _damage = damage.ThrowIfNegative();
             _projectilesCount = projectilesCount.ThrowIfNegative();

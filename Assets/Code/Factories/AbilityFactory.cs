@@ -1,6 +1,7 @@
 ﻿using Assets.Code.AbilitySystem;
 using Assets.Code.AbilitySystem.Abilities;
 using Assets.Code.Tools;
+using Assets.Scripts.Factories;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,23 +15,24 @@ namespace Assets.Code
         private readonly Transform _hero;
 
         private readonly Transform _swingEffectPoint;
-        private readonly Transform _holyGroundPoint;
         private readonly Dictionary<AbilityType, int> _abilityUnlockLevel;
+        private readonly LootFactory _lootFactory;
 
-        public AbilityFactory(Dictionary<AbilityType, AbilityConfig> configs, Transform hero, Transform swingEffectPoint, Dictionary<AbilityType, int> abilityUnlockLevel, Transform holyGroundPoint)
+        public AbilityFactory(Dictionary<AbilityType, AbilityConfig> configs, Transform hero, Transform swingEffectPoint, Dictionary<AbilityType, int> abilityUnlockLevel, LootFactory lootFactory)
         {
             _configs = configs.ThrowIfNullOrEmpty();
             _hero = hero.ThrowIfNull();
 
             _swingEffectPoint = swingEffectPoint.ThrowIfNull();
-            _holyGroundPoint = holyGroundPoint.ThrowIfNull();
             _abilityUnlockLevel = abilityUnlockLevel.ThrowIfNull();
+            _lootFactory = lootFactory.ThrowIfNull();
 
             _createFunctions = new()
             {
                 [AbilityType.SwordStrike] = CreateSwordStrike,
                 [AbilityType.GhostSwords] = CreateGhostSwords,
-                [AbilityType.HolyGround] = CreateHolyGround
+                [AbilityType.HolyGround] = CreateHolyGround,
+                [AbilityType.MidasHand] = CreateMidasHand,
             };
         }
 
@@ -50,14 +52,21 @@ namespace Assets.Code
         {
             AbilityConfig abilityConfig = _configs[AbilityType.GhostSwords];
 
-            return new GhostSwords(abilityConfig, _swingEffectPoint,_abilityUnlockLevel);
+            return new GhostSwords(abilityConfig, _swingEffectPoint, _abilityUnlockLevel);
         }
 
         private Ability CreateHolyGround()
         {
             AbilityConfig abilityConfig = _configs[AbilityType.HolyGround];
 
-            return new HolyGround(abilityConfig, _holyGroundPoint, _abilityUnlockLevel);
+            return new HolyGround(abilityConfig, _hero, _abilityUnlockLevel);
+        }
+
+        private Ability CreateMidasHand()
+        {
+            AbilityConfig abilityConfig = _configs[AbilityType.MidasHand];
+
+            return new MidasHand(abilityConfig, _hero, _abilityUnlockLevel, _lootFactory);
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿using Assets.Code.Shop;
-using Assets.Code.Tools;
+﻿using Assets.Code.Tools;
 using Assets.Scripts;
 using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 namespace Assets.Code.Ui.Windows
 {
@@ -22,7 +22,7 @@ namespace Assets.Code.Ui.Windows
         private readonly Color _upgradeUnavailable = Color.red;
         private Dictionary<AbilityType, int> _abilityUnlockLevel;
         private Dictionary<AbilityType, int> _abilityMaxLevel;
-        private UpgradeCost _upgradeCost;
+        private Dictionary<AbilityType, int[]> _upgradeCost;
         private Wallet _wallet;
 
         private void Awake()
@@ -48,11 +48,11 @@ namespace Assets.Code.Ui.Windows
             ExitButton.Unsubscribe(Disable);
         }
 
-        public ShopWindow Initialize(Dictionary<AbilityType, int> abilityUnlockLevel, Dictionary<AbilityType, int> abilityMaxLevel, UpgradeCost upgradeCost, Wallet wallet)
+        public ShopWindow Initialize(Dictionary<AbilityType, int> abilityUnlockLevel, Dictionary<AbilityType, int> abilityMaxLevel, Dictionary<AbilityType, int[]> upgradeCost, Wallet wallet)
         {
             _abilityUnlockLevel = abilityUnlockLevel.ThrowIfNullOrEmpty();
             _abilityMaxLevel = abilityMaxLevel.ThrowIfNullOrEmpty();
-            _upgradeCost = upgradeCost.ThrowIfNull();
+            _upgradeCost = upgradeCost.ThrowIfNullOrEmpty();
             _wallet = wallet.ThrowIfNull();
             _coinsQuantity.SetText((int)_wallet.CoinsQuantity);
             _wallet.ValueChanged += UpdateAllOptions;
@@ -87,7 +87,8 @@ namespace Assets.Code.Ui.Windows
             }
             else if (unlockLevel < maxLevel)
             {
-                int upgradeCost = _upgradeCost.GetCost(abilityType, unlockLevel + Constants.One);
+                int[] cost = _upgradeCost[abilityType];
+                int upgradeCost = cost[unlockLevel];
                 option.Cost.SetText(upgradeCost);
 
                 if (coinsQuantity >= upgradeCost)
@@ -109,12 +110,13 @@ namespace Assets.Code.Ui.Windows
 
         private void IncreaseUnlockLevel(AbilityType abilityType)
         {
-            int unlockLevel = _abilityUnlockLevel[abilityType] + Constants.One;
-            _wallet.Spend(_upgradeCost.GetCost(abilityType, unlockLevel));
-            _abilityUnlockLevel[abilityType] = unlockLevel;
+            int unlockLevel = _abilityUnlockLevel[abilityType];
+            _wallet.Spend(_upgradeCost[abilityType][unlockLevel]);
+            _abilityUnlockLevel[abilityType] = ++unlockLevel;
             _options[abilityType].LevelNumber.SetText(unlockLevel);
 
             UpdateAllOptions(_wallet.CoinsQuantity);
+            YG2.SaveProgress();
         }
 
         private void UpdateAllOptions(float coinsQuantity)

@@ -1,10 +1,10 @@
 ﻿using Assets.Code.Data;
-using Assets.Code.Shop;
 using Assets.Code.Tools;
 using Assets.Code.Ui.Windows;
 using Assets.Scripts;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Object = UnityEngine.Object;
 
 namespace Assets.Code.Ui
@@ -17,18 +17,18 @@ namespace Assets.Code.Ui
         private readonly UIConfig _uIConfig;
         private readonly Wallet _wallet;
         private readonly Dictionary<AbilityType, AbilityConfig> _abilityConfigs;
-        private readonly UpgradeCost _upgradeCost;
+        private readonly Dictionary<AbilityType, int[]> _upgradeCost;
         private readonly Dictionary<AbilityType, int> _abilityUnlockLevel;
         private readonly Dictionary<AbilityType, int> _abilityMaxLevel;
 
-        public UiFactory(UIConfig uIConfig, Wallet wallet, UpgradeCost upgradeCost, Dictionary<AbilityType, AbilityConfig> abilityConfigs, Dictionary<AbilityType, int> abilityUnlockLevel, Dictionary<AbilityType, int> abilityMaxLevel)
+        public UiFactory(UIConfig uIConfig, Wallet wallet, Dictionary<AbilityType, int[]> upgradeCost, Dictionary<AbilityType, AbilityConfig> abilityConfigs, Dictionary<AbilityType, int> abilityUnlockLevel)
         {
             _uIConfig = uIConfig.ThrowIfNull();
             _wallet = wallet.ThrowIfNull();
-            _upgradeCost = upgradeCost.ThrowIfNull();
+            _upgradeCost = upgradeCost.ThrowIfNullOrEmpty();
             _abilityConfigs = abilityConfigs.ThrowIfNullOrEmpty();
             _abilityUnlockLevel = abilityUnlockLevel.ThrowIfNullOrEmpty();
-            _abilityMaxLevel = abilityMaxLevel.ThrowIfNullOrEmpty();
+            _abilityMaxLevel = abilityConfigs.ToDictionary(pair => pair.Key, pair => pair.Value.MaxLevel); ;
             _canvas = Object.Instantiate(_uIConfig.TestCanvasUiFactory);
 
             _createMethods = new()

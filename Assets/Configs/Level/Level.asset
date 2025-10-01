@@ -39,11 +39,11 @@ MonoBehaviour:
   <GameAreaSettings>k__BackingField:
     <Center>k__BackingField: {x: 100, y: 0, z: 100}
     <Radius>k__BackingField: 90
-  <UpgradeCost>k__BackingField: {fileID: 11400000, guid: 6b3c2407c4ed24047b9c417b0b24a234, type: 2}
   _abilitiesConfigs:
   - {fileID: 11400000, guid: 0bca3361efed7af45be0c8a784702a07, type: 2}
   - {fileID: 11400000, guid: 491025efefcca204081a4555832f14fe, type: 2}
   - {fileID: 11400000, guid: 2e9cc2ed4b97ffc4ea15ea1e86a0747b, type: 2}
+  - {fileID: 11400000, guid: 6351cb34aca9afd43a1b76974035a3b4, type: 2}
   _fixedExperience: 1
   _experienceCoefficient: 1
   _degree: 1

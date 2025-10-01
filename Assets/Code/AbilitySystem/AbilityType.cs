@@ -4,6 +4,7 @@
     {
         SwordStrike,
         GhostSwords,
-        HolyGround
+        HolyGround,
+        MidasHand
     }
 }

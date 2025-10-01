@@ -10,7 +10,7 @@ namespace Assets.Code.CharactersLogic
     {
         private Health _health;
         private LootFactory _lootFactory;
-        private LootConfig[] _loots;
+        private LootDropInfo[] _loots;
         private CharacterMovement _characterMovement;
 
         private void OnEnable()
@@ -29,7 +29,7 @@ namespace Assets.Code.CharactersLogic
             }
         }
 
-        public void Initialize(Health health, LootFactory lootFactory, LootConfig[] loots, CharacterMovement characterMovement)
+        public void Initialize(Health health, LootFactory lootFactory, LootDropInfo[] loots, CharacterMovement characterMovement)
         {
             _health = health.ThrowIfNull();
             _lootFactory = lootFactory.ThrowIfNull();
@@ -39,21 +39,16 @@ namespace Assets.Code.CharactersLogic
             _health.Died += OnDeath;
         }
 
-        public void SetLoot(LootConfig[] loots)
-        {
-            _loots = loots.ThrowIfNullOrEmpty();
-        }
-
         private void OnDeath()
         {
-            foreach (LootConfig lootConfig in _loots)
+            foreach (LootDropInfo lootConfig in _loots)
             {
                 if (Random.Range(Constants.Zero, Constants.Hundred) > lootConfig.DropChance)
                 {
                     continue;
                 }
 
-                _lootFactory.Spawn(lootConfig.Prefab, transform.position, lootConfig.Count);
+                _lootFactory.Spawn(lootConfig.Type, transform.position, lootConfig.Count);
             }
 
             this.SetActive(false);

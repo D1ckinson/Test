@@ -25,6 +25,12 @@ namespace Assets.Code.Data
         public static string MenuText { get; private set; }
         public static string PersonalBest { get; private set; }
 
+        public static string Range { get; internal set; }
+        public static string Damage { get; internal set; }
+        public static string Cooldown { get; internal set; }
+        public static string ProjectilesCount { get; internal set; }
+        public static string HealthPercent { get; internal set; }
+
         public static IReadOnlyDictionary<AbilityType, string> AbilityName => _abilityName;
 
         static UIText()
@@ -60,11 +66,18 @@ namespace Assets.Code.Data
             MenuText = "Меню";
             PersonalBest = "Личный рекорд";
 
+            Damage = "Урон";
+            Cooldown = "Перезарядка";
+            Range = "Дальность";
+            ProjectilesCount = "Количество снарядов";
+            HealthPercent = "Процент здоровья";
+
             _abilityName = new()
             {
                 [AbilityType.SwordStrike] = "Удар мечом",
                 [AbilityType.GhostSwords] = "Призрачные мечи",
-                [AbilityType.HolyGround] = "Святая земля"
+                [AbilityType.HolyGround] = "Святая земля",
+                [AbilityType.MidasHand] = "Рука Мидаса"
             };
         }
 
@@ -83,11 +96,18 @@ namespace Assets.Code.Data
             MenuText = "Menu";
             PersonalBest = "Personal best";
 
+            Damage = "Damage";
+            Cooldown = "Cooldown";
+            Range = "Range";
+            ProjectilesCount = "Projectiles count";
+            HealthPercent = "Health percent";
+
             _abilityName = new()
             {
                 [AbilityType.SwordStrike] = "Sword strike",
-                [AbilityType.GhostSwords] = "Ghost Swords",
-                [AbilityType.HolyGround] = "Holy Ground"
+                [AbilityType.GhostSwords] = "Ghost swords",
+                [AbilityType.HolyGround] = "Holy ground",
+                [AbilityType.MidasHand] = "Midas Hand"
             };
         }
 

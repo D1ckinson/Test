@@ -56,7 +56,7 @@ namespace Assets.Code.AbilitySystem.Abilities
             _animator.SetTrigger(AnimationParameters.IsAttacking);
         }
 
-        protected override void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing)
+        protected override void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing, int healthPercent)
         {
             _damage = damage.ThrowIfNegative();
             _radius = range.ThrowIfNegative();

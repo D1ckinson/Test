@@ -4,6 +4,7 @@ using Assets.Code.Tools;
 using System.Collections.Generic;
 using System.Linq;
 using Random = UnityEngine.Random;
+using Assets.Code.Data;
 
 namespace Assets.Code.AbilitySystem
 {
@@ -91,7 +92,7 @@ namespace Assets.Code.AbilitySystem
                     statsDescription = nextStats.GetStatsDescription();
                 }
 
-                upgradeOptions.Add(new(abilityType, abilityLevel, statsDescription, abilityConfig.Icon, abilityConfig.Name));
+                upgradeOptions.Add(new(abilityType, abilityLevel, statsDescription, abilityConfig.Icon, UIText.AbilityName[abilityType]));
             }
 
             if (upgradeOptions.Count == Constants.Zero)

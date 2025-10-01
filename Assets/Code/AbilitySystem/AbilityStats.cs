@@ -1,4 +1,5 @@
-﻿using Assets.Code.Tools;
+﻿using Assets.Code.Data;
+using Assets.Code.Tools;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace Assets.Code
         [field: SerializeField] public float Range { get; private set; }
         [field: SerializeField] public int ProjectilesCount { get; private set; }
         [field: SerializeField] public bool IsPiercing { get; private set; }
+        [field: SerializeField] public int HealthPercent { get; private set; }
+        [field: SerializeField] public int Cost { get; private set; }
 
         public static AbilityStats operator -(AbilityStats a, AbilityStats b)
         {
@@ -21,7 +24,9 @@ namespace Assets.Code
                 Cooldown = a.Cooldown - b.Cooldown,
                 Damage = a.Damage - b.Damage,
                 Range = a.Range - b.Range,
-                ProjectilesCount = a.ProjectilesCount - b.ProjectilesCount
+                ProjectilesCount = a.ProjectilesCount - b.ProjectilesCount,
+                IsPiercing = b.IsPiercing,
+                HealthPercent = a.HealthPercent-b.HealthPercent
             };
         }
 
@@ -29,10 +34,12 @@ namespace Assets.Code
         {
             List<string> description = new();
 
-            AddIfNotZero(description, "Перезарядка", Cooldown);
-            AddIfNotZero(description, "Урон", Damage);
-            AddIfNotZero(description, "Дальность", Range);
-            AddIfNotZero(description, "Количество снарядов", ProjectilesCount);
+            AddIfNotZero(description, UIText.Cooldown, Cooldown);
+            AddIfNotZero(description, UIText.Damage, Damage);
+            AddIfNotZero(description, UIText.Range, Range);
+            AddIfNotZero(description, UIText.ProjectilesCount, ProjectilesCount);
+            AddIfNotZero(description, UIText.ProjectilesCount, ProjectilesCount);
+            AddIfNotZero(description, UIText.HealthPercent, HealthPercent);
 
             return description;
         }

@@ -28,7 +28,6 @@ namespace Assets.Scripts.Configs
         [field: SerializeField] public GameAreaSettings GameAreaSettings { get; private set; }
 
         [field: Header("Abilities")]
-        [field: SerializeField] public UpgradeCost UpgradeCost { get; private set; }
 
         [field: SerializeField] private AbilityConfig[] _abilitiesConfigs;
 
@@ -44,8 +43,8 @@ namespace Assets.Scripts.Configs
             return (int)(_fixedExperience * current + _experienceCoefficient * MathF.Pow(current, _degree));
         }
 
+        public Dictionary<AbilityType, int[]> UpgradeCost => _abilitiesConfigs.ToDictionary(config => config.Type, config => config.UpgradesCost);
         public Dictionary<AbilityType, AbilityConfig> AbilityConfigs => _abilitiesConfigs.ToDictionary(config => config.Type);
-
         public Dictionary<CharacterType, CharacterConfig> EnemyConfigs => _enemiesConfigs.ToDictionary(config => config.Type);
     }
 }

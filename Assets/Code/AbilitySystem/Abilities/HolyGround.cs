@@ -21,7 +21,7 @@ namespace Assets.Code.AbilitySystem.Abilities
             _holyRune.DealDamage();
         }
 
-        protected override void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing)
+        protected override void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing, int healthPercent)
         {
             _holyRune.SetStats(damage, range);
         }

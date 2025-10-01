@@ -20,15 +20,14 @@ namespace Assets.Scripts.Factories
             loots.ForEach(loot => _pools.Add(loot.Type, new(() => Create(loot))));
         }
 
-        public void Spawn(Loot loot, Vector3 position, int count = Constants.One)
+        public void Spawn(LootType type, Vector3 position, int count = 1)
         {
-            loot.ThrowIfNull();
             count.ThrowIfZeroOrLess();
 
             for (int i = Constants.Zero; i < count; i++)
             {
-                Loot createdLoot = _pools[loot.Type].Get();
-                createdLoot.transform.SetPositionAndRotation(position + GenerateOffset(), GenerateRotation());
+                Loot loot = _pools[type].Get();
+                loot.transform.SetPositionAndRotation(position + GenerateOffset(), GenerateRotation());
             }
         }
 

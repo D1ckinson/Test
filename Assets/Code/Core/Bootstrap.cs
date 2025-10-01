@@ -48,8 +48,7 @@ namespace Assets.Scripts
             PlayerData playerData = YG2.saves.Load();
             playerData.Wallet.Add(1000);///////////////////////////////
             ITimeService timeService = new TimeService();
-            Dictionary<AbilityType, int> abilityMaxLevel = _levelSettings.AbilityConfigs.ToDictionary(pair => pair.Key, pair => pair.Value.MaxLevel);
-            UiFactory uiFactory = new(_uIConfig, playerData.Wallet, _levelSettings.UpgradeCost, _levelSettings.AbilityConfigs, playerData.AbilityUnlockLevel, abilityMaxLevel);
+            UiFactory uiFactory = new(_uIConfig, playerData.Wallet, _levelSettings.UpgradeCost, _levelSettings.AbilityConfigs, playerData.AbilityUnlockLevel);
 
             IInputService inputService = new InputReader(uiFactory.Create<Joystick>(), timeService);
 
@@ -61,8 +60,8 @@ namespace Assets.Scripts
 
             Dictionary<AbilityType, AbilityConfig> abilities = _levelSettings.AbilityConfigs;
 
-            AbilityFactory abilityFactory = new(abilities, heroComponents.transform, heroComponents.SwingEffectPoint, playerData.AbilityUnlockLevel, heroComponents.HolyGroundPoint);
             LootFactory lootFactory = new(_levelSettings.Loots);
+            AbilityFactory abilityFactory = new(abilities, heroComponents.transform, heroComponents.SwingEffectPoint, playerData.AbilityUnlockLevel, lootFactory);
             EnemyFactory enemyFactory = new(_levelSettings.EnemyConfigs, lootFactory, heroComponents.transform, _levelSettings.EnemySpawnerSettings, gameAreaSettings, _levelSettings.GoldEnemy);
 
             LevelUpWindow levelUpWindow = new(_uIConfig.LevelUpCanvas, _uIConfig.LevelUpButton);
@@ -70,7 +69,6 @@ namespace Assets.Scripts
 
             EnemySpawner enemySpawner = new(enemyFactory, _levelSettings.SpawnTypeByTimes);
 
-            _levelSettings.UpgradeCost.Initialize();
             uiFactory.Create<FPSWindow>();
 
             _stateMachine = new();

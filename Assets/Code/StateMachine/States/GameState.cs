@@ -6,7 +6,6 @@ using Assets.Code.Spawners;
 using Assets.Code.Tools;
 using Assets.Code.Ui;
 using Assets.Code.Ui.Windows;
-using System;
 using YG;
 
 namespace Assets.Scripts.State_Machine
@@ -95,6 +94,8 @@ namespace Assets.Scripts.State_Machine
             _inputService.BackPressed -= Pause;
             _timer.Stop();
             _enemySpawner.Reset();
+
+            YG2.SaveProgress();
         }
 
         private void OnExit()

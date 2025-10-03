@@ -59,7 +59,7 @@ namespace Assets.Code.AbilitySystem
             AbilityStats stats = _config.GetStats(Level);
 
             _cooldown = stats.Cooldown;
-            UpdateStats(stats.Damage + _additionalDamage, stats.Range, stats.ProjectilesCount, stats.IsPiercing,stats.HealthPercent);
+            UpdateStats(stats.Damage + _additionalDamage, stats.Range, stats.ProjectilesCount, stats.IsPiercing, stats.HealthPercent, stats.PullForce);
         }
 
         public void SetAdditionalDamage(int value)
@@ -67,7 +67,7 @@ namespace Assets.Code.AbilitySystem
             _additionalDamage = value.ThrowIfNegative();
 
             AbilityStats stats = _config.GetStats(Level);
-            UpdateStats(stats.Damage + _additionalDamage, stats.Range, stats.ProjectilesCount, stats.IsPiercing, stats.HealthPercent);
+            UpdateStats(stats.Damage + _additionalDamage, stats.Range, stats.ProjectilesCount, stats.IsPiercing, stats.HealthPercent, stats.PullForce);
         }
 
         public void SetCooldownPercent(float percent)
@@ -78,7 +78,7 @@ namespace Assets.Code.AbilitySystem
 
         public abstract void Dispose();
 
-        protected abstract void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing,int healthPercent);
+        protected abstract void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing, int healthPercent, float pullForce);
 
         protected abstract void Apply();
     }

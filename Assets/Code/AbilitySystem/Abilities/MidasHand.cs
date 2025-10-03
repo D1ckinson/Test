@@ -56,12 +56,12 @@ namespace Assets.Code.AbilitySystem.Abilities
                 health.TakeDamage(_damage);
                 float floatPercent = (float)_healthPercent / Constants.Hundred;
                 int coinsCount = (int)(health.MaxValue * floatPercent);
-                Debug.Log(coinsCount);
+
                 _lootFactory.Spawn(LootType.Coin, closest.transform.position, coinsCount);
             }
         }
 
-        protected override void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing, int healthPercent)
+        protected override void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing, int healthPercent, float pullForce)
         {
             _damage = damage.ThrowIfNegative();
             _range = range.ThrowIfNegative();

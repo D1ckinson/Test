@@ -34,6 +34,7 @@ namespace Assets.Code
                 [AbilityType.HolyGround] = CreateHolyGround,
                 [AbilityType.MidasHand] = CreateMidasHand,
                 [AbilityType.Bombard] = CreateBombard,
+                [AbilityType.BlackHole] = CreateBlackHole,
             };
         }
 
@@ -75,6 +76,13 @@ namespace Assets.Code
             AbilityConfig config = _configs[AbilityType.Bombard];
 
             return new Bombard(config, _hero, _abilityUnlockLevel);
+        }
+
+        private Ability CreateBlackHole()
+        {
+            AbilityConfig config = _configs[AbilityType.BlackHole];
+
+            return new BlackHole(config, _hero, _abilityUnlockLevel, _swingEffectPoint);
         }
     }
 }

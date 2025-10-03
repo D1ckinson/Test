@@ -177,9 +177,12 @@ namespace Assets.Code.Tools
             return Object.Instantiate(component, parent);
         }
 
-        public static T Instantiate<T>(this T component) where T : MonoBehaviour
+        public static T Instantiate<T>(this T component, bool isActive = true) where T : Component
         {
-            return Object.Instantiate(component);
+            T @object = Object.Instantiate(component);
+            @object.SetActive(isActive);
+
+            return @object;
         }
 
         public static void SetText(this TMP_Text textWindow, int value)
@@ -211,6 +214,12 @@ namespace Assets.Code.Tools
         public static void DestroyGameObject(this Component component)
         {
             Object.Destroy(component.gameObject);
+        }
+
+        public static void SetShapeRadius(this ParticleSystem system, float radius)
+        {
+            ParticleSystem.ShapeModule shapeModule = system.shape;
+            shapeModule.radius = radius;
         }
     }
 }

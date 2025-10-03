@@ -1,5 +1,6 @@
 ﻿using Assets.Code.CharactersLogic;
 using Assets.Code.Tools;
+using Assets.Scripts.Tools;
 using DG.Tweening;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace Assets.Code.AbilitySystem.Abilities
 
         private float _damage;
         private float _explosionRadius;
+        private Pool<ParticleSystem> _effectPool;
         private LayerMask _damageLayer;
         private Tween _currentTween;
 
@@ -24,10 +26,12 @@ namespace Assets.Code.AbilitySystem.Abilities
             _currentTween?.Kill();
         }
 
-        public void Initialize(float damage, float explosionRadius, LayerMask damageLayer)
+        public void Initialize(float damage, float explosionRadius, LayerMask damageLayer, Pool<ParticleSystem> effectPool)
         {
             SetStats(damage, explosionRadius);
-            _damageLayer = damageLayer;
+
+            _effectPool = effectPool.ThrowIfNull();
+            _damageLayer = damageLayer.ThrowIfNull();
         }
 
         public void SetStats(float damage, float explosionRadius)
@@ -44,7 +48,7 @@ namespace Assets.Code.AbilitySystem.Abilities
             transform.position = from;
 
             _currentTween = transform.DOPath(new Vector3[] { from, controlPoint, to }, _airTime, PathType.CatmullRom)
-                .SetEase(Ease.OutQuad)
+                .SetEase(Ease.Linear)
                 .OnComplete(Explode);
         }
 
@@ -59,6 +63,10 @@ namespace Assets.Code.AbilitySystem.Abilities
                     health.TakeDamage(_damage);
                 }
             }
+
+            ParticleSystem effect = _effectPool.Get();
+            effect.transform.position = transform.position;
+            effect.Play();
 
             this.SetActive(false);
         }

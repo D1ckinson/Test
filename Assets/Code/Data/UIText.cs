@@ -78,7 +78,8 @@ namespace Assets.Code.Data
                 [AbilityType.GhostSwords] = "Призрачные мечи",
                 [AbilityType.HolyGround] = "Святая земля",
                 [AbilityType.MidasHand] = "Рука Мидаса",
-                [AbilityType.Bombard] = "Бомбарда"
+                [AbilityType.Bombard] = "Бомбарда",
+                [AbilityType.BlackHole] = "Черная дыра",
             };
         }
 
@@ -109,7 +110,8 @@ namespace Assets.Code.Data
                 [AbilityType.GhostSwords] = "Ghost swords",
                 [AbilityType.HolyGround] = "Holy ground",
                 [AbilityType.MidasHand] = "Midas Hand",
-                [AbilityType.MidasHand] = "Bombard"
+                [AbilityType.MidasHand] = "Bombard",
+                [AbilityType.BlackHole] = "Black hole",
             };
         }
 

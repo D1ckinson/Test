@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Tools
 {
-    public class Pool<T> where T : MonoBehaviour
+    public class Pool<T> where T : Component
     {
         private const int Zero = 0;
         private const int DefaultPreCreatedCount = 10;

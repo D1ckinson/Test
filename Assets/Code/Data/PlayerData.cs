@@ -24,6 +24,7 @@ namespace Assets.Scripts
                 [AbilityType.HolyGround] = 3,
                 [AbilityType.MidasHand] = 1,
                 [AbilityType.Bombard] = 1,
+                [AbilityType.BlackHole] = 1,
             };
         }
     }

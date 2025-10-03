@@ -27,7 +27,7 @@ namespace Assets.Code.AbilitySystem.Abilities
 
             _damage = stats.Damage;
             _radius = stats.Range;
-            SetEffectShape();
+            _swingEffect.SetShapeRadius(_radius);
             _animator = animator;
         }
 
@@ -56,17 +56,11 @@ namespace Assets.Code.AbilitySystem.Abilities
             _animator.SetTrigger(AnimationParameters.IsAttacking);
         }
 
-        protected override void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing, int healthPercent)
+        protected override void UpdateStats(float damage, float range, int projectilesCount, bool isPiercing, int healthPercent, float pullForce)
         {
             _damage = damage.ThrowIfNegative();
             _radius = range.ThrowIfNegative();
-            SetEffectShape();
-        }
-
-        private void SetEffectShape()
-        {
-            ParticleSystem.ShapeModule shapeModule = _swingEffect.shape;
-            shapeModule.radius = _radius;
+            _swingEffect.SetShapeRadius(_radius);
         }
     }
 }

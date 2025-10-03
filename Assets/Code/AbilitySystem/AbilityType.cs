@@ -6,6 +6,7 @@
         GhostSwords,
         HolyGround,
         MidasHand,
-        Bombard
+        Bombard,
+        BlackHole
     }
 }

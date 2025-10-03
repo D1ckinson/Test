@@ -11,6 +11,7 @@ namespace Assets.Code.CharactersLogic.EnemyLogic
     [RequireComponent(typeof(CollisionDamage))]
     [RequireComponent(typeof(DeathTriger))]
     [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(Rigidbody))]
     public class EnemyComponents : MonoBehaviour
     {
         public ITargetDirectionTeller DirectionTeller { get; private set; }
@@ -18,8 +19,8 @@ namespace Assets.Code.CharactersLogic.EnemyLogic
         public Health Health { get; private set; }
         public CollisionDamage CollisionDamage { get; private set; }
         public DeathTriger DeathTriger { get; private set; }
-        public CharacterType CharacterType { get; private set; } = CharacterType.Enemy1;
-
+        public CharacterType CharacterType { get; private set; }
+        public Rigidbody Rigidbody { get; private set; }
 
         private void Awake()
         {
@@ -27,6 +28,7 @@ namespace Assets.Code.CharactersLogic.EnemyLogic
             Health = GetComponent<Health>();
             CollisionDamage = GetComponent<CollisionDamage>();
             DeathTriger = GetComponent<DeathTriger>();
+            Rigidbody = GetComponent<Rigidbody>();
         }
 
         public void Initialize(ITargetDirectionTeller directionTeller)

@@ -35,6 +35,7 @@ namespace Assets.Code
                 [AbilityType.MidasHand] = CreateMidasHand,
                 [AbilityType.Bombard] = CreateBombard,
                 [AbilityType.BlackHole] = CreateBlackHole,
+                [AbilityType.StoneSpikes] = CreateStoneSpikes,
             };
         }
 
@@ -83,6 +84,13 @@ namespace Assets.Code
             AbilityConfig config = _configs[AbilityType.BlackHole];
 
             return new BlackHole(config, _hero, _abilityUnlockLevel, _swingEffectPoint);
+        }
+
+        private Ability CreateStoneSpikes()
+        {
+            AbilityConfig config = _configs[AbilityType.StoneSpikes];
+
+            return new StoneSpikes(config, _hero, _abilityUnlockLevel);
         }
     }
 }

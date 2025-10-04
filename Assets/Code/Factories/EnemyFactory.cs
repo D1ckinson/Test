@@ -115,10 +115,7 @@ namespace Assets.Scripts.Factories
 
         private Vector3 GenerateRandomPoint()
         {
-            float randomAngle = Random.Range(Constants.Zero, Constants.FullCircleDegrees) * Mathf.Deg2Rad;
-
-            Vector3 direction = new(Mathf.Cos(randomAngle), Constants.Zero, Mathf.Sin(randomAngle));
-            Vector3 distance = direction * _spawnerSettings.Radius;
+            Vector3 distance = Utilities.GenerateRandomDirection() * _spawnerSettings.Radius;
             Vector3 point = _hero.position + distance;
 
             return IsPositionInGameArea(point) ? point : _hero.position - distance;

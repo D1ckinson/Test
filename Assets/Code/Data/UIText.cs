@@ -80,6 +80,7 @@ namespace Assets.Code.Data
                 [AbilityType.MidasHand] = "Рука Мидаса",
                 [AbilityType.Bombard] = "Бомбарда",
                 [AbilityType.BlackHole] = "Черная дыра",
+                [AbilityType.StoneSpikes] = "Каменные иглы",
             };
         }
 
@@ -112,6 +113,7 @@ namespace Assets.Code.Data
                 [AbilityType.MidasHand] = "Midas Hand",
                 [AbilityType.MidasHand] = "Bombard",
                 [AbilityType.BlackHole] = "Black hole",
+                [AbilityType.StoneSpikes] = "Stone spikes",
             };
         }
 

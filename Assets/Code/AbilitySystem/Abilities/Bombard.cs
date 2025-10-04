@@ -72,10 +72,7 @@ namespace Assets.Code.AbilitySystem.Abilities
 
         private Vector3 GenerateRandomPoint()
         {
-            float randomAngle = Random.Range(Constants.Zero, Constants.FullCircleDegrees) * Mathf.Deg2Rad;
-
-            Vector3 direction = new(Mathf.Cos(randomAngle), Constants.Zero, Mathf.Sin(randomAngle));
-            Vector3 distance = direction * Random.Range(Constants.One, MaxThrowDistance);
+            Vector3 distance = Utilities.GenerateRandomDirection() * Random.Range(Constants.One, MaxThrowDistance);
             Vector3 point = Position + distance;
 
             return point;

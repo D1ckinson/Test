@@ -7,6 +7,7 @@
         HolyGround,
         MidasHand,
         Bombard,
-        BlackHole
+        BlackHole,
+        StoneSpikes
     }
 }

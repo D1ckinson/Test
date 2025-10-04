@@ -15,7 +15,7 @@ namespace Assets.Scripts
         public PlayerData()
         {
             Wallet = new();
-            StartAbility = AbilityType.Bombard;
+            StartAbility = AbilityType.StoneSpikes;
 
             AbilityUnlockLevel = new()
             {
@@ -25,6 +25,7 @@ namespace Assets.Scripts
                 [AbilityType.MidasHand] = 1,
                 [AbilityType.Bombard] = 1,
                 [AbilityType.BlackHole] = 1,
+                [AbilityType.StoneSpikes] = 1,
             };
         }
     }
